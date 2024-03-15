@@ -5,13 +5,18 @@ import os
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)  # Initialize Flask-Bootstrap
-app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024  # for 16 MB limit
+app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024  # for 64 MB limit
 
 assignments = [("Assignment 1", 0), ("Assignment 2", 1), ("Assignment 3", 3), ("Assignment 4", 4), ("Assignment 5", 2)]
-
 @app.route("/")
 def index():
-    return render_template("index.html", nav="Index", assignments=sorted(assignments, key=lambda x: x[1]))
+    # Ensure assignments is defined (even if empty) before sorting and passing to the template
+    if assignments is None:
+        sorted_assignments = []
+    else:
+        sorted_assignments = sorted(assignments, key=lambda x: x[1])
+
+    return render_template("index.html", nav="Index", assignments=sorted_assignments)
 
 @app.route('/submit', methods=['GET', 'POST'])
 def submit():
