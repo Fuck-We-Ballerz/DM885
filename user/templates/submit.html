@@ -5,7 +5,7 @@
 {% block content %}
     <h1>Upload a ZIP file</h1>
 
-    <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data" class="mt-3">
+    <form id="uploadForm" action="/student/upload" method="post" enctype="multipart/form-data" class="mt-3">
         <div class="input-group mb-3">
             <input type="file" class="form-control" id="zipFileUpload" name="file" accept=".zip">
             <button class="btn btn-primary" type="button" onclick="attemptUpload()">Upload</button>
