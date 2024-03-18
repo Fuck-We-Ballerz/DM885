@@ -41,7 +41,9 @@ permissions:
 jobs:
   Analysis:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        java: [ '21' ]
     steps:
       - name: Analyze with SonarCloud
 
