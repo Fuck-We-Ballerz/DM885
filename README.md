@@ -21,7 +21,7 @@
 </p>
 
 <p align="center">
-<img src="https://www.sdu.dk/-/media/files/nyheder/logoer/sdu_black_rgb_png.png" width="400">
+<img src="https://www.sdu.dk/-/media/files/nyheder/logoer/sdu_black_rgb_png.png" width="400" style="padding-bottom: 1em;">
 <br />
 Exploring microservices using Kubernetes!
 <br />
