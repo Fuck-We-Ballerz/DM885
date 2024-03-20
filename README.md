@@ -1,17 +1,7 @@
-# Title
+# TO-DO
 
-This is an example file with default selections.
+- Testing.
+- Oploading af filer.
+- Tracking af submission.
+- Stop submission.
 
-## Install
-
-```
-```
-
-## Usage
-
-```
-```
-
-## Contributing
-
-PRs accepted.
