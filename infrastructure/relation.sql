@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS assignment (
   start_date TIMESTAMP NOT NULL,
   end_date TIMESTAMP NOT NULL,
   is_visible BOOLEAN NOT NULL,
-  docker_image VARCHAR(64) NOT NULL,
+  docker_image BYTEA, 
   config_id INT NOT NULL,
   PRIMARY KEY(id),
   FOREIGN KEY(config_id) REFERENCES assignment_config(id)
