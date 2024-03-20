@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS submission (
   submission BYTEA,
   submission_std VARCHAR(64) DEFAULT '' NOT NULL,
   submission_err VARCHAR(64) DEFAULT '' NOT NULL,
-  submission_time TIMESTAMP  DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  submission_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   assignment_id INT,
   student_id INT,
   FOREIGN KEY(assignment_id) REFERENCES assignment(id),
