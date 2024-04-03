@@ -8,10 +8,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 # Install any needed packages specified in requirements.txt, or list them explicitly
-RUN pip install flask Flask Flask-Bootstrap Werkzeug Flask-SQLAlchemy psycopg2
-
-# Make port 5000 available to the world outside this container
-EXPOSE 5000
+RUN pip install -r requirements.txt 
 
 # Define environment variable
 ENV FLASK_APP=app.py

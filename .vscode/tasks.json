@@ -31,6 +31,12 @@
             "label": "Prune [Docker]",
             "type": "shell",
             "command": "docker system prune -a && docker volume prune -a"
+        },
+        {
+            "label": "Run student_service",
+            "type": "shell",
+            "dependsOn": "[Deploy infrastructure [DEV]]",
+            "command": "docker compose up -d --build"
         }
   ]
 }
