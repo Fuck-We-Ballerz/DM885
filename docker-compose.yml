@@ -8,11 +8,10 @@ services:
       dockerfile: Dockerfile
  
     ports:
-      - "8080:5000"
+      - "5050:5050"
     networks:
       - infrastructure_application
     restart: unless-stopped
-
 
 networks:
   infrastructure_application:

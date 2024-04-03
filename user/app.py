@@ -8,13 +8,7 @@ app = Flask(__name__)
 bootstrap = Bootstrap(app)  # Initialize Flask-Bootstrap
 app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024  # for 64 MB limit
 
-# Use a different config for testing
-app.config['TESTING'] = True
-
-if app.config['TESTING']:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:admin@localhost/testdb_test'
-else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:admin@localhost/testdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:admin@localhost/testdb'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
@@ -58,13 +52,23 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         if username and password: # Check if the inputs are not empty
-            student = Student.query.filter_by(username=username).first()
-            # Check if the student exists and the username and the password is correct
-            if student and username == student.username and password == student.password: # Check if the username and password are correct
-                session['username'] = student.username 
-                return redirect(url_for('student'))
-            else:
-                return render_template('login.html', nav="Login", error="Invalid username or password")
+            try:
+                student = Student.query.filter_by(username=username).first()
+                # Check if the student exists and the username and the password is correct
+                if student and username == student.username and password == student.password: # Check if the username and password are correct
+                    session['username'] = student.username 
+                    return redirect(url_for('student'))
+                else:
+                    return render_template('login.html', nav="Login", error="Invalid username or password")
+            
+            # In case the database is not connected. Used for testing without db
+            except:
+                if username == "admin" and password == "admin":
+                    session['username'] = username 
+                    return redirect(url_for('student'))
+                else:
+                    return render_template('login.html', nav="Login", error="Invalid username or password")
+                    
         else:
             return render_template('login.html', nav="Login", error="Input cannot be empty")
     else:
@@ -117,4 +121,4 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() == 'zip'
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5050)
+    app.run(host="0.0.0.0", debug=True, port=5050)
