@@ -8,7 +8,14 @@ app = Flask(__name__)
 bootstrap = Bootstrap(app)  # Initialize Flask-Bootstrap
 app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024  # for 64 MB limit
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:admin@localhost/testdb'
+# Use a different config for testing
+app.config['TESTING'] = True
+
+if app.config['TESTING']:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:admin@localhost/testdb_test'
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:admin@localhost/testdb'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 db = SQLAlchemy(app)
@@ -18,12 +25,17 @@ class Student(db.Model):
     __tablename__ = 'student'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
-    name = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(80), unique=True, nullable=False)
+    name = db.Column(db.String(80), nullable=False)
+    password = db.Column(db.String(80), nullable=False)
     
 
 
 assignments = [("Assignment 1", 0), ("Assignment 2", 1), ("Assignment 3", 3), ("Assignment 4", 4), ("Assignment 5", 2)]
+
+@app.route("/")
+def homepage():
+    return redirect(url_for('login', error="You must login first"))
+
 @app.route("/student")
 def student():
     if session:
