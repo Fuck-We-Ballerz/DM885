@@ -1,0 +1,3 @@
+server: cornelius.db.elephantsql.com
+User: dxckodzf
+Password: MdU3iqbE7HMarHK-RzZvQlzjBQleBhjB

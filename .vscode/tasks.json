@@ -1,0 +1,36 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Initialize [DEV]",
+            "group": "build",
+            "type": "shell",
+            "command": "sh init/env-files.sh"
+        },
+        {
+            "label": "Deploy infrastructure [DEV]",
+            "group": "build",
+            "type": "shell",
+            "dependsOn": ["Initialize [DEV]"],
+            "command": "docker compose -f infrastructure/docker-compose.yml up -d --build"
+        },
+        {
+            "label": "Deploy monitoring [DEV]",
+            "group": "build",
+            "type": "shell",
+            "dependsOn": ["Initialize [DEV]"],
+            "command": "docker compose -f monitoring/docker-compose.yml up -d --build"
+        },
+        {
+            "label": "Deploy everything [DEV]",
+            "group": "build",
+            "dependsOrder": "sequence",
+            "dependsOn": ["Deploy infrastructure [DEV]", "Deploy monitoring [DEV]"]
+        },
+        {
+            "label": "Prune [Docker]",
+            "type": "shell",
+            "command": "docker system prune -a && docker volume prune -a"
+        }
+  ]
+}
