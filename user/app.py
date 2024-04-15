@@ -33,7 +33,7 @@ fallback_assignments = [
     {"id": 2, "name": "DM551_AlgoSand", "status": 1},
     {"id": 3, "name": "DM566_DmMl", "status": 3},
     {"id": 4, "name": "DM563_CP", "status": 4},
-    {"id": 5, "name": "DM510_Opertivsystemer", "status": 2}
+    {"id": 5, "name": "DM510_Operativsystemer", "status": 2}
 ]
 
 
