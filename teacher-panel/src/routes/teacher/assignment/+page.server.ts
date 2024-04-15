@@ -9,8 +9,8 @@ const queryClient = postgres('postgres://admin:admin@postgres_application:5432/t
 const db = drizzle(queryClient, {schema: {...schema}});
 
 export const load: PageServerLoad = async ({params}) => {
-    const date = new Date()
-    date.toISOString()
+    // const date = new Date()
+    // date.toISOString()
 
     // const course = await db.insert(schema.course).values({
     //     name: "DM885"
@@ -46,41 +46,9 @@ export const load: PageServerLoad = async ({params}) => {
             endDate: ass.end_date
         }
     });
-
-    console.log(`Result from db: ${output}`);
-    for ( const i in output ) {
-        console.log(output[i])
-    }
-
 	// We need to know which teacher we are.
     // To be able to get the assignments for the teacher.
     return {
-        assignments: output,
-	    assignments2: [
-            {
-                title: `Assignment1`,
-                course: `DM861`,
-                config: `Config1`,
-                isVisible: true,
-                startDate: `2021-09-01`,
-                endDate: `2021-09-15`,
-            },
-            {
-                title: `Assignment2`,
-                course: `DM535`,
-                config: `Config1`,
-                isVisible: true,
-                startDate: `2021-09-08`,
-                endDate: `2021-09-10`,
-            },
-            {
-                title: `Assignment3`,
-                course: `DM882`,
-                config: `Config2`,
-                isVisible: false,
-                startDate: `2021-10-01`,
-                endDate: `2021-12-15`,
-            },
-       ]
+        assignments: output
 	};
 };
