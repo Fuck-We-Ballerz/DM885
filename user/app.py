@@ -8,7 +8,7 @@ app = Flask(__name__)
 bootstrap = Bootstrap(app)  # Initialize Flask-Bootstrap
 app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024  # for 64 MB limit
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:admin@localhost/testdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:admin@postgres_application/testdb'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
