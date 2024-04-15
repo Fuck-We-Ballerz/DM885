@@ -23,17 +23,19 @@ class Student(db.Model):
     password = db.Column(db.String(80), nullable=False)
     
 class Assignment(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    status = db.Column(db.Integer, default=0)  # Assuming statuses are 0-4 as used in your example
+    __tablename__ = 'assignment'
+    id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
+    name = db.Column(db.String(80), nullable=False)
+    status = db.Column(db.Integer, default=0)
+    requirements = db.Column(db.String(1000), default="No specific requirements")
 
 # In case we are not connected to the database, we can use this fallback
 fallback_assignments = [
-    {"id": 1, "name": "DM507_AlgoDat", "status": 0},
-    {"id": 2, "name": "DM551_AlgoSand", "status": 1},
-    {"id": 3, "name": "DM566_DmMl", "status": 3},
-    {"id": 4, "name": "DM563_CP", "status": 4},
-    {"id": 5, "name": "DM510_Operativsystemer", "status": 2}
+    {"id": 1, "name": "DM507_AlgoDat", "status": 0, "requirements": "No specific requirements"},
+    {"id": 2, "name": "DM551_AlgoSand", "status": 1, "requirements": "No specific requirements"},
+    {"id": 3, "name": "DM566_DmMl", "status": 3, "requirements": "No specific requirements"},
+    {"id": 4, "name": "DM563_CP", "status": 4, "requirements": "No specific requirements"},
+    {"id": 5, "name": "DM510_Operativsystemer", "status": 2, "requirements": "No specific requirements"}
 ]
 
 
@@ -121,9 +123,9 @@ def submit_assignment(assignment_id):
     except:
         # Use a fallback if the database query fails
         assignment = next((a for a in fallback_assignments if a['id'] == assignment_id), None)
-        assignment = Assignment(id=assignment['id'], name=assignment['name'], status=assignment['status'])
+        assignment = Assignment(id=assignment['id'], name=assignment['name'], status=assignment['status'], requirements=assignment['requirements'])
 
-    return render_template('submit.html', nav=f"Submit Assignment: {assignment.name}")
+    return render_template('submit.html', nav=f"Submit Assignment: {assignment.name}", assignment=assignment)
 
 
 @app.route('/student/upload', methods=['POST'])
