@@ -14,6 +14,7 @@ export const assignment = pgTable('assignment', {
   end_date: timestamp('end_date', { mode: 'string' }).notNull().defaultNow(),
   is_visible: boolean('is_visible').notNull(),
   docker_image: varchar('docker_image', {length: 64}),
+  course_id: integer('course_id').notNull().references(() => course.id),
   config_id: integer('config_id').notNull().references(() => assignmentConfig.id),
 });
 
