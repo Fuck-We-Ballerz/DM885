@@ -7,15 +7,23 @@ CREATE TABLE IF NOT EXISTS assignment_config (
   PRIMARY KEY(id)
 );
 
+CREATE TABLE IF NOT EXISTS course (
+    id INT GENERATED ALWAYS AS IDENTITY,
+    name VARCHAR(64) NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS assignment (
   id INT GENERATED ALWAYS AS IDENTITY,
   start_date TIMESTAMP NOT NULL,
   end_date TIMESTAMP NOT NULL,
   is_visible BOOLEAN NOT NULL,
-  docker_image BYTEA, 
+  title VARCHAR(64) NOT NULL,
+  docker_image TEXT,
   config_id INT NOT NULL,
+  course_id INT NOT NULL,
   PRIMARY KEY(id),
   FOREIGN KEY(config_id) REFERENCES assignment_config(id)
+  FOREIGN KEY(course_id) REFERENCES course(id)
 );
 
 CREATE TABLE IF NOT EXISTS student (
@@ -37,6 +45,24 @@ CREATE TABLE IF NOT EXISTS teacher (
   PRIMARY KEY(id)
 );
 
+CREATE TABLE IF NOT EXISTS student_to_course (
+  id INT GENERATED ALWAYS AS IDENTITY,
+  student_id INT NOT NULL,
+  course_id INT NOT NULL,
+  FOREIGN KEY(student_id) REFERENCES student(id),
+  FOREIGN KEY(course_id) REFERENCES course(id),
+  PRIMARY KEY(id)
+);
+
+CREATE TABLE IF NOT EXISTS teacher_to_course (
+  id INT GENERATED ALWAYS AS IDENTITY,
+  teacher_id INT NOT NULL,
+  course_id INT NOT NULL,
+  FOREIGN KEY(teacher_id) REFERENCES teacher(id),
+  FOREIGN KEY(course_id) REFERENCES course(id),
+  PRIMARY KEY(id)
+);
+
 CREATE TABLE IF NOT EXISTS admin (
   id INT GENERATED ALWAYS AS IDENTITY,
   name VARCHAR(64) NOT NULL,
@@ -49,7 +75,7 @@ CREATE TABLE IF NOT EXISTS submission (
   id INT GENERATED ALWAYS AS IDENTITY,
   grade VARCHAR(64) DEFAULT 'Not graded' NOT NULL,
   status VARCHAR(64) DEFAULT 'Pending' NOT NULL,
-  submission BYTEA,
+  submission BYTEA, -- Zip file
   submission_std VARCHAR(64) DEFAULT '' NOT NULL,
   submission_err VARCHAR(64) DEFAULT '' NOT NULL,
   submission_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
