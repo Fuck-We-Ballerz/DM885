@@ -8,7 +8,7 @@
 
 <h1>Assignments</h1>
 
-<!-- {#each data.assignmnets as assignment, i}
+{#each data.assignments as assignment, i}
     <table>
         <tr>
             <td>
@@ -40,7 +40,7 @@
             </td>
         </tr>
     </table>
-{/each} -->
+{/each}
 
 <style>
     /* Add a border to the table */
