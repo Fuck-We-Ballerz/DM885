@@ -22,9 +22,20 @@ class Student(db.Model):
     name = db.Column(db.String(80), nullable=False)
     password = db.Column(db.String(80), nullable=False)
     
+class Assignment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    status = db.Column(db.Integer, default=0)  # Assuming statuses are 0-4 as used in your example
 
+# In case we are not connected to the database, we can use this fallback
+fallback_assignments = [
+    {"id": 1, "name": "DM507_AlgoDat", "status": 0},
+    {"id": 2, "name": "DM551_AlgoSand", "status": 1},
+    {"id": 3, "name": "DM566_DmMl", "status": 3},
+    {"id": 4, "name": "DM563_CP", "status": 4},
+    {"id": 5, "name": "DM510_Opertivsystemer", "status": 2}
+]
 
-assignments = [("Assignment 1", 0), ("Assignment 2", 1), ("Assignment 3", 3), ("Assignment 4", 4), ("Assignment 5", 2)]
 
 @app.route("/")
 def homepage():
@@ -32,18 +43,17 @@ def homepage():
 
 @app.route("/student")
 def student():
-    if session:
-        # Ensure assignments is defined (even if empty) before sorting and passing to the template
-        username = session.get('username', 'No User')  
-        
-        if assignments is None:
-            sorted_assignments = []
-        else:
-            sorted_assignments = sorted(assignments, key=lambda x: x[1])
-
-        return render_template("student.html", nav= f"Dashbord for: {username}", assignments=sorted_assignments)
-    else:
+    if 'username' not in session:
         return redirect(url_for('login', error="You need to login first"))
+
+    username = session['username']
+    try:
+        assignments = Assignment.query.order_by(Assignment.status).all()
+    except:
+        # If there's an error (e.g., database is not reachable), use fallback assignments
+        assignments = [Assignment(id=a['id'], name=a['name'], status=a['status']) for a in fallback_assignments]
+
+    return render_template("student.html", nav=f"Dashboard for: {username}", assignments=assignments)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -102,6 +112,19 @@ def submit():
             file.save(os.path.join('/path_to_save_files', filename))
             return 'File successfully uploaded'
     return render_template('submit.html', nav=f"Submit for: {username}")
+
+
+@app.route('/student/submit/<int:assignment_id>', methods=['GET', 'POST'])
+def submit_assignment(assignment_id):
+    try:
+        assignment = Assignment.query.get(assignment_id)
+    except:
+        # Use a fallback if the database query fails
+        assignment = next((a for a in fallback_assignments if a['id'] == assignment_id), None)
+        assignment = Assignment(id=assignment['id'], name=assignment['name'], status=assignment['status'])
+
+    return render_template('submit.html', nav=f"Submit Assignment: {assignment.name}")
+
 
 @app.route('/student/upload', methods=['POST'])
 def upload_file():
