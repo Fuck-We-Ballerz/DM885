@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS assignment_config (
 
 CREATE TABLE IF NOT EXISTS course (
     id INT GENERATED ALWAYS AS IDENTITY,
-    name VARCHAR(64) NOT NULL
+    name VARCHAR(64) NOT NULL,
+    PRIMARY KEY(id)
 );
 
 CREATE TABLE IF NOT EXISTS assignment (
@@ -22,7 +23,7 @@ CREATE TABLE IF NOT EXISTS assignment (
   config_id INT NOT NULL,
   course_id INT NOT NULL,
   PRIMARY KEY(id),
-  FOREIGN KEY(config_id) REFERENCES assignment_config(id)
+  FOREIGN KEY(config_id) REFERENCES assignment_config(id),
   FOREIGN KEY(course_id) REFERENCES course(id)
 );
 
