@@ -63,3 +63,10 @@ Exploring microservices using Kubernetes!
 Distributed under the MIT License. See `LICENSE` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+# TO-DO
+
+- Testing.
+- Oploading af filer.
+- Tracking af submission.
+- Stop submission.
+
