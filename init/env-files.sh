@@ -13,7 +13,7 @@ mkdir -p $SECRETS_FOLDER
 
 DATABASE_DEV_ENV=$SECRETS_FOLDER/postgres-application-dev.env
 KEYCLOAK_DEV_ENV=$SECRETS_FOLDER/keycloak-dev.env
-PG_EXPORTER_DEV_ENV=$SECRETS_FOLDER/pg-exporter-dev.env
+PG_EXPORTER_DEV_ENV=$SECRETS_FOLDER/postgres-exporter-dev.env
 GRAFANA_DEV_ENV=$SECRETS_FOLDER/grafana-dev.env
 POSTGRES_KEYCLOAK_ENV=$SECRETS_FOLDER/postgres-keycloak-dev.env
 

@@ -18,7 +18,7 @@ datasources:
     secureJsonData:
       password: $POSTGRES_PASSWORD
     jsonData:
-      database: testdb
+      database: postgres_application
       sslmode: 'disable' # disable/require/verify-ca/verify-full
       maxOpenConns: 100 # Grafana v5.4+
       maxIdleConns: 100 # Grafana v5.4+

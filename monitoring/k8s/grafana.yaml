@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - name: grafana
+        image: grafana/grafana:latest
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: grafana-datasources-config
+          mountPath: /etc/grafana/provisioning/datasources
+        - name: grafana-dashboard-keycloak-metrics
+          mountPath: /etc/grafana/provisioning/dashboards/keycloak-metrics
+        - name: grafana-dashboard-loki-metrics
+          mountPath: /etc/grafana/provisioning/dashboards/loki-metrics
+        - name: grafana-dashboard-postgres-exporter
+          mountPath: /etc/grafana/provisioning/dashboards/postgres-exporter
+        # Add volume mounts for other dashboards as needed
+      volumes:
+      - name: grafana-datasources-config
+        configMap:
+          name: grafana-datasources-config
+      - name: grafana-dashboards-dashboard
+        configMap:
+          name: grafana-dashboard-dashboard
+      - name: grafana-dashboard-keycloak-metrics
+        configMap:
+          name: grafana-dashboard-keycloak-metrics
+      - name: grafana-dashboard-loki-metrics
+        configMap:
+          name: grafana-dashboard-loki-metrics
+      - name: grafana-dashboard-postgres-exporter
+        configMap:
+          name: grafana-dashboard-postgres-exporter
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+spec:
+  selector:
+    app: grafana
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
