@@ -31,7 +31,12 @@
             "label": "Prune [DOCKER]",
             "type": "shell",
             "command": "docker system prune -a && docker volume prune -a"
-        },        
+        },
+        {
+            "label": "Start Minikube [MINIKUBE]",
+            "type": "shell",
+            "command": "if command -v minikube >/dev/null 2>&1; then minikube start; else echo 'Error: Minikube is not installed. Please install Minikube from https://minikube.sigs.k8s.io/docs/start/ and try again.'; exit 1; fi"
+        },
         {
             "label": "Delete Secrets [MINIKUBE]",
             "type": "shell",
@@ -60,7 +65,7 @@
             "label": "Deploy infrastructure [MINIKUBE]",
             "group": "build",
             "type": "shell",
-            "dependsOn":["Delete Secrets [MINIKUBE]", "Create Secrets [MINIKUBE]", "Build Docker images [MINIKUBE]"],
+            "dependsOn":["Start Minikube [MINIKUBE]", "Delete Secrets [MINIKUBE]", "Create Secrets [MINIKUBE]", "Create configMaps [MINIKUBE]", "Build Docker images [MINIKUBE]"],
             "dependsOrder": "sequence",
             "command": "kubectl apply -f infrastructure/k8s"
         } 

@@ -14,18 +14,23 @@ spec:
     spec:
       containers:
       - name: postgres-application
-        image: postgres-application:latest
-        imagePullPolicy: Never
+        image: postgres:latest
         envFrom:
         - secretRef:
             name: postgres-application
         ports:
         - containerPort: 5432
         volumeMounts:
+        - mountPath: /docker-entrypoint-initdb.d
+          name: configmap-volume
+          readOnly: true 
         - mountPath: /var/lib/postgresql/data
-          name: application-db-volume
+          name: postgres-application-pvc
       volumes:
-      - name: application-db-volume
+      - name: configmap-volume
+        configMap:
+          name: relation-sql-configmap
+      - name: postgres-application-pvc
         persistentVolumeClaim:
           claimName: postgres-application-pvc
 
@@ -53,6 +58,7 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
   hostPath:
     path: "/mnt/data/postgres-application"
 
@@ -62,8 +68,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: postgres-application-pvc
 spec:
+  storageClassName: manual
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 100Mi

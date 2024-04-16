@@ -30,8 +30,7 @@ spec:
     spec:
       containers:
       - name: keycloak
-        image: keycloak:latest
-        imagePullPolicy: Never
+        image: quay.io/keycloak/keycloak:latest 
         args: ["start-dev","--import-realm"]
         env:
         - name: KEYCLOAK_ADMIN
@@ -73,11 +72,12 @@ spec:
             secretKeyRef:
               name: postgres-keycloak
               key: POSTGRES_PASSWORD
-        - name: KEYCLOAK_IMPORT 
-          value: /realm.json
         ports:
         - name: http
           containerPort: 8080
+        volumeMounts:
+          - name: keycloak-volume
+            mountPath: /opt/keycloak/data/import
         readinessProbe:
           httpGet:
             path: /health/ready
@@ -97,3 +97,7 @@ spec:
             requests:
               memory: 256Mi
               cpu: "0.2"
+      volumes: 
+      - name: keycloak-volume
+        configMap:
+          name: keycloak-realm-configmap
