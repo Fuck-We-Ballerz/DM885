@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-application
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-application
+  template:
+    metadata:
+      labels:
+        app: postgres-application
+    spec:
+      containers:
+      - name: postgres-application
+        image: postgres-application:latest
+        imagePullPolicy: Never
+        envFrom:
+        - secretRef:
+            name: postgres-application
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: application-db-volume
+      volumes:
+      - name: application-db-volume
+        persistentVolumeClaim:
+          claimName: postgres-application-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-application
+spec:
+  selector:
+    app: postgres-application
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-application-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/mnt/data/postgres-application"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-application-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi

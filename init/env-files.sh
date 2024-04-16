@@ -11,13 +11,19 @@ if [ "$count" -eq 0 ]; then docker network create monitoring; fi
 
 mkdir -p $SECRETS_FOLDER
 
-DATABASE_DEV_ENV=$SECRETS_FOLDER/database-dev.env
+DATABASE_DEV_ENV=$SECRETS_FOLDER/postgres-application-dev.env
 KEYCLOAK_DEV_ENV=$SECRETS_FOLDER/keycloak-dev.env
 PG_EXPORTER_DEV_ENV=$SECRETS_FOLDER/pg-exporter-dev.env
 GRAFANA_DEV_ENV=$SECRETS_FOLDER/grafana-dev.env
+POSTGRES_KEYCLOAK_ENV=$SECRETS_FOLDER/postgres-keycloak-dev.env
 
-echo POSTGRES_USER=admin >> $DATABASE_DEV_ENV
-echo POSTGRES_PASSWORD=admin >> $DATABASE_DEV_ENV
+echo POSTGRES_USER=postgres >> $DATABASE_DEV_ENV
+echo POSTGRES_PASSWORD=postgres >> $DATABASE_DEV_ENV
+echo POSTGRES_DB=postgres >> $DATABASE_DEV_ENV
+
+echo POSTGRES_USER=postgres >> $POSTGRES_KEYCLOAK_ENV
+echo POSTGRES_PASSWORD=postgres >> $POSTGRES_KEYCLOAK_ENV
+echo POSTGRES_DB=postgres >> $POSTGRES_KEYCLOAK_ENV
 
 echo KEYCLOAK_ADMIN=admin >> $KEYCLOAK_DEV_ENV
 echo KEYCLOAK_ADMIN_PASSWORD=admin >> $KEYCLOAK_DEV_ENV

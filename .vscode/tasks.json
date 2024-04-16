@@ -2,35 +2,67 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Initialize [DEV]",
+            "label": "Initialize",
             "group": "build",
             "type": "shell",
             "command": "sh init/env-files.sh"
         },
         {
-            "label": "Deploy infrastructure [DEV]",
+            "label": "Deploy infrastructure [DOCKER]",
             "group": "build",
             "type": "shell",
-            "dependsOn": ["Initialize [DEV]"],
+            "dependsOn": ["Initialize"],
             "command": "docker compose -f infrastructure/docker-compose.yml up -d --build"
         },
         {
-            "label": "Deploy monitoring [DEV]",
+            "label": "Deploy monitoring [DOCKER]",
             "group": "build",
             "type": "shell",
-            "dependsOn": ["Initialize [DEV]"],
+            "dependsOn": ["Initialize"],
             "command": "docker compose -f monitoring/docker-compose.yml up -d --build"
         },
         {
-            "label": "Deploy everything [DEV]",
+            "label": "Deploy everything [DOCKER]",
             "group": "build",
             "dependsOrder": "sequence",
-            "dependsOn": ["Deploy infrastructure [DEV]", "Deploy monitoring [DEV]"]
+            "dependsOn": ["Deploy infrastructure [DOCKER]", "Deploy monitoring [DOCKER]"]
         },
         {
-            "label": "Prune [Docker]",
+            "label": "Prune [DOCKER]",
             "type": "shell",
             "command": "docker system prune -a && docker volume prune -a"
-        }
+        },        
+        {
+            "label": "Delete Secrets [MINIKUBE]",
+            "type": "shell",
+            "command": "kubectl delete secrets --all"
+        },
+        {
+            "label": "Create Secrets [MINIKUBE]",
+            "group": "build",
+            "type": "shell",
+            "dependsOn":["Initialize"],
+            "command": "sh init/create-secrets.sh"
+        },
+        {
+            "label": "Create configMaps [MINIKUBE]",
+            "type": "shell",
+            "dependsOn":["Initialize"],
+            "command": "sh init/create-configmaps.sh"
+        },
+        {
+            "label": "Build Docker images [MINIKUBE]",
+            "group": "build",
+            "type": "shell",
+            "command": "sh init/build-docker-image.sh"
+        },
+        {
+            "label": "Deploy infrastructure [MINIKUBE]",
+            "group": "build",
+            "type": "shell",
+            "dependsOn":["Delete Secrets [MINIKUBE]", "Create Secrets [MINIKUBE]", "Build Docker images [MINIKUBE]"],
+            "dependsOrder": "sequence",
+            "command": "kubectl apply -f infrastructure/k8s"
+        } 
   ]
 }
