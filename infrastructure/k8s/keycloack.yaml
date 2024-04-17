@@ -6,8 +6,11 @@ metadata:
     app: keycloak
 spec:
   ports:
-  - name: https
-    port: 443
+  - name: "3200"
+    port: 3200
+    targetPort: 8080
+  - name: "8080"
+    port: 8080
     targetPort: 8080
   selector:
     app: keycloak

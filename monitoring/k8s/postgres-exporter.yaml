@@ -32,4 +32,3 @@ spec:
   ports:
     - protocol: TCP
       port: 9187
-      targetPort: 9187

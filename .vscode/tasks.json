@@ -65,9 +65,9 @@
             "label": "Deploy infrastructure [MINIKUBE]",
             "group": "build",
             "type": "shell",
-            "dependsOn":["Start Minikube [MINIKUBE]", "Delete Secrets [MINIKUBE]", "Create Secrets [MINIKUBE]", "Create configMaps [MINIKUBE]", "Build Docker images [MINIKUBE]"],
+            "dependsOn":["Start Minikube [MINIKUBE]", "Delete Secrets [MINIKUBE]", "Create Secrets [MINIKUBE]", "Create configMaps [MINIKUBE]"],
             "dependsOrder": "sequence",
-            "command": "kubectl apply -f infrastructure/k8s"
+            "command": "kubectl apply -f infrastructure/k8s && sleep 60 && kubectl port-forward service/keycloak 3200:3200 & kubectl port-forward service/adminer 3300:3300"
         },
         {
             "label": "Deploy monitoring [MINIKUBE]",

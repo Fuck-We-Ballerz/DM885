@@ -26,7 +26,6 @@ spec:
           mountPath: /etc/grafana/provisioning/dashboards/loki-metrics
         - name: grafana-dashboard-postgres-exporter
           mountPath: /etc/grafana/provisioning/dashboards/postgres-exporter
-        # Add volume mounts for other dashboards as needed
       volumes:
       - name: grafana-datasources-config
         configMap:

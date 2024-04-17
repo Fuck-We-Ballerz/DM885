@@ -42,5 +42,5 @@ spec:
   selector:
     app: adminer
   ports:
-    - port: 8080
+    - port: 3300
       targetPort: 8080
