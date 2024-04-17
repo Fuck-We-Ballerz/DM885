@@ -5,7 +5,7 @@
             "label": "Initialize",
             "group": "build",
             "type": "shell",
-            "command": "./init/env-files.sh"
+            "command": "./init/init.sh"
         },
         {
             "label": "Deploy infrastructure",
