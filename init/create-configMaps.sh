@@ -1,18 +1,14 @@
-# Infrastructure configMaps
-kubectl delete configmap relation-sql-configmap --ignore-not-found
-kubectl create configmap relation-sql-configmap --from-file=infrastructure/relation.sql
+#!/bin/bash
 
-kubectl delete configmap keycloak-realm-configmap --ignore-not-found
+kubectl delete configmap --all
+
+# Infrastructure configMaps
+kubectl create configmap relation-sql-configmap --from-file=infrastructure/relation.sql
 kubectl create configmap keycloak-realm-configmap --from-file=infrastructure/realm.json
 
 # Monitoring configMaps
-kubectl delete configmap grafana-datasources-config --ignore-not-found
 kubectl create configmap grafana-datasources-config --from-file=monitoring/grafana-datasources.yml
-
-kubectl delete configmap grafana --ignore-not-found
 kubectl create configmap grafana --from-env-file=monitoring/grafana.env
-
-kubectl delete configmap -l app=grafana-dashboard --ignore-not-found
 
 DASHBOARDS_DIR="monitoring/dashboards"
 

@@ -5,77 +5,26 @@
             "label": "Initialize",
             "group": "build",
             "type": "shell",
-            "command": "sh init/env-files.sh"
+            "command": "./init/env-files.sh"
         },
         {
-            "label": "Deploy infrastructure [DOCKER]",
-            "group": "build",
-            "type": "shell",
-            "dependsOn": ["Initialize"],
-            "command": "docker compose -f infrastructure/docker-compose.yml up -d --build"
-        },
-        {
-            "label": "Deploy monitoring [DOCKER]",
-            "group": "build",
-            "type": "shell",
-            "dependsOn": ["Initialize"],
-            "command": "docker compose -f monitoring/docker-compose.yml up -d --build"
-        },
-        {
-            "label": "Deploy everything [DOCKER]",
-            "group": "build",
-            "dependsOrder": "sequence",
-            "dependsOn": ["Deploy infrastructure [DOCKER]", "Deploy monitoring [DOCKER]"]
-        },
-        {
-            "label": "Prune [DOCKER]",
-            "type": "shell",
-            "command": "docker system prune -a && docker volume prune -a"
-        },
-        {
-            "label": "Start Minikube [MINIKUBE]",
-            "type": "shell",
-            "command": "if minikube status | grep -q 'Running'; then echo 'Minikube is already running.'; else if command -v minikube >/dev/null 2>&1; then minikube start; else echo 'Error: Minikube is not installed. Please install Minikube from https://minikube.sigs.k8s.io/docs/start/ and try again.'; exit 1; fi; fi"
-        },
-        {
-            "label": "Delete Secrets [MINIKUBE]",
-            "type": "shell",
-            "command": "kubectl delete secrets --all"
-        },
-        {
-            "label": "Create Secrets [MINIKUBE]",
+            "label": "Deploy infrastructure",
             "group": "build",
             "type": "shell",
             "dependsOn":["Initialize"],
-            "command": "sh init/create-secrets.sh"
+            "command": "kubectl apply -f infrastructure/k8s"
         },
         {
-            "label": "Create configMaps [MINIKUBE]",
+            "label": "Deploy monitoring",
+            "group": "build",
             "type": "shell",
             "dependsOn":["Initialize"],
-            "command": "sh init/create-configmaps.sh"
-        },
-        {
-            "label": "Build Docker images [MINIKUBE]",
-            "group": "build",
-            "type": "shell",
-            "command": "sh init/build-docker-image.sh"
-        },
-        {
-            "label": "Deploy infrastructure [MINIKUBE]",
-            "group": "build",
-            "type": "shell",
-            "dependsOn":["Start Minikube [MINIKUBE]", "Delete Secrets [MINIKUBE]", "Create Secrets [MINIKUBE]", "Create configMaps [MINIKUBE]"],
-            "dependsOrder": "sequence",
-            "command": "kubectl apply -f infrastructure/k8s && sleep 60 && kubectl port-forward service/keycloak 3200:3200 & kubectl port-forward service/adminer 3300:3300"
-        },
-        {
-            "label": "Deploy monitoring [MINIKUBE]",
-            "group": "build",
-            "type": "shell",
-            "dependsOn":["Start Minikube [MINIKUBE]", "Delete Secrets [MINIKUBE]", "Create Secrets [MINIKUBE]", "Create configMaps [MINIKUBE]", "Build Docker images [MINIKUBE]"],
-            "dependsOrder": "sequence",
             "command": "kubectl apply -f monitoring/k8s"
+        },
+        {
+            "label": "Deploy everything",
+            "group": "build",
+            "dependsOn":["Deploy infrastructure", "Deploy monitoring"]
         },
   ]
 }
