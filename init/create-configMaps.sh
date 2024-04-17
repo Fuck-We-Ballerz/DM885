@@ -3,8 +3,11 @@
 kubectl delete configmap --all
 
 # Infrastructure configMaps
-kubectl create configmap relation-sql-configmap --from-file=infrastructure/relation.sql
-kubectl create configmap keycloak-realm-configmap --from-file=infrastructure/realm.json
+kubectl create configmap relation-sql --from-file=infrastructure/relation.sql
+kubectl create configmap keycloak-realm --from-file=infrastructure/realm.json
+kubectl create configmap postgress-application --from-file=infrastructure/postgres-application.env
+kubectl create configmap postgress-keycloak --from-file=infrastructure/postgres-keycloak.env
+kubectl create configmap keycloak --from-file=infrastructure/keycloak.env
 
 # Monitoring configMaps
 kubectl create configmap grafana-datasources-config --from-file=monitoring/grafana-datasources.yml

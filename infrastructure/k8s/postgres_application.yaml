@@ -29,7 +29,7 @@ spec:
       volumes:
       - name: configmap-volume
         configMap:
-          name: relation-sql-configmap
+          name: relation-sql
       - name: postgres-application-pvc
         persistentVolumeClaim:
           claimName: postgres-application-pvc
