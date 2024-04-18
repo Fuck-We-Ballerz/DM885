@@ -29,10 +29,10 @@ class Assignment(db.Model):
     status = db.Column(db.Integer, default=0)
     requirements = db.Column(db.String(1000), default="No specific requirements")
 
-# In case we are not connected to the database, we can use this fallback
+# In case we are not connected to the database, we can use this as fallback
 fallback_assignments = [
     {"id": 1, "name": "DM507_AlgoDat", "status": 0, "requirements": "No specific requirements"},
-    {"id": 2, "name": "DM551_AlgoSand", "status": 1, "requirements": "No specific requirements"},
+    {"id": 2, "name": "DM551_AlgoSand", "status": 1, "requirements": "Nu skal du staffes"},
     {"id": 3, "name": "DM566_DmMl", "status": 3, "requirements": "No specific requirements"},
     {"id": 4, "name": "DM563_CP", "status": 4, "requirements": "No specific requirements"},
     {"id": 5, "name": "DM510_Operativsystemer", "status": 2, "requirements": "No specific requirements"}
@@ -137,7 +137,7 @@ def upload_file():
         return jsonify({'error': 'No selected file'}), 400
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        file.save(os.path.join('/user/uploaded', filename))
+        file.save(os.path.join('/user/upload', filename))
         return jsonify({'message': 'File successfully uploaded'}), 200
     else:
         return jsonify({'error': 'Invalid file type'}), 400
