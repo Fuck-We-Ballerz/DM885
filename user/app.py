@@ -71,7 +71,7 @@ def login():
                     session['username'] = student.username 
                     return redirect(url_for('student'))
                 else:
-                    return render_template('login.html', nav="Login", error="Invalid username or password")
+                    return redirect(url_for('login.html', nav="Login", error="Invalid username or password"))
             
             # In case the database is not connected. Used for testing without db
             except:
@@ -79,10 +79,10 @@ def login():
                     session['username'] = username 
                     return redirect(url_for('student'))
                 else:
-                    return render_template('login.html', nav="Login", error="Invalid username or password")
+                    redirect(url_for('login.html', nav="Login", error="Invalid username or password"))
                     
         else:
-            return render_template('login.html', nav="Login", error="Input cannot be empty")
+            return redirect(url_for('login.html', nav="Login", error="Input cannot be empty"))
     else:
         return render_template('login.html', nav="Login")
 
