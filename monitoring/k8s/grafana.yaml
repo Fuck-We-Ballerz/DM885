@@ -113,7 +113,7 @@ spec:
                 name: postgres-application 
           - name: POSTGRES_DB
             valueFrom:
-              secretKeyRef:
+              configMapKeyRef:
                 key: POSTGRES_DB
                 name: postgres-application
           ports:

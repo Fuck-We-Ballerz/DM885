@@ -26,5 +26,10 @@
             "group": "build",
             "dependsOn":["Deploy infrastructure", "Deploy monitoring"]
         },
+        {   "label": "Delete everything",
+            "group": "build",
+            "type": "shell",
+            "command": "kubectl delete deployments,pods,services,secrets,configmaps,replicasets,statefulsets,daemonsets,ingresses,jobs,cronjobs --all"
+        }
   ]
 }

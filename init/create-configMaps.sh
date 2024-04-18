@@ -5,9 +5,9 @@ kubectl delete configmap --all
 # Infrastructure configMaps
 kubectl create configmap relation-sql --from-file=infrastructure/relation.sql
 kubectl create configmap keycloak-realm --from-file=infrastructure/realm.json
-kubectl create configmap postgress-application --from-file=infrastructure/postgres-application.env
-kubectl create configmap postgress-keycloak --from-file=infrastructure/postgres-keycloak.env
-kubectl create configmap keycloak --from-file=infrastructure/keycloak.env
+kubectl create configmap postgres-application --from-env-file=infrastructure/postgres-application.env
+kubectl create configmap postgres-keycloak --from-env-file=infrastructure/postgres-keycloak.env
+kubectl create configmap keycloak --from-env-file=infrastructure/keycloak.env
 
 # Monitoring configMaps
 kubectl create configmap grafana-datasources-config --from-file=monitoring/grafana-datasources.yml
@@ -26,3 +26,6 @@ do
   kubectl delete configmap "grafana-dashboard-$name" --ignore-not-found
   kubectl create configmap "grafana-dashboard-$name" --from-file="$file"
 done
+
+# Prometheus configMaps
+kubectl create configmap prometheus --from-file=monitoring/prometheus.yml
