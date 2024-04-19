@@ -18,6 +18,8 @@ spec:
         envFrom:
         - secretRef:
             name: postgres-application
+        - configMapRef:
+            name: postgres-application
         ports:
         - containerPort: 5432
         volumeMounts:
