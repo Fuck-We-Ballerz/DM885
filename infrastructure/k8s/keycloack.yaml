@@ -3,10 +3,12 @@ kind: Service
 metadata:
   name: keycloak
 spec:
+  type: NodePort
   ports:
   - name: "3200"
     port: 3200
     targetPort: 8080
+    nodePort: 32000
   selector:
     app: keycloak
 ---

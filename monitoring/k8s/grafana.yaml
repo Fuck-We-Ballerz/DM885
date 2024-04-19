@@ -15,107 +15,15 @@ spec:
       containers:
         - name: grafana
           image: grafana/grafana:latest
-          env:
-          # - name: GF_AUTH_DISABLE_LOGIN_FORM
-          #   valueFrom:
-          #     configMapKeyRef:
-          #       key: GF_AUTH_DISABLE_LOGIN_FORM
-          #       name: grafana
-          # - name: GF_AUTH_GENERIC_OAUTH_ALLOW_ASSIGN_GRAFANA_ADMIN
-          #   valueFrom:
-          #     configMapKeyRef:
-          #       key: GF_AUTH_GENERIC_OAUTH_ALLOW_ASSIGN_GRAFANA_ADMIN
-          #       name: grafana
-          # - name: GF_AUTH_GENERIC_OAUTH_ALLOW_SIGN_UP
-          #   valueFrom:
-          #     configMapKeyRef:
-          #       key: GF_AUTH_GENERIC_OAUTH_ALLOW_SIGN_UP
-          #       name: grafana
-          # - name: GF_AUTH_GENERIC_OAUTH_API_URL
-          #   valueFrom:
-          #     configMapKeyRef:
-          #       key: GF_AUTH_GENERIC_OAUTH_API_URL
-          #       name: grafana
-          # - name: GF_AUTH_GENERIC_OAUTH_AUTH_URL
-          #   valueFrom:
-          #     configMapKeyRef:
-          #       key: GF_AUTH_GENERIC_OAUTH_AUTH_URL
-          #       name: grafana
-          # - name: GF_AUTH_GENERIC_OAUTH_CLIENT_ID
-          #   valueFrom:
-          #     configMapKeyRef:
-          #       key: GF_AUTH_GENERIC_OAUTH_CLIENT_ID
-          #       name: grafana
-          #- name: GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET
-          #  valueFrom:
-          #    secretRef:
-          #      key: GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET
-          #      name: grafana
-          # - name: GF_AUTH_GENERIC_OAUTH_EMAIL_ATTRIBUTE_PATH
-          #   valueFrom:
-          #     configMapKeyRef:
-          #       key: GF_AUTH_GENERIC_OAUTH_EMAIL_ATTRIBUTE_PATH
-          #       name: grafana
-          # - name: GF_AUTH_GENERIC_OAUTH_ENABLED
-          #   valueFrom:
-          #     configMapKeyRef:
-          #       key: GF_AUTH_GENERIC_OAUTH_ENABLED
-          #       name: grafana
-          # - name: GF_AUTH_GENERIC_OAUTH_LOGIN_ATTRIBUTE_PATH
-          #   valueFrom:
-          #     configMapKeyRef:
-          #       key: GF_AUTH_GENERIC_OAUTH_LOGIN_ATTRIBUTE_PATH
-          #       name: grafana
-          # - name: GF_AUTH_GENERIC_OAUTH_NAME
-          #   valueFrom:
-          #     configMapKeyRef:
-          #       key: GF_AUTH_GENERIC_OAUTH_NAME
-          #       name: grafana
-          # - name: GF_AUTH_GENERIC_OAUTH_NAME_ATTRIBUTE_PATH
-          #   valueFrom:
-          #     configMapKeyRef:
-          #       key: GF_AUTH_GENERIC_OAUTH_NAME_ATTRIBUTE_PATH
-          #       name: grafana
-          # - name: GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH
-          #   valueFrom:
-          #     configMapKeyRef:
-          #       key: GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH
-          #       name: grafana
-          # - name: GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_STRICT
-          #   valueFrom:
-          #     configMapKeyRef:
-          #       key: GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_STRICT
-          #       name: grafana
-          # - name: GF_AUTH_GENERIC_OAUTH_SCOPES
-          #   valueFrom:
-          #     configMapKeyRef:
-          #       key: GF_AUTH_GENERIC_OAUTH_SCOPES
-          #       name: grafana
-          # - name: GF_AUTH_GENERIC_OAUTH_TLS_SKIP_VERIFY_INSECURE
-          #   valueFrom:
-          #     configMapKeyRef:
-          #       key: GF_AUTH_GENERIC_OAUTH_TLS_SKIP_VERIFY_INSECURE
-          #       name: grafana
-          # - name: GF_AUTH_GENERIC_OAUTH_TOKEN_URL
-          #   valueFrom:
-          #     configMapKeyRef:
-          #       key: GF_AUTH_GENERIC_OAUTH_TOKEN_URL
-          #       name: grafana
-          - name: POSTGRES_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                key: POSTGRES_PASSWORD
-                name: postgres-application
-          - name: POSTGRES_USER
-            valueFrom:
-              secretKeyRef:
-                key: POSTGRES_USER
-                name: postgres-application 
-          - name: POSTGRES_DB
-            valueFrom:
-              configMapKeyRef:
-                key: POSTGRES_DB
-                name: postgres-application
+          envFrom:
+          # - configMapRef:
+          #     name: grafana
+          # - secretRef:
+          #     name: grafana
+          - configMapRef:
+              name: postgres-application
+          - secretRef:
+              name: postgres-application
           ports:
           - containerPort: 3000
           volumeMounts:

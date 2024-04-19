@@ -10,7 +10,7 @@ kubectl create configmap postgres-keycloak --from-env-file=infrastructure/postgr
 kubectl create configmap keycloak --from-env-file=infrastructure/keycloak.env
 
 # Monitoring configMaps
-kubectl create configmap grafana-datasources-config --from-file=monitoring/grafana-datasources.yml
+kubectl create configmap grafana-datasources-config --from-file=monitoring/grafana-datasources.yaml
 kubectl create configmap grafana --from-env-file=monitoring/grafana.env
 
 DASHBOARDS_DIR="monitoring/dashboards"
@@ -27,5 +27,5 @@ do
   kubectl create configmap "grafana-dashboard-$name" --from-file="$file"
 done
 
-# Prometheus configMaps
-kubectl create configmap prometheus --from-file=monitoring/prometheus.yml
+kubectl create configmap prometheus --from-file=monitoring/prometheus.yaml
+kubectl create configmap promtail --from-file=monitoring/promtail.yaml
