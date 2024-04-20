@@ -32,6 +32,6 @@ echo KC_DB_PASSWORD=postgres >> $KEYCLOAK_DEV_ENV
 
 echo GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=$REALM_GRAFANA_SECRET > $GRAFANA_DEV_ENV
 
-CONNECTION_STRING=postgresql://admin:admin@postgres-application:5432/postgres?sslmode=disable
+CONNECTION_STRING=postgresql://postgres:postgres@postgres-application:5432/postgres?sslmode=disable
 echo DATA_SOURCE_NAME= $CONNECTION_STRING >> $PG_EXPORTER_DEV_ENV
 

@@ -18,8 +18,8 @@ spec:
           envFrom:
           # - configMapRef:
           #     name: grafana
-          # - secretRef:
-          #     name: grafana
+          - secretRef:
+              name: grafana
           - configMapRef:
               name: postgres-application
           - secretRef:
