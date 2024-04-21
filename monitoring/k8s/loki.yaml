@@ -3,7 +3,6 @@ kind: Service
 metadata:
   name: loki
 spec:
-  clusterIP: 10.96.0.50
   selector:
     app: loki
   ports:

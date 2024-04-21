@@ -3,12 +3,10 @@ kind: Service
 metadata:
   name: keycloak
 spec:
-  clusterIP: 10.96.0.42
-  ports:
-  - name: "3200"
-    port: 3200
   selector:
     app: keycloak
+  ports:
+  - port: 3200
 ---
 apiVersion: apps/v1
 kind: Deployment
