@@ -34,7 +34,7 @@ spec:
         - configMapRef:
             name: keycloak
         ports:
-          containerPort: 8080
+          - containerPort: 8080
         volumeMounts:
           - name: keycloak-volume
             mountPath: /opt/keycloak/data/import
