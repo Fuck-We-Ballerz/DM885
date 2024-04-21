@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: Pod
-metadata:
-  name: log-generator
-spec:
-  containers:
-  - name: logger
-    image: busybox
-    command: ["/bin/sh", "-c", "while true; do echo '$(date) - This is a test log message'; sleep 1; done"]

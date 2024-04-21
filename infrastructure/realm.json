@@ -873,7 +873,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "${CUSTOM_KC_GRAFANA_REALM_SECRET}",
+      "secret": "Z3UIkhnpy7fXPKnrhjkrUov1379wUgTU",
       "redirectUris": ["http://localhost:3000/*"],
       "webOrigins": ["http://localhost:3000"],
       "notBefore": 0,

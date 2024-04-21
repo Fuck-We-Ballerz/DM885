@@ -4,7 +4,9 @@ metadata:
   name: postgres-keycloak
 spec:
   ports:
-  - port: 5432
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
   selector:
     app: postgres-keycloak
   type: ClusterIP
@@ -30,7 +32,6 @@ spec:
               name: postgres-keycloak
         ports:
         - containerPort: 5432
-          name: postgres
         volumeMounts:
         - name: postgres-storage
           mountPath: "/var/lib/postgresql/data" 
