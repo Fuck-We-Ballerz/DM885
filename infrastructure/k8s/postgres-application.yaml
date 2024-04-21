@@ -13,28 +13,26 @@ spec:
         app: postgres-application
     spec:
       containers:
-      - name: postgres-application
-        image: postgres:latest
-        envFrom:
-        - secretRef:
-            name: postgres-application
-        - configMapRef:
-            name: postgres-application
-        ports:
-        - containerPort: 5432
-        volumeMounts:
-        - mountPath: /docker-entrypoint-initdb.d
-          name: configmap-volume
-          readOnly: true 
-        - mountPath: /var/lib/postgresql/data
-          name: postgres-application-pvc
+        - name: postgres-application
+          image: postgres:latest
+          envFrom:
+            - secretRef:
+                name: postgres-application
+            - configMapRef:
+                name: postgres-application
+          volumeMounts:
+            - mountPath: /docker-entrypoint-initdb.d
+              name: configmap-volume
+              readOnly: true
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-application-pvc
       volumes:
-      - name: configmap-volume
-        configMap:
-          name: relation-sql
-      - name: postgres-application-pvc
-        persistentVolumeClaim:
-          claimName: postgres-application-pvc
+        - name: configmap-volume
+          configMap:
+            name: relation-sql
+        - name: postgres-application-pvc
+          persistentVolumeClaim:
+            claimName: postgres-application-pvc
 
 ---
 apiVersion: v1
@@ -45,9 +43,7 @@ spec:
   selector:
     app: postgres-application
   ports:
-  - protocol: TCP
-    port: 5432
-    targetPort: 5432
+    - port: 5432
 
 ---
 apiVersion: v1

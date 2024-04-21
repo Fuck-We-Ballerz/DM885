@@ -13,14 +13,12 @@ spec:
         app: postgres-exporter
     spec:
       containers:
-      - name: postgres-exporter
-        image: bitnami/postgres-exporter:latest
-        ports:
-        - containerPort: 9187
-        envFrom:
-        - secretRef:
-            name: postgres-exporter
-      restartPolicy: Always 
+        - name: postgres-exporter
+          image: bitnami/postgres-exporter:latest
+          envFrom:
+            - secretRef:
+                name: postgres-exporter
+      restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
@@ -30,5 +28,4 @@ spec:
   selector:
     app: postgres-application
   ports:
-    - protocol: TCP
-      port: 9187
+    - port: 9187

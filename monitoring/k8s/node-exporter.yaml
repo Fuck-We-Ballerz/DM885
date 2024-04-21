@@ -12,28 +12,28 @@ spec:
         app: node-exporter
     spec:
       containers:
-      - args:
-        - --path.procfs=/host/proc
-        - --path.sysfs=/host/sys
-        name: node-exporter
-        image: prom/node-exporter:latest
-        volumeMounts:
-        - mountPath: /host/proc
-          name: proc-volume
-          readOnly: true
-        - mountPath: /host/sys
-          name: sys-volume
-          readOnly: true
-        - mountPath: /rootfs
-          name: rootfs-volume
-          readOnly: true
+        - args:
+            - --path.procfs=/host/proc
+            - --path.sysfs=/host/sys
+          name: node-exporter
+          image: prom/node-exporter:latest
+          volumeMounts:
+            - mountPath: /host/proc
+              name: proc-volume
+              readOnly: true
+            - mountPath: /host/sys
+              name: sys-volume
+              readOnly: true
+            - mountPath: /rootfs
+              name: rootfs-volume
+              readOnly: true
       volumes:
-      - name: proc-volume
-        hostPath:
-          path: /proc
-      - name: sys-volume
-        hostPath:
-          path: /sys
-      - name: rootfs-volume
-        hostPath:
-          path: /
+        - name: proc-volume
+          hostPath:
+            path: /proc
+        - name: sys-volume
+          hostPath:
+            path: /sys
+        - name: rootfs-volume
+          hostPath:
+            path: /

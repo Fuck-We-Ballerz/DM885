@@ -6,8 +6,7 @@ spec:
   selector:
     app: loki
   ports:
-    - protocol: TCP
-      port: 3100
+    - port: 3100
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -26,11 +25,9 @@ spec:
       containers:
         - name: loki
           image: grafana/loki:latest
-          ports:
-            - containerPort: 3100
           volumeMounts:
             - name: loki-data
               mountPath: /tmp/loki
       volumes:
-      - name: loki-data
-        emptyDir: {}
+        - name: loki-data
+          emptyDir: {}

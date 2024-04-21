@@ -4,9 +4,7 @@ metadata:
   name: postgres-keycloak
 spec:
   ports:
-  - protocol: TCP
-    port: 5432
-    targetPort: 5432
+    - port: 5432
   selector:
     app: postgres-keycloak
   type: ClusterIP
@@ -25,20 +23,18 @@ spec:
         app: postgres-keycloak
     spec:
       containers:
-      - image: postgres:latest
-        name: postgres-keycloak
-        envFrom:
-          - secretRef:
-              name: postgres-keycloak
-        ports:
-        - containerPort: 5432
-        volumeMounts:
-        - name: postgres-storage
-          mountPath: "/var/lib/postgresql/data" 
+        - image: postgres:latest
+          name: postgres-keycloak
+          envFrom:
+            - secretRef:
+                name: postgres-keycloak
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: "/var/lib/postgresql/data"
       volumes:
-      - name: postgres-storage
-        persistentVolumeClaim:
-          claimName: postgres-keycloak-pvc
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-keycloak-pvc
 ---
 kind: PersistentVolume
 apiVersion: v1

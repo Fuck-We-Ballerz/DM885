@@ -6,9 +6,7 @@ spec:
   selector:
     app: keycloak
   ports:
-  - protocol: TCP
-    port: 3200
-    targetPort: 8080
+    - port: 8080
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -25,20 +23,18 @@ spec:
         app: keycloak
     spec:
       containers:
-      - name: keycloak
-        image: quay.io/keycloak/keycloak:latest 
-        args: ["start-dev","--import-realm"]
-        envFrom:
-        - secretRef:
-            name: keycloak
-        - configMapRef:
-            name: keycloak
-        ports:
-          - containerPort: 8080
-        volumeMounts:
-          - name: keycloak-volume
-            mountPath: /opt/keycloak/data/import
-      volumes: 
-      - name: keycloak-volume
-        configMap:
-          name: keycloak-realm
+        - name: keycloak
+          image: quay.io/keycloak/keycloak:latest
+          args: ["start-dev", "--import-realm"]
+          envFrom:
+            - secretRef:
+                name: keycloak
+            - configMapRef:
+                name: keycloak
+          volumeMounts:
+            - name: keycloak-volume
+              mountPath: /opt/keycloak/data/import
+      volumes:
+        - name: keycloak-volume
+          configMap:
+            name: keycloak-realm

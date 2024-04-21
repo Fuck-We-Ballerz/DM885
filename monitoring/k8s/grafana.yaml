@@ -16,21 +16,19 @@ spec:
         - name: grafana
           image: grafana/grafana:latest
           envFrom:
-          - configMapRef:
-              name: grafana
-          - secretRef:
-              name: grafana
-          - configMapRef:
-              name: postgres-application
-          - secretRef:
-              name: postgres-application
-          ports:
-          - containerPort: 3000
+            - configMapRef:
+                name: grafana
+            - secretRef:
+                name: grafana
+            - configMapRef:
+                name: postgres-application
+            - secretRef:
+                name: postgres-application
           volumeMounts:
-          - name: grafana-datasources-config
-            mountPath: /etc/grafana/provisioning/datasources/
-          - name: dashboards-folder
-            mountPath: /etc/grafana/provisioning/dashboards/
+            - name: grafana-datasources-config
+              mountPath: /etc/grafana/provisioning/datasources/
+            - name: dashboards-folder
+              mountPath: /etc/grafana/provisioning/dashboards/
       volumes:
         - name: grafana-datasources-config
           configMap:
@@ -61,6 +59,4 @@ spec:
   selector:
     app: grafana
   ports:
-    - protocol: TCP
-      port: 3000
-      targetPort: 3000
+    - port: 3000
