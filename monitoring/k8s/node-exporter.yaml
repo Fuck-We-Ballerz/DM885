@@ -1,6 +1,8 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
+  labels:
+    app: node-exporter
   name: node-exporter
 spec:
   selector:
@@ -8,32 +10,57 @@ spec:
       app: node-exporter
   template:
     metadata:
+      annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
       labels:
         app: node-exporter
     spec:
       containers:
-        - args:
-            - --path.procfs=/host/proc
-            - --path.sysfs=/host/sys
-          name: node-exporter
-          image: prom/node-exporter:latest
-          volumeMounts:
-            - mountPath: /host/proc
-              name: proc-volume
-              readOnly: true
-            - mountPath: /host/sys
-              name: sys-volume
-              readOnly: true
-            - mountPath: /rootfs
-              name: rootfs-volume
-              readOnly: true
+      - args:
+        - --web.listen-address=0.0.0.0:9100
+        - --path.procfs=/host/proc
+        - --path.sysfs=/host/sys
+        image: quay.io/prometheus/node-exporter:v0.18.1
+        imagePullPolicy: IfNotPresent
+        name: node-exporter
+        resources:
+          limits:
+            cpu: 200m
+            memory: 50Mi
+          requests:
+            cpu: 100m
+            memory: 30Mi
+        volumeMounts:
+        - mountPath: /host/proc
+          name: proc
+          readOnly: true
+        - mountPath: /host/sys
+          name: sys
+          readOnly: true
+      hostNetwork: true
+      hostPID: true
+      restartPolicy: Always
+      tolerations:
+      - effect: NoSchedule
+        operator: Exists
+      - effect: NoExecute
+        operator: Exists
       volumes:
-        - name: proc-volume
-          hostPath:
-            path: /proc
-        - name: sys-volume
-          hostPath:
-            path: /sys
-        - name: rootfs-volume
-          hostPath:
-            path: /
+      - hostPath:
+          path: /proc
+          type: ""
+        name: proc
+      - hostPath:
+          path: /sys
+          type: ""
+        name: sys
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-exporter
+spec:
+  ports:
+  - port: 9100
+  selector:
+    app: node-exporter

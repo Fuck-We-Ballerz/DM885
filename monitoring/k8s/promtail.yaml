@@ -2,24 +2,25 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: promtail-daemonset
+  labels:
+    app: promtail
+  name: promtail
 spec:
   selector:
     matchLabels:
-      name: promtail
+      app: promtail
   template:
     metadata:
       labels:
-        name: promtail
+        app: promtail
     spec:
-      serviceAccount: promtail-serviceaccount
       containers:
         - name: promtail-container
           image: grafana/promtail
           args:
             - -config.file=/etc/promtail/promtail.yaml
           env:
-            - name: "HOSTNAME" # needed when using kubernetes_sd_configs
+            - name: "HOSTNAME"
               valueFrom:
                 fieldRef:
                   fieldPath: "spec.nodeName"
@@ -41,38 +42,13 @@ spec:
         - name: promtail-config
           configMap:
             name: promtail
---- # Clusterrole.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: promtail-clusterrole
-rules:
-  - apiGroups: [""]
-    resources:
-      - nodes
-      - services
-      - pods
-    verbs:
-      - get
-      - watch
-      - list
-
---- # ServiceAccount.yaml
+---
 apiVersion: v1
-kind: ServiceAccount
+kind: Service
 metadata:
-  name: promtail-serviceaccount
-
---- # Rolebinding.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: promtail-clusterrolebinding
-subjects:
-  - kind: ServiceAccount
-    name: promtail-serviceaccount
-    namespace: default
-roleRef:
-  kind: ClusterRole
-  name: promtail-clusterrole
-  apiGroup: rbac.authorization.k8s.io
+  name: promtail
+spec:
+  ports:
+  - port: 9080
+  selector:
+    app: promtail

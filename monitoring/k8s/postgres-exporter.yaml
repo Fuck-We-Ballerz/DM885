@@ -26,6 +26,6 @@ metadata:
   name: postgres-exporter
 spec:
   selector:
-    app: postgres-application
+    app: postgres-exporter
   ports:
     - port: 9187
