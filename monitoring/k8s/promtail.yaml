@@ -14,6 +14,7 @@ spec:
       labels:
         app: promtail
     spec:
+      serviceAccount: promtail-serviceaccount
       containers:
         - name: promtail-container
           image: grafana/promtail
@@ -42,6 +43,41 @@ spec:
         - name: promtail-config
           configMap:
             name: promtail
+--- # Clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: promtail-clusterrole
+rules:
+  - apiGroups: [""]
+    resources:
+      - nodes
+      - services
+      - pods
+    verbs:
+      - get
+      - watch
+      - list
+
+--- # ServiceAccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: promtail-serviceaccount
+
+--- # Rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: promtail-clusterrolebinding
+subjects:
+  - kind: ServiceAccount
+    name: promtail-serviceaccount
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: promtail-clusterrole
+  apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: v1
 kind: Service
