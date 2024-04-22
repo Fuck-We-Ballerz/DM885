@@ -46,10 +46,6 @@ spec:
                   name: grafana-dashboard-node-exporter
               - configMap:
                   name: grafana-dashboard-loki-metrics
-              - configMap:
-                  name: grafana-dashboard-promtail-loki
-              - configMap:
-                  name: grafana-dashboard-keycloak-metrics
 ---
 apiVersion: v1
 kind: Service
