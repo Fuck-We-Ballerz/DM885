@@ -1,0 +1,12 @@
+apiVersion: v1
+stringData:
+  CUSTOM_KC_APPLICATION_REALM_SECRET: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+  CUSTOM_KC_GRAFANA_REALM_SECRET: Z3UIkhnpy7fXPKnrhjkrUov1379wUgTU
+  KC_DB_PASSWORD: postgres
+  KC_DB_USERNAME: postgres
+  KEYCLOAK_ADMIN: admin
+  KEYCLOAK_ADMIN_PASSWORD: admin
+kind: Secret
+metadata:
+  name: keycloak
+type: Opaque

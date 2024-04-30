@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: grafana
-          image: grafana/grafana:latest
+          image: grafana-custom
+          imagePullPolicy: Never
           envFrom:
             - configMapRef:
                 name: grafana
@@ -27,25 +28,10 @@ spec:
           volumeMounts:
             - name: grafana-datasources-config
               mountPath: /etc/grafana/provisioning/datasources/
-            - name: dashboards-folder
-              mountPath: /etc/grafana/provisioning/dashboards/
       volumes:
         - name: grafana-datasources-config
           configMap:
             name: grafana-datasources-config
-        - name: dashboards-folder
-          projected:
-            sources:
-              - configMap:
-                  name: grafana-dashboard-dashboard
-              - configMap:
-                  name: grafana-dashboard-postgres-exporter
-              - configMap:
-                  name: grafana-dashboard-prometheus-metrics
-              - configMap:
-                  name: grafana-dashboard-node-exporter
-              - configMap:
-                  name: grafana-dashboard-loki-metrics
 ---
 apiVersion: v1
 kind: Service

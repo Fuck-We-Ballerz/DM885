@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  DATA_SOURCE_NAME: postgresql://${{APPLICATION_POSTGRES_USER}}:${{APPLICATION_POSTGRES_PASSWORD}}@postgres-application:5432/postgres?ssl 
+kind: Secret
+metadata:
+  name: postgres-exporter
+type: Opaque

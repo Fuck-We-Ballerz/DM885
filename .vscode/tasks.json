@@ -2,29 +2,35 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Initialize",
+            "label": "ConfigMaps",
             "group": "build",
             "type": "shell",
-            "command": "./init/init.sh"
+            "command": "kubectl apply -f infrastructure/configMaps && kubectl apply -f monitoring/configMaps"
         },
         {
-            "label": "Deploy infrastructure",
+            "label": "Secrets",
             "group": "build",
             "type": "shell",
-            "dependsOn":["Initialize"],
-            "command": "kubectl apply -f infrastructure/k8s"
+            "command": "kubectl apply -f infrastructure/secrets-dev && kubectl apply -f monitoring/secrets-dev"
         },
         {
-            "label": "Deploy monitoring",
+            "label": "Build Grafana",
             "group": "build",
             "type": "shell",
-            "dependsOn":["Initialize"],
-            "command": "kubectl apply -f monitoring/k8s"
+            "command": "eval $(minikube docker-env) && docker build monitoring -f monitoring/docker/Dockerfile.grafana -t grafana-custom"
         },
         {
-            "label": "Deploy everything",
+            "label": "Init",
             "group": "build",
-            "dependsOn":["Deploy infrastructure", "Deploy monitoring"]
+            "type": "shell",
+            "dependsOn":["Build Grafana", "ConfigMaps", "Secrets"]
+        },
+        {
+            "label": "Deploy",
+            "group": "build",
+            "type": "shell",
+            "dependsOn":["Init"],
+            "command": "kubectl apply -f infrastructure/k8s && kubectl apply -f monitoring/k8s"
         }
   ]
 }

@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  POSTGRES_PASSWORD: ${{ APPLICATION_POSTGRES_PASSWORD }}
+  POSTGRES_USER: ${{ APPLICATION_POSTGRES_USER }}
+kind: Secret
+metadata:
+  name: postgres-application
+type: Opaque
