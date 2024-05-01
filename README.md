@@ -36,6 +36,10 @@ Exploring microservices using Kubernetes!
     </li>
     <li>
       <a href="#👷‍♂️-getting-started">👷‍♂️ Getting Started</a>
+    </li>
+    <li>
+      <a href="#👨‍💻-assisting-dev-tools">👨‍💻 Assisting Dev Tools</a>
+    </li>
     <li>
         <a href="#✅-todo">✅ TODO</a>
     </li>
