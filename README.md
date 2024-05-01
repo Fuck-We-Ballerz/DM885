@@ -95,11 +95,16 @@ This separation of environments is achieved by creating two secret configuration
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## ✅ TODO
+This section is dedicated to highlighting areas in the project that require further attention or improvement. These areas could be related to functionality, maintainability, or even critical aspects such as security. The following list provides a brief overview of the tasks that need to be addressed:
 
-- Testing.
-- Oploading af filer.
-- Tracking af submission.
-- Stop submission.
+* Testing: Implement comprehensive testing strategies to ensure the application behaves as expected under various conditions. This includes unit tests, integration tests, and end-to-end tests.
+* Upload of Files: Develop a secure and efficient file upload feature.
+* Tracking of Submissions: Create a system to track user submissions. This could involve logging submission times, user details, and the status of the submission.
+* Stop Submission: Implement a feature that allows users or administrators to stop or cancel a submission process. This could be useful in situations where an error has been identified or a change needs to be made.
+* Create Self-Signed Certificates for Development: For local development and testing, generate self-signed SSL certificates. This will allow for testing of HTTPS connections and other SSL-dependent features.
+* Signed Certificates for Production: For the production environment, obtain SSL certificates signed by a trusted Certificate Authority (CA). This is crucial for ensuring the security of data in transit and building trust with end users.
+
+Remember, this is a living document. As the project evolves, new tasks may emerge and existing ones may become irrelevant.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
