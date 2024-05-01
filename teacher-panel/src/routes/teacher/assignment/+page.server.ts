@@ -4,7 +4,7 @@ import type { PageServerLoad } from './$types';
 
 import postgres from 'postgres';
 
-const queryClient = postgres('postgres://admin:admin@postgres_application:5432/testdb')
+const queryClient = postgres('postgres://admin:admin@postgres-application:5432/postgres')
 
 const db = drizzle(queryClient, {schema: {...schema}});
 

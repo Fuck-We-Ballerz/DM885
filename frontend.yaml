@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: student-service
+spec:
+  selector:
+    app: student-service
+  ports:
+    - port: 5050
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: student-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: student-service
+  template:
+    metadata:
+      labels:
+        app: student-service
+    spec:
+      containers:
+        - name: student-service
+          image: python-custom
+          imagePullPolicy: Never
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: teacher-service
+spec:
+  selector:
+    app: teacher-service
+  ports:
+    - port: 5173
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: teacher-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: teacher-service
+  template:
+    metadata:
+      labels:
+        app: teacher-service
+    spec:
+      containers:
+        - name: student-service
+          image: node-custom
+          imagePullPolicy: Never

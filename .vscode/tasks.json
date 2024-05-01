@@ -17,20 +17,32 @@
             "label": "Build Grafana",
             "group": "build",
             "type": "shell",
-            "command": "eval $(minikube docker-env) && docker build monitoring -f monitoring/docker/Dockerfile.grafana -t grafana-custom"
+            "command": "eval $(minikube docker-env) && docker build monitoring -f monitoring/Dockerfile.grafana -t grafana-custom"
+        },
+        {
+            "label": "Build User",
+            "group": "build",
+            "type": "shell",
+            "command": "eval $(minikube docker-env) && docker build user -f user/Dockerfile -t python-custom"
+        },
+        {
+            "label": "Build Teacher",
+            "group": "build",
+            "type": "shell",
+            "command": "eval $(minikube docker-env) && docker build teacher-panel -f teacher-panel/Dockerfile -t node-custom"
         },
         {
             "label": "Init",
             "group": "build",
             "type": "shell",
-            "dependsOn":["Build Grafana", "ConfigMaps", "Secrets"]
+            "dependsOn":["Build Grafana", "Build User", "Build Teacher", "ConfigMaps", "Secrets"]
         },
         {
             "label": "Deploy",
             "group": "build",
             "type": "shell",
             "dependsOn":["Init"],
-            "command": "kubectl apply -f infrastructure/k8s && kubectl apply -f monitoring/k8s"
+            "command": "kubectl apply -f infrastructure/k8s && kubectl apply -f monitoring/k8s && kubectl apply -f frontend.yaml"
         }
   ]
 }
