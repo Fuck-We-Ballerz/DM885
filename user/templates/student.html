@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div style="text-align: center;">
+    <h1>Welcome to the home page.</h1>
+</div>
+<div style="text-align: center;">
+    <h2>Here are the statuses of your assignments.</h2>
+</div>
+
+<div class="list-group d-flex justify-content-center">
+    {% if assignments %}
+        {% for assignment in assignments %}
+            <a href="{{ url_for('submit_assignment', assignment_id=assignment.id) }}" class="list-group-item list-group-item-action text-center">
+                {{ assignment.name }}
+                <span style="height: 10px; width: 10px; background-color: 
+                    {% if assignment.status == 0 %}grey
+                    {% elif assignment.status == 1 %}blue
+                    {% elif assignment.status == 2 %}orange
+                    {% elif assignment.status == 3 %}green
+                    {% elif assignment.status == 4 %}red
+                    {% endif %}; border-radius: 50%; display: inline-block;"></span>
+            </a>
+        {% endfor %}
+    {% else %}
+        <a href="#" class="list-group-item list-group-item-action text-center">No assignments available</a>
+    {% endif %}
+</div>
+{% endblock %}
