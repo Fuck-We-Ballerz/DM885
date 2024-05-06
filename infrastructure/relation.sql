@@ -22,10 +22,13 @@ CREATE TABLE IF NOT EXISTS assignment (
   docker_image TEXT,
   config_id INT NOT NULL,
   course_id INT NOT NULL,
+  status INT DEFAULT 0,
+  requirements TEXT DEFAULT 'No specific requirements',
   PRIMARY KEY(id),
   FOREIGN KEY(config_id) REFERENCES assignment_config(id),
   FOREIGN KEY(course_id) REFERENCES course(id)
 );
+
 
 CREATE TABLE IF NOT EXISTS student (
   id INT GENERATED ALWAYS AS IDENTITY,

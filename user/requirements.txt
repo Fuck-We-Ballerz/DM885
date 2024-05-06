@@ -4,3 +4,4 @@ Flask-Bootstrap
 Werkzeug 
 Flask-SQLAlchemy 
 psycopg2-binary==2.9.9
+requests

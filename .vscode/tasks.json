@@ -36,7 +36,7 @@
             "label": "Run frontend",
             "type": "shell",
             "dependsOn": ["Deploy infrastructure [DEV]"],
-            "command": "docker compose up -d --build"
+            "command": "docker compose down && docker compose up -d --build"
         }
   ]
 }
