@@ -1,0 +1,1 @@
+<h1>Delete Teacher or Students</h1>

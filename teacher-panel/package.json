@@ -29,6 +29,7 @@
 	"type": "module",
 	"dependencies": {
 		"drizzle-orm": "^0.30.8",
+		"keycloak-js": "^24.0.3",
 		"postgres": "^3.4.4"
 	}
 }
