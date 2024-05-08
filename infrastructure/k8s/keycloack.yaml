@@ -31,6 +31,8 @@ spec:
                 name: keycloak
             - configMapRef:
                 name: keycloak
+            - configMapRef:
+                name: keycloak-env
           volumeMounts:
             - name: keycloak-volume
               mountPath: /opt/keycloak/data/import

@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  KC_HOSTNAME_URL: https://localhost/keycloak/
+  KC_HOSTNAME_ADMIN_URL: https://localhost/keycloak/
+kind: ConfigMap
+metadata:
+  name: keycloak-env

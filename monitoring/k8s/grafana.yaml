@@ -19,6 +19,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: grafana
+            - configMapRef:
+                name: grafana-env
             - secretRef:
                 name: grafana
             - configMapRef:

@@ -5,4 +5,5 @@ kubectl port-forward service/prometheus 9090:9090 &
 kubectl port-forward service/postgres-exporter 9187:9187 &
 kubectl port-forward service/promtail 9080:9080 &
 kubectl port-forward service/teacher-service 5173:5173 &
-kubectl port-forward service/student-service 5050:5050
+kubectl port-forward service/student-service 5050:5050 &
+kubectl port-forward service/kube-state-metrics 8080:8080

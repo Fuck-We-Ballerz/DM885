@@ -5,13 +5,19 @@
             "label": "ConfigMaps",
             "group": "build",
             "type": "shell",
-            "command": "kubectl apply -f infrastructure/configMaps && kubectl apply -f monitoring/configMaps"
+            "command": "kubectl apply -f infrastructure/configMaps && kubectl apply -f infrastructure/configMaps-dev && kubectl apply -f monitoring/configMaps && kubectl apply -f monitoring/configMaps-dev"
         },
         {
             "label": "Secrets",
             "group": "build",
             "type": "shell",
             "command": "kubectl apply -f infrastructure/secrets-dev && kubectl apply -f monitoring/secrets-dev"
+        },
+        {
+            "label": "Enable Ingress",
+            "group": "build",
+            "type": "shell",
+            "command": "minikube addons enable ingress"
         },
         {
             "label": "Build Grafana",
@@ -35,7 +41,7 @@
             "label": "Init",
             "group": "build",
             "type": "shell",
-            "dependsOn":["Build Grafana", "Build User", "Build Teacher", "ConfigMaps", "Secrets"]
+            "dependsOn":["Enable Ingress", "Build Grafana", "Build User", "Build Teacher", "ConfigMaps", "Secrets"]
         },
         {
             "label": "Deploy",
