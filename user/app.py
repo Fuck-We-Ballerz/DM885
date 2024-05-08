@@ -1,16 +1,17 @@
+from re import sub
 from flask import Flask, request, render_template, redirect, url_for, jsonify, session
 from flask_bootstrap import Bootstrap  # Import Flask-Bootstrap
 from werkzeug.utils import secure_filename
 import os
-from flask_sqlalchemy import *
 from logs_config import setup_logging
 import requests
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import BYTEA
+from database import db, Student, Assignment, Course, AssignmentConfig, Submission, init_db
 
 # Set up logger
-# set log_temrinal to True, if you want logs in the terminal, otherwise set to False
-log_terminal = True 
+# set log_terminal to True, if you want logs in the terminal, otherwise set to False
+log_terminal = True
 logger = setup_logging(log_terminal)
 
 app = Flask(__name__)
@@ -19,67 +20,11 @@ app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024  # for 64 MB limit
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:admin@postgres_application/testdb'
 
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-
-db = SQLAlchemy(app)
 app.secret_key = 'Jacobo'  # Set a secret key for session management
-
-class Student(db.Model):
-    __tablename__ = 'student'
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    name = db.Column(db.String(80), nullable=False)
-    password = db.Column(db.String(80), nullable=False)
-    
-class Assignment(db.Model):
-    __tablename__ = 'assignment'
-    id = db.Column(db.Integer, primary_key=True)
-    start_date = db.Column(db.DateTime, nullable=False)
-    end_date = db.Column(db.DateTime, nullable=False)
-    is_visible = db.Column(db.Boolean, nullable=False)
-    title = db.Column(db.String(64), nullable=False)
-    docker_image = db.Column(db.Text)
-    config_id = db.Column(db.Integer, db.ForeignKey('assignment_config.id'), nullable=False)
-    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
-    status = db.Column(db.Integer, default=0)
-    requirements = db.Column(db.String(1000), default="No specific requirements")
-    # Relationship to Course
-    course = db.relationship('Course', backref=db.backref('assignments', lazy=True))
-    
-    
-class Course(db.Model):
-    __tablename__ = 'course'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), nullable=False)
-    
-    
-class AssignmentConfig(db.Model):
-    __tablename__ = 'assignment_config'
-    id = db.Column(db.Integer, primary_key=True)
-    max_ram = db.Column(db.Integer, nullable=False)
-    max_cpu = db.Column(db.Float, nullable=False)
-    max_time = db.Column(db.Interval, nullable=False)
-    max_submission = db.Column(db.Integer, nullable=False)
-    # Relationship to Assignment
-    assignments = db.relationship('Assignment', backref='config', lazy=True)
-
-
-class Submission(db.Model):
-    __tablename__ = 'submission'
-    id = db.Column(db.Integer, primary_key=True)
-    grade = db.Column(db.String(64), default='Not graded', nullable=False)
-    status = db.Column(db.String(64), default='Pending', nullable=False)
-    submission = db.Column(BYTEA)  # For storing binary data, such as a zip file
-    submission_std = db.Column(db.String(64), default='', nullable=False)
-    submission_err = db.Column(db.String(64), default='', nullable=False)
-    submission_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    assignment_id = db.Column(db.Integer, db.ForeignKey('assignment.id'))
-    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
-
-    # Relationships
-    assignment = db.relationship('Assignment', backref=db.backref('submissions', lazy=True))
-    student = db.relationship('Student', backref=db.backref('submissions', lazy=True))
-
+# Initialize the database
+init_db(app)
 
 # In case we are not connected to the database, we can use this as fallback
 fallback_assignments = [
@@ -212,6 +157,29 @@ def submit_assignment(assignment_id):
     return render_template('submit.html', nav=f"{assignment.course}: {assignment.title}", assignment=assignment)
 
 
+@app.route('/student/cancel_assignment/<int:assignment_id>', methods=['POST'])
+def cancel_assignment(assignment_id):
+    if 'username' not in session:
+        return jsonify({'success': False, 'error': 'You need to login first'}), 403
+
+    try:
+        assignment = Assignment.query.get(assignment_id)
+        submission = Submission.query.filter_by(assignment_id=assignment_id).first()
+        if assignment:
+            assignment.status = 0
+            db.session.delete(submission)
+            db.session.commit()
+            logger.info(f"Assignment {assignment_id} status set to 0 by user {session['username']}")
+            return jsonify({'success': True}), 200
+        else:
+            logger.warning(f"Assignment {assignment_id} not found")
+            return jsonify({'success': False, 'error': 'Assignment not found'}), 404
+    except Exception as e:
+        logger.error(f"Failed to cancel assignment {assignment_id}: {e}")
+        return jsonify({'success': False, 'error': 'Failed to cancel assignment'}), 500
+
+
+
 @app.route('/student/upload', methods=['POST'])
 def upload_file():
     assignemt_id = session.get('assignment_id', 'No Assignment')
@@ -253,6 +221,7 @@ def upload_file():
             with(open(os.path.join(upload_folder, filename), 'rb')) as f:
                 data = f.read()
                 
+
             student = Student.query.filter_by(username=username).first()
             new_submission = Submission(assignment_id=assignemt_id, student_id=student.id, submission=data)
             db.session.add(new_submission)
