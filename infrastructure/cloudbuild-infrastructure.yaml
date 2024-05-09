@@ -1,0 +1,26 @@
+steps: 
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=$europe-west3'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=$dm885-grading-system'
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        kubectl apply -f infrastructure/configMaps-dev
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        kubectl apply -f infrastructure/secrets-dev
+
+  - name: 'gcr.io/cloud-builders/kubectl'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+      kubectl apply -f infrastructure/k8s
+
+
