@@ -28,8 +28,8 @@ export const actions = {
                     temporary: true
                 }
             ],
-            // groups: ["teacher-group"]
-            groups: ["admin-group"]
+            groups: ["teacher-group"]
+            // groups: ["admin-group"]
         };
 
         // const test = {
@@ -101,5 +101,5 @@ export const actions = {
         } else { 
             console.error('Failed to create user');
         }
-    }
+    } 
 } as Actions;

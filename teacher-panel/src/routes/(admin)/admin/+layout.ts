@@ -16,7 +16,6 @@ export const load: LayoutLoad = async ({data}) => {
   let kcInitOpts: KeycloakInitOptions = { 
     onLoad: "login-required", 
     checkLoginIframe: false,
-    redirectUri: "http://localhost:5173/admin",
   };
   
   let keycloakPromise;
