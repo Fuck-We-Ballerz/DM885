@@ -25,6 +25,10 @@ data:
         static_configs:
         - targets: [node-exporter:9100]
 
+      - job_name: kube-state-metrics
+        static_configs:
+        - targets: [kube-state-metrics.kube-system.svc.cluster.local:8080]
+
       - job_name: postgres-exporter
         static_configs:
         - targets: [postgres-exporter:9187]
