@@ -7,19 +7,16 @@
     import type {KeycloakLogoutOptions} from 'keycloak-js';
 
     export let data;
-    onMount(async () => {
-        setTimeout(async () => {
+    onMount(
+        () => setTimeout(() => {
             let logoutOptions: KeycloakLogoutOptions = {
                 redirectUri: "http://localhost:5173/",
             };
             if (data.keycloak) {
-                const keycloak = await data.keycloak;
-                if (keycloak) {
-                    keycloak.logout(logoutOptions);
-                }
+                data.keycloak.logout(logoutOptions);
             }
         }, 2000)
-    });
+    );
 </script>
 
 <p>Logging Out...</p>

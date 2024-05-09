@@ -5,6 +5,5 @@ export const load: PageLoad = async ({parent, data}) => {
   let {keycloak} = parentData;
   return {
     keycloak: keycloak,
-    home: "http://localhost:51743",
   }
 };

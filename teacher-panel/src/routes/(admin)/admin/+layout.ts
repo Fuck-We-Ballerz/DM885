@@ -9,13 +9,14 @@ export const load: LayoutLoad = async ({data}) => {
   let instance = {
     url: `http://localhost:3200/`,
     realm: 'DM885',
-    clientId: 'svelte'
+    clientId: 'svelte-admin'
   };
 
   let keycloak = new Keycloak(instance);
   let kcInitOpts: KeycloakInitOptions = { 
     onLoad: "login-required", 
     checkLoginIframe: false,
+    redirectUri: "http://localhost:5173/admin",
   };
   
   let keycloakPromise;
@@ -29,6 +30,7 @@ export const load: LayoutLoad = async ({data}) => {
   }
 
   return {
-    keycloak: keycloakPromise,
+    // keycloak: keycloakPromise,
+    keycloak
   };
 };
