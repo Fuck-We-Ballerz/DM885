@@ -16,10 +16,10 @@ data:
 
       - name: Postgres
         type: postgres
-        url: http://postgres-application:5432
-        user: $POSTGRES_USER
+        url: postgres-application:5432
+        user: postgres
         secureJsonData:
-          password: $POSTGRES_PASSWORD
+          password: postgres
         jsonData:
           database: postgres
           sslmode: 'disable' # disable/require/verify-ca/verify-full
