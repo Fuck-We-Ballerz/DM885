@@ -1,6 +1,8 @@
 import { boolean, foreignKey, integer, pgTable, primaryKey, serial, text, timestamp, unique, varchar } from 'drizzle-orm/pg-core';
+
 export const assignmentConfig = pgTable('assignment_config', {
   id: serial('id').primaryKey(),
+  name: varchar('name', {length: 64}).notNull(),
   max_ram: integer('max_ram').notNull(),
   max_cpu: integer('max_cpu').notNull(),
   max_time: integer('max_time').notNull(),
@@ -59,7 +61,6 @@ export const course = pgTable('course', {
     name: text('name')
 });
 
-
 export const student_to_course = pgTable('student_to_course', {
     id: serial('id').primaryKey(),
     student_id: integer('student_id').notNull().references(() => student.id),
@@ -72,12 +73,12 @@ export const teacher_to_course = pgTable('student_to_course', {
     course_id: integer('course_id').notNull().references(() => course.id),
 })
 
-export const studentToAssignment = pgTable('student_to_assignment', {
+export const student_to_assignment = pgTable('student_to_assignment', {
     assignment_id: integer('assignment_id').primaryKey().references(() => assignment.id),
     student_id: integer('student_id').primaryKey().references(() => student.id),
 });
 
-export const teacherToAssignment = pgTable('teacher_to_assignment', {
+export const teacher_to_assignment = pgTable('teacher_to_assignment', {
     assignment_id: integer('assignment_id').primaryKey().references(() => assignment.id),
     teacher_id: integer('teacher_id').primaryKey().references(() => teacher.id),
 });

@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS assignment_config (
   id INT GENERATED ALWAYS AS IDENTITY,
+  name VARCHAR(64) NOT NULL,
   max_ram INT NOT NULL,
   max_cpu FLOAT NOT NULL,
   max_time INTERVAL NOT NULL,
