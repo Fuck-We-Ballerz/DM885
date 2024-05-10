@@ -4,9 +4,11 @@ import type { Actions } from './$types'
 import type { PageServerLoad } from './$types'
 import postgres from 'postgres'
 import { eq } from 'drizzle-orm'
+import { PUBLIC_KEYCLOAK_POST_URL } from '$env/static/public';
 
-// const queryClient = postgres('postgres://admin:admin@postgres_application:5432/testdb') //Docker
-const queryClient = postgres('postgres://admin:admin@localhost:5432/testdb')
+
+const queryClient = postgres('postgres://admin:admin@postgres_application:5432/testdb') //Docker
+// const queryClient = postgres('postgres://admin:admin@localhost:5432/testdb')
 const db = drizzle(queryClient, {schema: {...schema}});
 
 export async function load({params}) {
@@ -31,8 +33,6 @@ export async function load({params}) {
             }
         })
 
-        // let output = teachersOutput.concat(studentOutput)
-        // console.log(output)
         return {
             teachers: teachersOutput,
             students: studentOutput
@@ -43,11 +43,8 @@ export async function load({params}) {
 export const actions = {
     default: async ({cookies, request}) => {
         const token = cookies.get('kc-cookie');
-
-        // Test students
-        // await db.insert(schema.student).values({name: "med", username: "ss", password: "hej"})
-        // await db.insert(schema.student).values({name: "sd", username: "saa", password: "hej"})
-
+        console.log(token)
+        
         const data = await request.formData();
         console.log(data)
 
@@ -60,22 +57,28 @@ export const actions = {
 
             if(resTeacher){
                 const teacherIdDb = resTeacher.id         
-
+                
+                console.log(`${ PUBLIC_KEYCLOAK_POST_URL}`)
+                console.log(`${ PUBLIC_KEYCLOAK_POST_URL }?username=${username}`)
                 console.log(`fetch user from keycloak`)
-                const response = await fetch(`http://localhost:3200/admin/realms/DM885/users?username=${username}`, {
+                // const response = await fetch(`http://localhost:3200/admin/realms/DM885/users?username=${username}`, { //local
+                const response = await fetch(`${ PUBLIC_KEYCLOAK_POST_URL }?username=${username}`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     }
                 });
+                console.log(response.status)
 
                 if(response.status === 200){
                     const responJ = await response.json();
+                    console.log(JSON.stringify(responJ))
                     const userId = responJ[0].id;
                     
                     console.log(`Deleting user from keycloak`)
-                    const responseDelete = await fetch(`http://localhost:3200/admin/realms/DM885/users/${userId}`, {
+                    // const responseDelete = await fetch(`http://localhost:3200/admin/realms/DM885/users/${userId}`, { //local
+                    const responseDelete = await fetch(`${ PUBLIC_KEYCLOAK_POST_URL }/${userId}`, {
                         method: 'DELETE',
                         headers: {
                             'Authorization': `Bearer ${token}`,
@@ -102,6 +105,7 @@ export const actions = {
                     }
                 } else{
                     console.log(`Failed to get ${username} from keycloak`);
+                    console.log(response.status)
                 }
             } else if(resStudent){
                 const studentIdDb = resStudent.id

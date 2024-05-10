@@ -5,8 +5,8 @@ import type { PageServerLoad } from './$types'
 import postgres from 'postgres'
 import { eq } from 'drizzle-orm'
 
-// const queryClient = postgres('postgres://admin:admin@postgres_application:5432/testdb') //Docker
-const queryClient = postgres('postgres://admin:admin@localhost:5432/testdb')
+const queryClient = postgres('postgres://admin:admin@postgres_application:5432/testdb') //Docker
+// const queryClient = postgres('postgres://admin:admin@localhost:5432/testdb')
 const db = drizzle(queryClient, {schema: {...schema}});
 
 export async function load({params}) {
