@@ -1,0 +1,23 @@
+options:
+  env:
+    - 'CLOUDSDK_COMPUTE_ZONE=europe-west3-a'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=dm885-grading-system'
+
+steps: 
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: 
+      - 'apply'
+      - '-f'
+      - 'infrastructure/configMaps'
+
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: 
+      - 'apply'
+      - '-f'
+      - 'infrastructure/secrets-dev'
+
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: 
+      - 'apply'
+      - '-f'
+      - 'infrastructure/k8s-cloud'
