@@ -33,7 +33,6 @@ spec:
         - name: postgres-application-pvc
           persistentVolumeClaim:
             claimName: postgres-application-pvc
-
 ---
 apiVersion: v1
 kind: Service
@@ -44,7 +43,6 @@ spec:
     app: postgres-application
   ports:
     - port: 5432
-
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -59,7 +57,6 @@ spec:
   storageClassName: manual
   hostPath:
     path: "/mnt/data/postgres-application"
-
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
