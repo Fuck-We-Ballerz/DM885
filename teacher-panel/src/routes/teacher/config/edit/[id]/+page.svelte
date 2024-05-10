@@ -28,10 +28,12 @@
             <tr>
               <td>Max CPU</td>
               <td><input type="number" name="max_cpu" bind:value={data.data.max_cpu} /></td>
+              <td>vCPU</td>
             </tr>
             <tr>
               <td>Max RAM</td>
               <td><input type="number" name="max_ram" bind:value={data.data.max_ram} /></td>
+              <td>MegaBytes</td>
             </tr>
             <tr>
               <td>Max Submissions</td>
@@ -39,7 +41,8 @@
             </tr>
             <tr>
               <td>Max Time</td>
-              <td><input type="number" name="max_time" bind:value={data.data.max_time} /></td>
+              <td><input type="number" name="max_time" value={data.data.max_time}/></td>
+              <td>seconds</td>
             </tr>
           </table>
         </div>

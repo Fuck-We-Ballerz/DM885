@@ -28,10 +28,8 @@
                                     <button style="background-color: red; padding: 5px;">Delete</button>
                                 </form>
                                 <!-- NOTE: What do I do here, I am not allowed to have post. I need to redirect. -->
-                                <form method="POST" action="/teacher/config/edit/{configuration.id}">
-                                    <input type="hidden" name="id" value="{configuration.id}">
-                                    <button style="background-color: blue; padding: 5px;">Edit</button>
-                                </form>
+                                <a href="/teacher/config/edit/{configuration.id}" style="padding: 5px;">Edit</a>
+                                
                             </div>
 
                             <div>

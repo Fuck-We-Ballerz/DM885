@@ -14,7 +14,7 @@ export const actions = {
             
             max_cpu: parseInt(data.get('max_cpu')!.toString()),
             max_ram: parseInt(data.get('max_ram')!.toString()),
-            max_time: parseInt(data.get('max_time')!.toString()),
+            max_time: data.get('max_time')!.toString(),
             max_submission: parseInt(data.get('max_submission')!.toString()),
         }).where(eq(schema.assignmentConfig.id, params.id));
     }
@@ -27,5 +27,17 @@ export const load: PageServerLoad = async ({params}) => {
         error(404, "Did not find any configuration with that ID");
     }
     
-    return { data: config, copy: config };
+    const parts = config.max_time.split(':');
+
+    let hours = parseInt(parts[0]);
+    let minutes = parseInt(parts[1]);
+    let seconds = parseInt(parts[2]);
+    const total = hours * 3600 + minutes * 60 + seconds;
+
+    return { data: {
+        max_cpu: config.max_cpu,
+        max_ram: config.max_ram,
+        max_time: total,
+        max_submission: config.max_submission
+    }, copy: config };
 };

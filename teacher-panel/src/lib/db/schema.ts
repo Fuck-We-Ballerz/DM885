@@ -1,11 +1,11 @@
-import { boolean, foreignKey, integer, pgTable, primaryKey, serial, text, timestamp, unique, varchar } from 'drizzle-orm/pg-core';
+import { boolean, interval, foreignKey, integer, pgTable, primaryKey, serial, text, timestamp, unique, varchar } from 'drizzle-orm/pg-core';
 
 export const assignmentConfig = pgTable('assignment_config', {
   id: serial('id').primaryKey(),
   name: varchar('name', {length: 64}).notNull(),
   max_ram: integer('max_ram').notNull(),
   max_cpu: integer('max_cpu').notNull(),
-  max_time: integer('max_time').notNull(),
+  max_time: interval('max_time').notNull(),
   max_submission: integer('max_submission').notNull(),
 });
 
