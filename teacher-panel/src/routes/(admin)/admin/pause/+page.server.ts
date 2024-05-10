@@ -33,11 +33,11 @@ export const actions = {
         const data = await request.formData();
         console.log(data)
         for (const entry of data.entries()) {  //entries [username, value]
-        console.log(`inserting ${entry[0]} into teacher`)
-        
-        await db.update(schema.teacher)
-                .set({is_paused: entry[1] === 'on' ? true : false})
-                .where(eq(schema.teacher.username, entry[0].toString()))
+            console.log(`inserting ${entry[0]} into teacher`)
+            
+            await db.update(schema.teacher)
+                    .set({is_paused: entry[1] === 'on' ? true : false})
+                    .where(eq(schema.teacher.username, entry[0].toString()))
         }
     }
 } as Actions;
