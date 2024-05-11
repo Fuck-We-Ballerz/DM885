@@ -23,6 +23,8 @@ services:
       - 5173:5173
     networks:
       - infrastructure_application
+    env_file:
+      - ./teacher-panel/.env
 
 networks:
   infrastructure_application:

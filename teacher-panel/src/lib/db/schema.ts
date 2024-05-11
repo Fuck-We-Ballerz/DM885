@@ -67,7 +67,7 @@ export const student_to_course = pgTable('student_to_course', {
     course_id: integer('course_id').notNull().references(() => course.id),
 })
 
-export const teacher_to_course = pgTable('student_to_course', {
+export const teacher_to_course = pgTable('teacher_to_course', {
     id: serial('id').primaryKey(),
     teacher_id: integer('teacher_id').notNull().references(() => teacher.id),
     course_id: integer('course_id').notNull().references(() => course.id),

@@ -63,6 +63,7 @@ services:
     networks:
       - keycloak
       - monitoring
+      - application
     restart: unless-stopped
 
 networks:
