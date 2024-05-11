@@ -26,6 +26,21 @@ spec:
         - name: student-service
           image: python-custom
           imagePullPolicy: Never
+          env:
+          - name: DOCKER_HOST
+            value: "tcp://dind:2376"
+          - name: DOCKER_CERT_PATH
+            value: "/certs/client"
+          - name: DOCKER_TLS_VERIFY
+            value: "1"
+          volumeMounts:
+          - name: dind-certs
+            mountPath: "/certs/client"
+            readOnly: true
+      volumes:
+      - name: dind-certs
+        persistentVolumeClaim:
+          claimName: dind-certs
 ---
 apiVersion: v1
 kind: Service
