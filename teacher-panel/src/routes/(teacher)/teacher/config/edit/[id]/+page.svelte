@@ -53,3 +53,6 @@
   <!-- <button type="reset">Discard</button> -->
   <!-- <button on:click|preventDefault={discardChanges}>Discard</button> -->
 </form>
+  
+<button on:click={() => { window.location.href = '/teacher/assignment/create'; }}>Back to assignments</button>
+
