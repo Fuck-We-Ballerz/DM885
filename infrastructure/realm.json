@@ -1316,14 +1316,14 @@
       "name": "Teacher client",
       "description": "",
       "rootUrl": "http://localhost:5173/teacher",
-      "adminUrl": "http://localhost:5173/teacher",
+      "adminUrl": "",
       "baseUrl": "http://localhost:5173/teacher",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "/teacher/*"
+        "*"
       ],
       "webOrigins": [
         "*"
@@ -1339,14 +1339,22 @@
       "frontchannelLogout": true,
       "protocol": "openid-connect",
       "attributes": {
-        "oidc.ciba.grant.enabled": "false",
-        "backchannel.logout.session.required": "true",
-        "post.logout.redirect.uris": "http://localhost:5173/",
-        "display.on.consent.screen": "false",
         "oauth2.device.authorization.grant.enabled": "false",
-        "backchannel.logout.revoke.offline.tokens": "false"
+        "backchannel.logout.revoke.offline.tokens": "false",
+        "use.refresh.tokens": "true",
+        "oidc.ciba.grant.enabled": "false",
+        "client.use.lightweight.access.token.enabled": "false",
+        "backchannel.logout.session.required": "true",
+        "client_credentials.use_refresh_token": "false",
+        "acr.loa.map": "{}",
+        "require.pushed.authorization.requests": "false",
+        "tls.client.certificate.bound.access.tokens": "false",
+        "display.on.consent.screen": "false",
+        "token.response.type.bearer.lower-case": "false"
       },
-      "authenticationFlowBindingOverrides": {},
+      "authenticationFlowBindingOverrides": {
+        "browser": "4972eb2f-dbb4-46c6-96e1-a93aeaf44897"
+      },
       "fullScopeAllowed": true,
       "nodeReRegistrationTimeout": -1,
       "defaultClientScopes": [
@@ -2397,6 +2405,144 @@
       ]
     },
     {
+      "id": "4972eb2f-dbb4-46c6-96e1-a93aeaf44897",
+      "alias": "Svelte-teacher",
+      "description": "browser based authentication",
+      "providerId": "basic-flow",
+      "topLevel": true,
+      "builtIn": false,
+      "authenticationExecutions": [
+        {
+          "authenticator": "auth-cookie",
+          "authenticatorFlow": false,
+          "requirement": "ALTERNATIVE",
+          "priority": 10,
+          "autheticatorFlow": false,
+          "userSetupAllowed": false
+        },
+        {
+          "authenticator": "auth-spnego",
+          "authenticatorFlow": false,
+          "requirement": "DISABLED",
+          "priority": 20,
+          "autheticatorFlow": false,
+          "userSetupAllowed": false
+        },
+        {
+          "authenticator": "identity-provider-redirector",
+          "authenticatorFlow": false,
+          "requirement": "ALTERNATIVE",
+          "priority": 25,
+          "autheticatorFlow": false,
+          "userSetupAllowed": false
+        },
+        {
+          "authenticatorFlow": true,
+          "requirement": "ALTERNATIVE",
+          "priority": 30,
+          "autheticatorFlow": true,
+          "flowAlias": "Svelte-teacher Svelte-admin forms",
+          "userSetupAllowed": false
+        }
+      ]
+    },
+    {
+      "id": "5ec9e1ec-2a26-458c-a946-663a89c23165",
+      "alias": "Svelte-teacher RBAC",
+      "description": "",
+      "providerId": "basic-flow",
+      "topLevel": false,
+      "builtIn": false,
+      "authenticationExecutions": [
+        {
+          "authenticatorConfig": "Svelte-teacher admin",
+          "authenticator": "conditional-user-role",
+          "authenticatorFlow": false,
+          "requirement": "REQUIRED",
+          "priority": 0,
+          "autheticatorFlow": false,
+          "userSetupAllowed": false
+        },
+        {
+          "authenticatorConfig": "Svelte-teacher teacher",
+          "authenticator": "conditional-user-role",
+          "authenticatorFlow": false,
+          "requirement": "REQUIRED",
+          "priority": 1,
+          "autheticatorFlow": false,
+          "userSetupAllowed": false
+        },
+        {
+          "authenticator": "deny-access-authenticator",
+          "authenticatorFlow": false,
+          "requirement": "REQUIRED",
+          "priority": 2,
+          "autheticatorFlow": false,
+          "userSetupAllowed": false
+        }
+      ]
+    },
+    {
+      "id": "4b173c05-bff6-49c4-8a02-84bc519336b4",
+      "alias": "Svelte-teacher Svelte-admin Browser - Conditional OTP",
+      "description": "Flow to determine if the OTP is required for the authentication",
+      "providerId": "basic-flow",
+      "topLevel": false,
+      "builtIn": false,
+      "authenticationExecutions": [
+        {
+          "authenticator": "conditional-user-configured",
+          "authenticatorFlow": false,
+          "requirement": "REQUIRED",
+          "priority": 10,
+          "autheticatorFlow": false,
+          "userSetupAllowed": false
+        },
+        {
+          "authenticator": "auth-otp-form",
+          "authenticatorFlow": false,
+          "requirement": "REQUIRED",
+          "priority": 20,
+          "autheticatorFlow": false,
+          "userSetupAllowed": false
+        }
+      ]
+    },
+    {
+      "id": "29641c2b-b0b5-403e-99d2-bcf988249561",
+      "alias": "Svelte-teacher Svelte-admin forms",
+      "description": "Username, password, otp and other auth forms.",
+      "providerId": "basic-flow",
+      "topLevel": false,
+      "builtIn": false,
+      "authenticationExecutions": [
+        {
+          "authenticator": "auth-username-password-form",
+          "authenticatorFlow": false,
+          "requirement": "REQUIRED",
+          "priority": 10,
+          "autheticatorFlow": false,
+          "userSetupAllowed": false
+        },
+        {
+          "authenticatorFlow": true,
+          "requirement": "CONDITIONAL",
+          "priority": 20,
+          "autheticatorFlow": true,
+          "flowAlias": "Svelte-teacher Svelte-admin Browser - Conditional OTP",
+          "userSetupAllowed": false
+        },
+        {
+          "authenticatorFlow": true,
+          "requirement": "CONDITIONAL",
+          "priority": 21,
+          "autheticatorFlow": true,
+          "flowAlias": "Svelte-teacher RBAC",
+          "userSetupAllowed": false
+        }
+      ]
+    },
+    {
       "id": "dc0878ca-b903-4b23-a67d-95f4f30c201a",
       "alias": "User creation or linking",
       "description": "Flow for the existing/non-existing user alternatives",
@@ -2761,6 +2907,22 @@
     }
   ],
   "authenticatorConfig": [
+    {
+      "id": "5c206a18-38de-4505-8964-75b2a63d1f7f",
+      "alias": "Svelte-teacher admin",
+      "config": {
+        "condUserRole": "svelte-admin.admin",
+        "negate": "true"
+      }
+    },
+    {
+      "id": "ac222c70-fcd0-43a5-88fa-b69411c715f8",
+      "alias": "Svelte-teacher teacher",
+      "config": {
+        "condUserRole": "svelte-teacher.teacher",
+        "negate": "true"
+      }
+    },
     {
       "id": "22a472d3-dcea-4999-b4a7-8c2c4f41bed4",
       "alias": "admin",
