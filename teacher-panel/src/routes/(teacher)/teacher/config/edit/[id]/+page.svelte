@@ -12,7 +12,7 @@
     data.data.max_cpu = data.copy.max_cpu;
     data.data.max_ram = data.copy.max_ram;
     data.data.max_submission = data.copy.max_submission;
-    data.data.max_time = data.copy.max_time;
+    data.data.max_time = parseInt(data.copy.max_time);
   }
 
 </script>

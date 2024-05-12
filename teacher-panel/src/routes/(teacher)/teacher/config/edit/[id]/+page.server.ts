@@ -11,18 +11,17 @@ export const actions = {
         const data = await request.formData();
         
         await db.update(schema.assignmentConfig).set({
-            
             max_cpu: parseInt(data.get('max_cpu')!.toString()),
             max_ram: parseInt(data.get('max_ram')!.toString()),
             max_time: data.get('max_time')!.toString(),
             max_submission: parseInt(data.get('max_submission')!.toString()),
-        }).where(eq(schema.assignmentConfig.id, params.id));
+        }).where(eq(schema.assignmentConfig.id, parseInt(params.id)));
     }
 } satisfies Actions;
 
 export const load: PageServerLoad = async ({params}) => {
-    const config = await db.query.assignmentConfig.findFirst({where: eq(schema.assignmentConfig.id, params.id)})
-    
+    const config = await db.query.assignmentConfig.findFirst({where: eq(schema.assignmentConfig.id, parseInt(params.id))})
+    console.log(config);
     if (!config) {
         error(404, "Did not find any configuration with that ID");
     }
@@ -35,6 +34,7 @@ export const load: PageServerLoad = async ({params}) => {
     const total = hours * 3600 + minutes * 60 + seconds;
 
     return { data: {
+        id: config.id,
         max_cpu: config.max_cpu,
         max_ram: config.max_ram,
         max_time: total,

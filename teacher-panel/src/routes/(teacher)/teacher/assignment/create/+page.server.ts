@@ -3,17 +3,17 @@ import * as schema from '$lib/db/schema'
 import { eq } from 'drizzle-orm';
 import type { Actions } from './$types';
 
-type Course = typeof schema.course.$inferInsert;
+// type Course = typeof schema.course.$inferInsert;
 
 export const actions = {
 	newConfig: async () => {
         console.log("Creating new config")
         await db.insert(schema.assignmentConfig).values({
-            name: "Some Awesome Config",
-            max_cpu: 1,
+            // name: "Some Awesome Config",  //TODO: Add name to the postgress schema as well
+            max_cpu: 1, 
             max_ram: 1,
             max_submission: 1,
-            max_time: 1,
+            max_time: "1",
         })
     },
     
@@ -31,6 +31,7 @@ export const actions = {
         //         { where: eq(schema.assignmentConfig.name, data.get('assignmentConfig')!.toString()) });
         // console.log(config);
         //TODO: Handle the form data. Insert into database.
+        console.log("Creating new assignment");
         await db.insert(schema.assignment).values({
             course_id: course_id,
             config_id: config_id,

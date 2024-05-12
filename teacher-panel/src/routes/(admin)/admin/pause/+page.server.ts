@@ -1,13 +1,10 @@
 import { drizzle } from 'drizzle-orm/postgres-js'
+import { db } from '$lib'
 import * as schema from '$lib/db/schema'
 import type { Actions } from './$types'
 import type { PageServerLoad } from './$types'
 import postgres from 'postgres'
 import { eq } from 'drizzle-orm'
-
-const queryClient = postgres('postgres://admin:admin@postgres_application:5432/testdb') //Docker
-// const queryClient = postgres('postgres://admin:admin@localhost:5432/testdb')
-const db = drizzle(queryClient, {schema: {...schema}});
 
 export async function load({params}) {
         const teachers = await db.query.teacher.findMany() ?? []
