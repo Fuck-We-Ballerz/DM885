@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+    import { base } from '$app/paths';
 	
 	export let data: PageData;
 </script>
@@ -28,7 +29,7 @@
                                     <button style="background-color: red; padding: 5px;">Delete</button>
                                 </form>
                                 <!-- NOTE: What do I do here, I am not allowed to have post. I need to redirect. -->
-                                <a href="/teacher/config/edit/{configuration.id}" style="padding: 5px;">Edit</a>
+                                <a href="${base}/teacher/config/edit/{configuration.id}" style="padding: 5px;">Edit</a>
                                 
                             </div>
 

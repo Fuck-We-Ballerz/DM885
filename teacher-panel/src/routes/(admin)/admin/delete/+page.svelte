@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { PageData } from './$types';
+    import { base } from '$app/paths';
 
     export let data: PageData;
     data.teachers.sort((a, b) => a.name.localeCompare(b.name)); //List of teachers sorted by name
@@ -12,7 +13,7 @@
             const formData = new FormData(target)
 
             // Send form data with a POST request
-            const response = await fetch('/admin/delete', {
+            const response = await fetch(`${base}/admin/delete`, {
                 method: 'POST',
                 body: formData
             });

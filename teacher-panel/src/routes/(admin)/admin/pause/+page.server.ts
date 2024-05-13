@@ -6,7 +6,7 @@ import type { PageServerLoad } from './$types'
 import postgres from 'postgres'
 import { eq } from 'drizzle-orm'
 
-export async function load({params}) {
+export async function load({}) {
         const teachers = await db.query.teacher.findMany() ?? []
 
         // console.log(teachers[0].name)

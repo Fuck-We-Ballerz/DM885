@@ -1,4 +1,5 @@
 <script>
+    import { base } from '$app/paths';
     import { onMount } from 'svelte';
     export let data;
     export let { keycloak } = data;
@@ -11,9 +12,9 @@
 </script>
 
 <nav>
-    <a href="/teacher/assignment">List Assignments</a>
-    <a href="/teacher/assignment/create">Create Assignment</a>
-    <a href="/teacher/logout">Logout</a>
+    <a href="{base}/teacher/assignment">List Assignments</a>
+    <a href="{base}/teacher/assignment/create">Create Assignment</a>
+    <a href="{base}/teacher/logout">Logout</a>
 </nav>
 <slot></slot>
 <style>

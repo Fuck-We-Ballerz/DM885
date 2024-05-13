@@ -7,7 +7,7 @@ import postgres from 'postgres'
 import { eq } from 'drizzle-orm'
 import { PUBLIC_KEYCLOAK_POST_URL } from '$env/static/public';
 
-export async function load({params}) {
+export async function load({}) {
         const teachers = await db.query.teacher.findMany() ?? []
         const students = await db.query.student.findMany() ?? []
 
