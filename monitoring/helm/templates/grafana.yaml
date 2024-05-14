@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+        - name: grafana
+          image: grafana-custom
+          imagePullPolicy: Never
+          envFrom:
+            - configMapRef:
+                name: grafana
+            - secretRef:
+                name: grafana
+            - configMapRef:
+                name: postgres-application
+            - secretRef:
+                name: postgres-application
+          volumeMounts:
+            - name: grafana-datasources-config
+              mountPath: /etc/grafana/provisioning/datasources/
+      volumes:
+        - name: grafana-datasources-config
+          configMap:
+            name: grafana-datasources-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+spec:
+  selector:
+    app: grafana
+  ports:
+    - port: 3000

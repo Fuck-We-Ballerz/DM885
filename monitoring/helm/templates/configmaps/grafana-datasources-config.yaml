@@ -1,0 +1,35 @@
+apiVersion: v1
+data:
+  grafana-datasources.yaml: |-
+    apiVersion: 1
+
+    datasources:
+      - name: Loki
+        type: loki
+        access: proxy
+        url: http://loki:3100
+
+      - name: Prometheus
+        type: prometheus
+        access: proxy
+        url: http://prometheus:9090
+
+      - name: Postgres
+        type: postgres
+        url: postgres-application:5432
+        user: postgres
+        secureJsonData:
+          password: postgres
+        jsonData:
+          database: postgres
+          sslmode: 'disable' # disable/require/verify-ca/verify-full
+          maxOpenConns: 100 # Grafana v5.4+
+          maxIdleConns: 100 # Grafana v5.4+
+          maxIdleConnsAuto: true # Grafana v9.5.1+
+          connMaxLifetime: 14400 # Grafana v5.4+
+          postgresVersion: 1600 # 903=9.3, 904=9.4, 905=9.5, 906=9.6, 1000=10
+          timescaledb: false
+kind: ConfigMap
+metadata:
+  name: grafana-datasources-config
+  namespace: default
