@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-exporter
+  template:
+    metadata:
+      labels:
+        app: postgres-exporter
+    spec:
+      containers:
+        - name: postgres-exporter
+          image: bitnami/postgres-exporter:latest
+          envFrom:
+            - secretRef:
+                name: postgres-exporter
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-exporter
+spec:
+  selector:
+    app: postgres-exporter
+  ports:
+    - port: 9187
