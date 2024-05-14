@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { PageData } from './$types';
+  import { base } from '$app/paths';
 
   export let data: PageData;
 
@@ -54,5 +55,5 @@
   <!-- <button on:click|preventDefault={discardChanges}>Discard</button> -->
 </form>
   
-<button on:click={() => { window.location.href = '/teacher/assignment/create'; }}>Back to assignments</button>
+<button on:click={() => { window.location.href = `${base}/teacher/assignment/create`; }}>Back to assignments</button>
 

@@ -23,6 +23,7 @@ export const load: LayoutLoad = async ({data}) => {
   if (browser) {
     keycloakPromise = keycloak.init(kcInitOpts).then((auth) => {
       if (auth) {
+        console.log(keycloak.userInfo)
         document.cookie= "kc-cookie=" + keycloak.token + "; path=/; SameSite=strict";
         return keycloak;
       }

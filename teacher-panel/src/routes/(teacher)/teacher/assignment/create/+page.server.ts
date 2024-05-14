@@ -50,7 +50,7 @@ export const actions = {
         const id = parseInt(data.get('id')!.toString());
 
 
-        console.log("Deleting all assignments related to config"); //Do we want or nah?
+        console.log("Deleting all assignments related to config"); 
         await db.delete(schema.assignment).where(eq(schema.assignment.config_id, id));
 
         console.log("Deleting config");
