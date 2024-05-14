@@ -26,6 +26,7 @@ spec:
               readOnly: true
             - mountPath: /var/lib/postgresql/data
               name: postgres-application-pvc
+              subPath: postgres-app
       volumes:
         - name: configmap-volume
           configMap:
@@ -52,11 +53,17 @@ spec:
   capacity:
     storage: 1Gi
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   storageClassName: manual
+{{- if eq .Values.environment "dev"}}
   hostPath:
     path: "/mnt/data/postgres-application"
+{{- else if eq .Values.environment "prod"}}
+  gcePersistentDisk:
+    pdName: postgres-disk
+    fsType: ext4
+{{- end }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -65,7 +72,7 @@ metadata:
 spec:
   storageClassName: manual
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi

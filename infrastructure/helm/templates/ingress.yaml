@@ -14,7 +14,7 @@ metadata:
 spec:
   ingressClassName: "nginx"
   rules:
-    - host: "{{ .Values.Ingress.host }}"
+    - host: "{{ .Values.ingress.host }}"
       http:
         paths:
           - path: "/grafana(/|$)(.*)"

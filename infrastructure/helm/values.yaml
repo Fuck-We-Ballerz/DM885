@@ -17,5 +17,7 @@ keycloak:
 postgresApplication:
   POSTGRES_DB: postgres
 
-Ingress:
+ingress:
   host: localhost
+
+environment: "dev"

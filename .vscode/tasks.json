@@ -54,6 +54,7 @@
             "label": "Helm Deploy Infrastructure",
             "group": "build",
             "type": "shell",
+            "dependsOn": "Enable Ingress",
             "command": "helm package -d infrastructure/helm infrastructure/helm/. && helm install infrastructure infrastructure/helm/infrastructure-0.1.0.tgz"
         },
         {
