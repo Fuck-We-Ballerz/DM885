@@ -45,10 +45,16 @@ spec:
   capacity:
     storage: 1Gi
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
+{{- if eq .Values.environment "dev"}}
   hostPath:
     path: "/mnt/data/postgres-keycloak"
+{{- else if eq .Values.environment "prod"}}
+  gcePersistentDisk:
+    pdName: postgres-disk
+    fsType: ext4
+{{- end }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -57,7 +63,7 @@ metadata:
 spec:
   storageClassName: "standard"
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi

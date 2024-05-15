@@ -14,10 +14,9 @@ data:
   GF_AUTH_GENERIC_OAUTH_SCOPES: openid
   GF_AUTH_GENERIC_OAUTH_TLS_SKIP_VERIFY_INSECURE: "true"
   GF_AUTH_GENERIC_OAUTH_TOKEN_URL: http://keycloak:8080/realms/DM885/protocol/openid-connect/token
-
-  GF_AUTH_GENERIC_OAUTH_API_URL: {{ .Values.Grafana.GF_AUTH_GENERIC_OAUTH_API_URL | quote}}
-  GF_AUTH_GENERIC_OAUTH_AUTH_URL: {{ .Values.Grafana.GF_AUTH_GENERIC_OAUTH_AUTH_URL | quote}}
-  GF_SERVER_ROOT_URL: {{ .Values.Grafana.GF_SERVER_ROOT_URL | quote}}
+  GF_AUTH_GENERIC_OAUTH_API_URL: {{ .Values.grafana.GF_AUTH_GENERIC_OAUTH_API_URL }}
+  GF_AUTH_GENERIC_OAUTH_AUTH_URL: {{ .Values.grafana.GF_AUTH_GENERIC_OAUTH_AUTH_URL }}
+  GF_SERVER_ROOT_URL: {{ .Values.grafana.GF_SERVER_ROOT_URL }}
 kind: ConfigMap
 metadata:
   name: grafana
