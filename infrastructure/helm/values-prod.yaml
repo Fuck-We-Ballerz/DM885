@@ -3,6 +3,6 @@ keycloak:
   KC_HOSTNAME_ADMIN_URL: zeruscloud.com/keycloak/
 
 ingress:
-  host: zeruscloud.com
+  HOST: zeruscloud.com
 
 environment: "prod"

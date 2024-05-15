@@ -8,3 +8,4 @@ data:
   KC_METRICS_ENABLED: {{ .Values.keycloak.KC_METRICS_ENABLED | quote}}
   KC_HOSTNAME_URL: {{ .Values.keycloak.KC_HOSTNAME_URL | quote}}
   KC_HOSTNAME_ADMIN_URL: {{ .Values.keycloak.KC_HOSTNAME_ADMIN_URL | quote}}
+  HOSTNAME_BASE: {{ .Values.ingress.HOST | quote}}

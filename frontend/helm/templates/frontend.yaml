@@ -70,3 +70,6 @@ spec:
         - name: student-service
           image: node-custom
           imagePullPolicy: Never
+          envFrom:
+            - configMapRef:
+                name: teacher

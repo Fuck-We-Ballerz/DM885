@@ -1,12 +1,7 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import * as schema from '$lib/db/schema'
 import type { PageServerLoad } from './$types';
-
-import postgres from 'postgres';
-
-const queryClient = postgres('postgres://admin:admin@postgres-application:5432/postgres')
-
-const db = drizzle(queryClient, {schema: {...schema}});
+import { db } from '$lib';
 
 export const load: PageServerLoad = async ({params}) => {
     // const date = new Date()
