@@ -3,8 +3,8 @@
     import { base } from '$app/paths';
 
     export let data: PageData;
-    data.teachers.sort((a, b) => a.name.localeCompare(b.name)); //List of teachers sorted by name
-    data.students.sort((a, b) => a.name.localeCompare(b.name)); //List of teachers sorted by name
+    data.students.sort((a, b) => a.name.localeCompare(b.name)); //List of students sorted by name
+
 
     async function handleSubmit(event: SubmitEvent) {
         event.preventDefault();
@@ -13,7 +13,7 @@
             const formData = new FormData(target)
 
             // Send form data with a POST request
-            const response = await fetch(`${base}/admin/delete`, {
+            const response = await fetch(`${base}/teacher/course/add`, {
                 method: 'POST',
                 body: formData
             });
@@ -27,37 +27,23 @@
         }
     }
 </script>
-<h1>Teachers</h1>
-<form on:submit={handleSubmit}>
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Username</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            {#each data.teachers as teacher}
-            <tr>
-                <td>{teacher.name}</td>
-                <td>{teacher.username}</td>
-                <td><input type="checkbox" name={teacher.username} /></td>
-            </tr>
-            {/each}
-        </tbody>
-    </table>
-    <button type="submit">Submit</button>
-</form>
 
-<h1>Students</h1>
+<h1>Add Students To A Course</h1>
 <form on:submit={handleSubmit}>
+    <label>
+        Course
+        <select id="course" name="course">
+            {#each data.courses as course, i}
+                <option value="{course.id}">{course.name}</option>
+            {/each}
+        </select>
+    </label>
     <table>
         <thead>
             <tr>
                 <th>Name</th>
                 <th>Username</th>
-                <th>Delete</th>
+                <th>Add</th>
             </tr>
         </thead>
         <tbody>
@@ -65,7 +51,7 @@
             <tr>
                 <td>{student.name}</td>
                 <td>{student.username}</td>
-                <td><input type="checkbox" name={student.username} /></td>
+                <td><input type="checkbox" name={student.username} value="{student.id}" /></td>
             </tr>
             {/each}
         </tbody>
