@@ -2,18 +2,6 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "ConfigMaps",
-            "group": "build",
-            "type": "shell",
-            "command": "kubectl apply -f infrastructure/configMaps && kubectl apply -f infrastructure/configMaps-dev && kubectl apply -f monitoring/configMaps && kubectl apply -f monitoring/configMaps-dev"
-        },
-        {
-            "label": "Secrets",
-            "group": "build",
-            "type": "shell",
-            "command": "kubectl apply -f infrastructure/secrets-dev && kubectl apply -f monitoring/secrets-dev"
-        },
-        {
             "label": "Enable Ingress",
             "group": "build",
             "type": "shell",
@@ -38,30 +26,17 @@
             "command": "eval $(minikube docker-env) && docker build frontend/teacher-panel -f frontend/teacher-panel/Dockerfile -t node-custom"
         },
         {
-            "label": "Init",
-            "group": "build",
-            "type": "shell",
-            "dependsOn":["Enable Ingress", "Build Grafana", "Build User", "Build Teacher", "ConfigMaps", "Secrets"]
-        },
-        {
-            "label": "Deploy",
-            "group": "build",
-            "type": "shell",
-            "dependsOn":["Init"],
-            "command": "kubectl apply -f infrastructure/k8s && kubectl apply -f monitoring/k8s && kubectl apply -f frontend.yaml"
-        },
-        {
             "label": "Helm Deploy Infrastructure",
             "group": "build",
             "type": "shell",
-            "dependsOn": "Enable Ingress",
+            "dependsOn": ["Enable Ingress"],
             "command": "helm package -d infrastructure/helm infrastructure/helm/. && helm install infrastructure infrastructure/helm/infrastructure-0.1.0.tgz"
         },
         {
             "label": "Helm Deploy Monitoring",
             "group": "build",
             "type": "shell",
-            "dependsOn":["Helm Deploy Infrastructure", "Enable Ingress", "Build Grafana"],
+            "dependsOn":["Helm Deploy Infrastructure", "Build Grafana"],
             "command": "helm package -d monitoring/helm monitoring/helm/. && helm install monitoring monitoring/helm/monitoring-0.1.0.tgz"
         },
         {
@@ -75,7 +50,7 @@
             "label": "Helm Deploy",
             "group": "build",
             "type": "shell",
-            "dependsOn":["Helm Deploy Infrastructure", "Helm Deploy Monitoring", "Helm Deploy Frontend"],
+            "dependsOn":["Helm Deploy Monitoring", "Helm Deploy Frontend"],
         }
   ]
 }

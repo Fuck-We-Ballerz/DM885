@@ -26,7 +26,6 @@ spec:
               readOnly: true
             - mountPath: /var/lib/postgresql/data
               name: postgres-application-pvc
-              subPath: postgres-app
       volumes:
         - name: configmap-volume
           configMap:

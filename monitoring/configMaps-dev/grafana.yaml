@@ -1,8 +1,0 @@
-apiVersion: v1
-data:
-  GF_AUTH_GENERIC_OAUTH_API_URL: https://localhost/keycloak/realms/DM885/protocol/openid-connect/userinfo
-  GF_AUTH_GENERIC_OAUTH_AUTH_URL: https://localhost/keycloak/realms/DM885/protocol/openid-connect/auth
-  GF_SERVER_ROOT_URL: https://localhost/grafana/
-kind: ConfigMap
-metadata:
-  name: grafana-env
