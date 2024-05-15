@@ -8,6 +8,7 @@ export async function load({cookies}) {
         const teacherUsername = cookies.get('kc-username')!
         const teacher = await db.query.teacher.findFirst({ where: eq(schema.teacher.username, teacherUsername)})
         
+        //Get all courses that the teacher is teaching
         const courses = await db.select().from(schema.course)
                                 .innerJoin(schema.teacher_to_course, eq(schema.course.id, schema.teacher_to_course.course_id))
                                 .where(eq(schema.teacher_to_course.teacher_id, teacher!.id));

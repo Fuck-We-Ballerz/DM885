@@ -1,23 +1,14 @@
 <script lang="ts">
     import type { PageData } from './$types';
     import { base } from '$app/paths';
-    import { student } from '$lib/db/schema';
 
     export let data: PageData;
     data.students.sort((a, b) => a.name.localeCompare(b.name)); //List of students sorted by name
 </script>
 
-<h1>Add Students To An Assignment</h1>
+<h1>Remove Students from Assignment {data.assignmentName} </h1>
 <form method="post">
-    <label>
-        Assignment
-        <select id="assignment" name="assignment">
-            {#each data.assignments as assignment, i}
-                <option value="{assignment.id}">{assignment.title}</option>
-            {/each}
-        </select>
-    </label>
-    <div style="margin-top: 20px;">Enrolled Students in {data.courseName}</div>
+    <div style="margin-top: 20px;">Students currently added to {data.assignmentName}</div>
     <table>
         <thead>
             <tr>
@@ -34,7 +25,8 @@
                 <td><input type="checkbox" name={student.username} value="{student.id}" /></td>
             </tr>
             {/each}
+            <td><input type="hidden" name="assignmentId" value="{data.assignmentId}" /></td>
         </tbody>
     </table>
-    <button type="submit">Submit</button>
+    <button type="submit">Remove From Assignment</button>
 </form>

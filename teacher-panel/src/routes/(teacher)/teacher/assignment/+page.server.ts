@@ -35,6 +35,7 @@ export const load: PageServerLoad = async ({cookies, params}) => {
     const configs = await db.query.assignmentConfig.findMany()
 
     let output = []
+    //Get all assignments that a teacher has
     const res = await db.select().from(schema.assignment)
                         .innerJoin(schema.teacher_to_assignment, eq(schema.assignment.id, schema.teacher_to_assignment.assignment_id))
                         .where(eq(schema.teacher_to_assignment.teacher_id, teacher!.id))
