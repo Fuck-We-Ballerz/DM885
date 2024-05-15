@@ -22,7 +22,6 @@ class Assignment(db.Model):
     docker_image = db.Column(db.Text)
     config_id = db.Column(db.Integer, db.ForeignKey('assignment_config.id'), nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
-    status = db.Column(db.Integer, default=0)
     requirements = db.Column(db.String(1000), default="No specific requirements")
     course = db.relationship('Course', backref=db.backref('assignments', lazy=True))
     
@@ -53,6 +52,14 @@ class Submission(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
     assignment = db.relationship('Assignment', backref=db.backref('submissions', lazy=True))
     student = db.relationship('Student', backref=db.backref('submissions', lazy=True))
+    
+class Student_to_assignment(db.Model):
+    __tablename__ = 'student_to_assignment'
+    assignment_id = db.Column(db.Integer, db.ForeignKey('assignment.id'), primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('student.id'), primary_key=True)
+    status = db.Column(db.Integer, default=0, nullable=False)
+    
+
 
 def init_db(app):
     db.init_app(app)

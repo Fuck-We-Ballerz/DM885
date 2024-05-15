@@ -13,7 +13,7 @@
         {% for assignment in assignments %}
         <a href="{{ url_for('submit_assignment', assignment_id=assignment.id) }}" class="list-group-item list-group-item-action text-center">
             <div>
-                <strong>Assignment:</strong> {{ assignment.course.name }}: {{ assignment.title }}<br>
+                <strong>Assignment:</strong> {{ assignment.course_name }}: {{ assignment.title }}<br>
                 <strong>Time Period:</strong> {{ assignment.start_date.strftime('%Y-%m-%d %H:%M:%S') }} - {{ assignment.end_date.strftime('%Y-%m-%d %H:%M:%S') }}
                 <strong>Status:</strong>
                 <span style="color: 

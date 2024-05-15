@@ -1,0 +1,16 @@
+2024-05-15 12:36:12,889 - logs_config - DEBUG - Redirecting from homepage to login
+2024-05-15 12:36:17,463 - logs_config - INFO - Bypass database using admin
+2024-05-15 12:36:17,483 - logs_config - ERROR - Failed to retrieve assignments: (psycopg2.OperationalError) could not translate host name "postgres_application" to address: nodename nor servname provided, or not known
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2024-05-15 12:37:10,342 - logs_config - INFO - Bypass database using admin
+2024-05-15 12:37:10,361 - logs_config - ERROR - Failed to retrieve assignments: (psycopg2.OperationalError) could not translate host name "postgres_application" to address: nodename nor servname provided, or not known
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2024-05-15 12:40:40,305 - logs_config - INFO - Bypass database using admin
+2024-05-15 12:40:40,329 - logs_config - ERROR - Failed to retrieve assignments: (psycopg2.OperationalError) could not translate host name "postgres_application" to address: nodename nor servname provided, or not known
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2024-05-15 12:42:05,549 - logs_config - ERROR - Failed to retrieve assignments: (psycopg2.OperationalError) could not translate host name "postgres_application" to address: nodename nor servname provided, or not known
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)

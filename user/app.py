@@ -1,3 +1,4 @@
+from ast import Sub
 from re import sub
 from flask import Flask, request, render_template, redirect, url_for, jsonify, session
 from flask_bootstrap import Bootstrap  # Import Flask-Bootstrap
@@ -7,7 +8,7 @@ from logs_config import setup_logging
 import requests
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import BYTEA
-from database import db, Student, Assignment, Course, AssignmentConfig, Submission, init_db
+from database import db, Student, Assignment, Course, AssignmentConfig, Submission, init_db, Student_to_assignment
 
 # Set up logger
 # set log_terminal to True, if you want logs in the terminal, otherwise set to False
@@ -57,10 +58,26 @@ def student():
 
     username = session['username']
     try:
-        assignments = Assignment.query.order_by(Assignment.status).join(Course).all()  # Ensure each assignment has the course loaded
+        # Get the student's assignments with status
+        student = Student.query.filter_by(username=username).first()
+        assignments = db.session.query(
+            Assignment.id,
+            Assignment.title,
+            Assignment.start_date,
+            Assignment.end_date,
+            Course.name.label('course_name'),
+            db.case(
+                (Student_to_assignment.status.isnot(None), Student_to_assignment.status),
+                else_=0
+            ).label('status')
+            ).outerjoin(Student_to_assignment, 
+                        (Assignment.id == Student_to_assignment.assignment_id) & 
+                        (Student_to_assignment.student_id == student.id))\
+            .join(Course, Assignment.course_id == Course.id)\
+            .order_by('status').all()
     except Exception as e:
         logger.error(f"Failed to retrieve assignments: {e}")
-        
+        assignments = fallback_assignments  # Use the fallback assignments if the query fails
 
     return render_template("student.html", nav=f"Dashboard for: {username}", assignments=assignments)
 
@@ -146,14 +163,16 @@ def logout():
 def submit_assignment(assignment_id):
     username = session.get('username', 'No user')
     session['assignment_id'] = assignment_id
+    print("Info for /student", username, assignment_id)
     try:
-        assignment = Assignment.query.get(assignment_id)
+        print("User getting assignment from database")
+        assignment = Assignment.query.get(session.get('assignment_id'))
         logger.info(f"User clicked assignment: {assignment}")
-    except:
+    except Exception as e:
         # Use a fallback if the database query fails
         assignment = next((a for a in fallback_assignments if a['id'] == assignment_id), None)
         assignment = Assignment(id=assignment['id'], title=assignment['title'], status=assignment['status'], requirements=assignment['requirements'])
-        logger.info(f"Using the fallback list the user: {username} clicked assignment: {assignment}")
+        logger.info(f"Using the fallback list the user: {username} clicked assignment: {assignment}, Error: {e}")
     return render_template('submit.html', nav=f"{assignment.course}: {assignment.title}", assignment=assignment)
 
 
@@ -161,13 +180,14 @@ def submit_assignment(assignment_id):
 def cancel_assignment(assignment_id):
     if 'username' not in session:
         return jsonify({'success': False, 'error': 'You need to login first'}), 403
-
     try:
-        assignment = Assignment.query.get(assignment_id)
-        submission = Submission.query.filter_by(assignment_id=assignment_id).first()
+        student_id = Student.query.filter_by(username=session['username']).first().id
+        assignment = Student_to_assignment.query.filter_by(assignment_id=assignment_id, student_id=student_id).first()
+        submission = Submission.query.filter_by(assignment_id=assignment_id, student_id=student_id).first()
         if assignment:
             assignment.status = 0
             db.session.delete(submission)
+            db.session.delete(assignment)
             db.session.commit()
             logger.info(f"Assignment {assignment_id} status set to 0 by user {session['username']}")
             return jsonify({'success': True}), 200
@@ -206,28 +226,22 @@ def upload_file():
         filename = secure_filename(file.filename)
         file.save(os.path.join(upload_folder, filename))
         logger.info(f"{username} succesfully uploaded file: {filename}")
-        # sql update Assignement
-        try:
-            assignment = Assignment.query.get(assignemt_id)
-            logger.info(f"Assignment: {assignemt_id} status: {assignment.status}")
-            assignment.status = 1
-            db.session.commit()
-            logger.info(f"Assignment: {assignemt_id} updated to status {assignment.status}")
-        except Exception as e:
-            logger.error(f"Failed to update assignment: {assignemt_id}, Error {e}")
-        
         # sql create submission
         try:
             with(open(os.path.join(upload_folder, filename), 'rb')) as f:
                 data = f.read()
                 
-
             student = Student.query.filter_by(username=username).first()
             new_submission = Submission(assignment_id=assignemt_id, student_id=student.id, submission=data)
+            new_student_to_assignment = Student_to_assignment(assignment_id=assignemt_id, student_id=student.id, status=1)
+            
             db.session.add(new_submission)
+            db.session.add(new_student_to_assignment)
             db.session.commit()
             logger.info(f"Submission created for assignment: {assignemt_id} by student: {username}")
+            logger.info(f"Student_to_assignment created for assignment: {assignemt_id} by student: {username} with status 1")
         except Exception as e:
+            print("Error in submission", e)
             db.session.rollback()
             
             logger.error(f"Failed to create submission for assignment: {assignemt_id}, Error {e}")

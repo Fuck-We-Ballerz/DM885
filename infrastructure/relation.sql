@@ -22,7 +22,6 @@ CREATE TABLE IF NOT EXISTS assignment (
   docker_image TEXT,
   config_id INT NOT NULL,
   course_id INT NOT NULL,
-  status INT DEFAULT 0,
   requirements TEXT DEFAULT 'No specific requirements',
   PRIMARY KEY(id),
   FOREIGN KEY(config_id) REFERENCES assignment_config(id),
@@ -93,6 +92,7 @@ CREATE TABLE IF NOT EXISTS submission (
 CREATE TABLE IF NOT EXISTS student_to_assignment (
   assignment_id INT,
   student_id INT,
+  status INT,
   FOREIGN KEY(assignment_id) REFERENCES assignment(id),
   FOREIGN KEY(student_id) REFERENCES student(id),
   PRIMARY KEY(assignment_id, student_id)
