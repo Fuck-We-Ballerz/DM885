@@ -18,6 +18,9 @@ export const actions = {
     },
     
     newAssignment: async ({ cookies, request }) => {
+        const teacherUsername = cookies.get('kc-username')!
+        const teacher = await db.query.teacher.findFirst({ where: eq(schema.teacher.username, teacherUsername)})
+
 		const data = await request.formData();
         
         // const course_id = await db.query.course.findFirst(
@@ -32,7 +35,7 @@ export const actions = {
         // console.log(config);
         //TODO: Handle the form data. Insert into database.
         console.log("Creating new assignment");
-        await db.insert(schema.assignment).values({
+        const insertedAssignment = await db.insert(schema.assignment).values({
             course_id: course_id,
             config_id: config_id,
             is_visible: true,
@@ -40,8 +43,13 @@ export const actions = {
             docker_image: data.get('docker-image')!.toString(),
             start_date: data.get('startDate')!.toString(),
             end_date: data.get('dueDate')!.toString(),
-        });
-        console.log(data);
+        }).returning()
+
+        await db.insert(schema.teacher_to_assignment).values({ 
+            teacher_id: teacher!.id, 
+            assignment_id: insertedAssignment[0].id
+         })
+
         return { success: true };
 	},
 
