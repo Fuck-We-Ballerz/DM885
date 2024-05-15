@@ -69,6 +69,14 @@
                 <input type="text" id="title" name="title" required>
             </label>
             <label>
+                Course
+                <select id="course" name="course">
+                    {#each data.courses as course, i}
+                        <option value="{course.id}">{course.name}</option>
+                    {/each}
+                </select>
+            </label>
+            <label>
                 Docker Image
                 <textarea id="docker-image" name="docker-image" required></textarea>
             </label>

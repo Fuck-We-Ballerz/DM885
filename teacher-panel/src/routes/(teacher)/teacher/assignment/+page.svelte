@@ -35,7 +35,7 @@
                 <form method="POST" action={formAction}>
                     <table>
                         <tr>
-                            <td>Course: {assignment.course}</td>
+                            <td>Course: {assignment.courseName}, id: {assignment.course}</td>
                             {#if isEditing === i}
                                 <input type="hidden" name="assignmentId" value={assignment.assignmentId} />
                             {/if}
