@@ -62,14 +62,14 @@ We are using existing tools for monitoring our system because they are reliable 
 * Prometheus for metric scraping, 
 * Node-exporter for server metrics, 
 * Postgres-exporter for database metrics, and 
-* cAdvisor for container resource metrics (which is yet to be implemented).
+* cAdvisor for container resource metrics.
 
 Regarding the infrastructure, we are using: 
 
 * Adminer for database administration, 
 * Keycloak for authentication, 
 * Postgres for our databases, 
-* and Ingress (which is yet to be implemented).
+* and Ingress.
 
 Our user interface is built using Django and Svelte. We chose different frameworks to allow our teams to work independently and reduce the need for communication. This means we can develop different parts of the system separately and connect them later. The user interface includes a panel for users and a panel for teachers.
 
@@ -78,21 +78,23 @@ Finally, our project is live on Google Cloud and can be accessed through these U
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## 👷‍♂️ Getting Started
-To run this project, you need Docker and Minikube installed. Docker packages the application with its dependencies. Minikube allows running Kubernetes, which manages the application, locally.
+To run this project, you need to install Docker, Minikube, and Helm. Docker packages the application with its dependencies. Minikube allows running Kubernetes, which manages the application locally. Helm is for Kubernetes deployment.
 
-Deploying locally has been simplified with the use of VSCode tasks. These tasks mimic a real pipeline, efficiently managing the necessary stages of deployment. This process includes the creation of secrets, configuration maps, and the building of custom Docker images that are referenced in the Kubernetes YAML files.
+Deploying locally has been simplified with the use of VSCode tasks. These tasks mimic a real pipeline, efficiently managing the necessary stages of deployment. This process includes the creation of helm Charts and the building custom Docker images that are referenced in the Kubernetes YAML files.
 
-The tasks are designed with inherent dependencies, allowing the execution of a single task to trigger multiple stages, enhancing performance. The entire project can be deployed using the `deploy` task. However, there are several tasks available for specific needs:
+The tasks are designed with inherent dependencies, allowing the execution of a single task to trigger multiple stages, enhancing performance. The entire project can be deployed using the `Helm Deploy` task. However, there are several tasks available for specific needs:
 
-* `ConfigMaps`: For managing configurations across multiple pods.
-* `Secrets`: For storing sensitive data like API keys, passwords, etc.
 * `Build Grafana`: For creating a custom Grafana image.
 * `Build User`: For creating a custom User service image.
 * `Build Teacher`: For creating a custom Teacher service image.
-* `Init`: For initializing the deployment process.
-* `Deploy`: For deploying the entire project.
+* `Deploy Deploy Infrastructure`: For deploying the infrastructure.
+* `Deploy Deploy Monitoring`: For deploying the monitoring.
+* `Deploy Deploy Frontend`: For deploying the frontend.
+* `Deploy Helm`: For deploying the entire project.
 
-We place a high value on ensuring that the development environment mirrors the production environment, with the only differences being the secrets used and the test data available. The services are configured to persist solely on the server they are run on.
+A minimal values.yaml are provided for the three helm charts: `infrastructure`, `monitoring`, and `frontend`. For each of the three helm charts, a values-prod.yaml is provided to overwrite the default values.yaml for production.
+
+We value ensuring that the development environment mirrors the production environment. The only differences are the values in `values-prod.yaml` and minimal if-statements in the templates. The services are configured to persist solely on the server they are run on.
 
 This separation of environments is achieved by creating two secret configurations: one with hard-coded development secrets, and the other pulling secrets from the pipeline variables. This ensures a secure and efficient deployment process.
 
