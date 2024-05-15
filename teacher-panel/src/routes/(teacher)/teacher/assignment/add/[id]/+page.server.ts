@@ -44,18 +44,14 @@ export async function load({cookies, params}) {
 export const actions = {
     default: async ({cookies, request}) => {
         const data = await request.formData();
-        console.log(data)
         
         // Retrieve the assigment
         const assignment = data.get('assignment')
         const assignmentId = parseInt(assignment!.toString())
-        console.log(assignmentId)
 
         // Retrieve a list of student IDs from the formData
         const studentIds = Array.from(data.values())
             .filter(value => value !== assignment);
-
-        console.log(studentIds);
         
         // Array of form [{student_id: <student_id>, assignment_id: <assignment_id>}, {student_id: <student_id>, assignment_id: <assignment_id>}, ...]}]
         const insertStudents = studentIds.map(studentId => ({

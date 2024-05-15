@@ -11,8 +11,6 @@ export async function load({cookies, params}) {
         const students = await db.select().from(schema.student)
                     .innerJoin(schema.student_to_assignment, eq(schema.student.id, schema.student_to_assignment.student_id))
                     .where(eq(schema.student_to_assignment.assignment_id, assignmentId))
-
-        console.log(students)
         
         let studentOutput = students.map((student) => {
             return {    
@@ -34,14 +32,11 @@ export const actions = {
     default: async ({cookies, request}) => {
         const data = await request.formData();
         const assignmentId = parseInt(data.get('assignmentId')!.toString())
-        
-        console.log(data)
-        
+                
         for (const [key, value] of data.entries()) {
             if (key === 'assignmentId') continue;  // Skip the entry if the key is 'assignmentId'
 
             const student_id = parseInt(value.toString())
-            console.log(student_id)
 
             console.log("Delete student from assignment")
             await db.delete(schema.student_to_assignment).where(
