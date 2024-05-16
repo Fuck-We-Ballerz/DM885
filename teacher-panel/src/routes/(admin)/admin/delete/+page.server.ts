@@ -39,11 +39,8 @@ export async function load({}) {
 export const actions = {
     default: async ({cookies, request}) => {
         const token = cookies.get('kc-cookie');
-        console.log(token)
         
         const data = await request.formData();
-        console.log(data)
-
 
         for (const entry of data.entries()) {  //entries [username, "on"] indicating user to delete
             const username = entry[0].toString();

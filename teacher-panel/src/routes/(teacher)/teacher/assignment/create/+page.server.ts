@@ -23,17 +23,9 @@ export const actions = {
 
 		const data = await request.formData();
         
-        // const course_id = await db.query.course.findFirst(
-        //     { where: eq(schema.course.name, data.get('id')!.toString()) });
-        console.log("assignment Config");
-        console.log();
-        
-        const course_id = 1; // We probably wont support more courses
+        const course_id = parseInt(data.get('course')!.toString())
         const config_id = parseInt(await data.get('assignmentConfig')!.toString());
-        // const config = await db.query.assignmentConfig.findFirst(
-        //         { where: eq(schema.assignmentConfig.name, data.get('assignmentConfig')!.toString()) });
-        // console.log(config);
-        //TODO: Handle the form data. Insert into database.
+
         console.log("Creating new assignment");
         const insertedAssignment = await db.insert(schema.assignment).values({
             course_id: course_id,
@@ -69,9 +61,18 @@ export const actions = {
 
 
 import type { PageServerLoad } from './$types';
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({cookies}) => {
+    const teacherUsername = cookies.get('kc-username')!
+    const teacher = await db.query.teacher.findFirst({ where: eq(schema.teacher.username, teacherUsername)})
+    
     const configs = await db.query.assignmentConfig.findMany()
+
+    const courses = await db.select().from(schema.course)
+                            .innerJoin(schema.teacher_to_course, eq(schema.course.id, schema.teacher_to_course.course_id))
+                            .where(eq(schema.teacher_to_course.teacher_id, teacher!.id));
+
 	return {
+        courses: courses.map(courseObj => courseObj.course),
 	    assignmentConfigs2: configs
-	};
-};
+	}
+}
