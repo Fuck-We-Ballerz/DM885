@@ -3,22 +3,9 @@ options:
     - 'CLOUDSDK_COMPUTE_ZONE=europe-west3-a'
     - 'CLOUDSDK_CONTAINER_CLUSTER=dm885-grading-system'
 
-steps:
 steps: 
-  - name: 'gcr.io/cloud-builders/kubectl'
-    args: 
-      - 'apply'
-      - '-f'
-      - 'monitoring/configMaps'
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/devsecops-422807/grafana', '-f', 'monitoring/Dockerfile.grafana', './monitoring']
 
-  - name: 'gcr.io/cloud-builders/kubectl'
-    args: 
-      - 'apply'
-      - '-f'
-      - 'monitoring/secrets-dev'
-
-  - name: 'gcr.io/cloud-builders/kubectl'
-    args: 
-      - 'apply'
-      - '-f'
-      - 'monitoring/k8s-cloud'
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/devsecops-422807/grafana']

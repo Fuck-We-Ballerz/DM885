@@ -26,6 +26,20 @@ spec:
           command:
             - /bin/prometheus
             - --config.file=/etc/prometheus/prometheus.yaml
+            - --storage.tsdb.path=/prometheus
+{{- if eq .Values.environment "prod" }}
+          securityContext: 
+            runAsUser: 1000
+            runAsNonRoot: true
+            runAsGroup: 65534
+      initContainers:
+        - name: prometheus-data-permission-fix
+          image: busybox
+          command: ["sh", "-c", "chown -R 1000:65534 /prometheus"]
+          volumeMounts:
+            - name: prometheus-data
+              mountPath: /prometheus
+{{- end }}
       volumes:
         - name: prometheus-config
           configMap:
