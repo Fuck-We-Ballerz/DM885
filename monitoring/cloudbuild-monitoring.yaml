@@ -3,12 +3,12 @@ options:
     - 'CLOUDSDK_COMPUTE_ZONE=europe-west3-a'
     - 'CLOUDSDK_CONTAINER_CLUSTER=dm885-grading-system'
 
+steps:
 steps: 
   - name: 'gcr.io/cloud-builders/kubectl'
     args: 
       - 'apply'
       - '-f'
-<<<<<<< Updated upstream
       - 'monitoring/configMaps'
 
   - name: 'gcr.io/cloud-builders/kubectl'
@@ -22,19 +22,3 @@ steps:
       - 'apply'
       - '-f'
       - 'monitoring/k8s-cloud'
-=======
-      - 'monitoring/k8s-cloud'
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/devsecops-422807/grafana', '-f', 'monitoring/Dockerfile.grafana', '.']
-
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/devsecops-422807/grafana']
-
-  - name: 'gcr.io/devsecops-422807/helm'
-    args:
-      - 'install'
-      - 'monitoring'
-      - 'monitoring/helm/monitoring-0.1.0.tgz'
-      - '--values'
-      - 'monitoring/helm/values-prod.yaml'
->>>>>>> Stashed changes
