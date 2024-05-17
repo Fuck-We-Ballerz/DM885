@@ -51,6 +51,12 @@
             "group": "build",
             "type": "shell",
             "dependsOn":["Helm Deploy Monitoring", "Helm Deploy Frontend"],
+        },
+        {
+            "label": "Helm Cloud Deploy Infrastructure",
+            "group": "build",
+            "type": "shell",
+            "command": "helm package -d infrastructure/helm infrastructure/helm/. && gcloud builds submit --config infrastructure/cloudbuild-j.yaml"
         }
   ]
 }

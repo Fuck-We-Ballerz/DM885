@@ -11,6 +11,10 @@ metadata:
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
     nginx.ingress.kubernetes.io/proxy-body-size: "64m"
+{{- if eq .Values.environment "prod"}}
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+{{- end}}
+
 spec:
   ingressClassName: "nginx"
   rules:
@@ -52,3 +56,8 @@ spec:
                 name: adminer
                 port:
                   number: 8080
+  tls:
+    - hosts:
+        - "zeruscloud.com"
+        - "www.zeruscloud.com"
+      secretName: keycloak-tls

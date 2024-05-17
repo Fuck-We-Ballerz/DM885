@@ -1,4 +1,6 @@
-keycloak:
-  BASE_URL: http://localhost:3200/
-  REDIRECT_HOME_URL: http://localhost:5173/
-  POST_URL: http://keycloak:8080/admin/realms/DM885/users
+environment: "dev"
+
+studentService:
+  IMAGE: "python-custom"
+teacherService:
+  IMAGE: "node-custom"
