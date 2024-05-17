@@ -42,13 +42,6 @@ spec:
                 name: student-service
                 port:
                   number: 5050
-          - path: "/teacher(/|$)(.*)"
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: teacher-service
-                port:
-                  number: 5173
           - path: "/adminer(/|$)(.*)"
             pathType: ImplementationSpecific
             backend:
@@ -56,6 +49,13 @@ spec:
                 name: adminer
                 port:
                   number: 8080
+          - path: "/()(.*)"
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: teacher-service
+                port:
+                  number: 5173
   tls:
     - hosts:
         - "zeruscloud.com"
