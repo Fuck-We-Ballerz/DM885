@@ -1,0 +1,6 @@
+environment: "prod"
+
+studentService:
+  IMAGE: "gcr.io/devsecops-422807/python-custom"
+teacherService:
+  IMAGE: "gcr.io/devsecops-422807/node-custom"
