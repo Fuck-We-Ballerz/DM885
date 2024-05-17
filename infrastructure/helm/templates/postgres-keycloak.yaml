@@ -31,6 +31,9 @@ spec:
           volumeMounts:
             - name: postgres-storage
               mountPath: "/var/lib/postgresql/data"
+{{- if eq .Values.environment "prod"}}
+              subPath: postgres-key
+{{- end }}
       volumes:
         - name: postgres-storage
           persistentVolumeClaim:
@@ -52,7 +55,7 @@ spec:
     path: "/mnt/data/postgres-keycloak"
 {{- else if eq .Values.environment "prod"}}
   gcePersistentDisk:
-    pdName: postgres-disk
+    pdName: keycloak-disk
     fsType: ext4
 {{- end }}
 ---

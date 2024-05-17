@@ -1,6 +1,7 @@
 keycloak:
-  KC_HOSTNAME_URL: zeruscloud.com/keycloak/
-  KC_HOSTNAME_ADMIN_URL: zeruscloud.com/keycloak/
+  KC_HOSTNAME_URL: https://zeruscloud.com/keycloak/
+  KC_HOSTNAME_ADMIN_URL: https://zeruscloud.com/keycloak/
+  HOSTNAME_BASE: https://zeruscloud.com
 
 ingress:
   host: zeruscloud.com

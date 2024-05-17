@@ -26,6 +26,9 @@ spec:
               readOnly: true
             - mountPath: /var/lib/postgresql/data
               name: postgres-application-pvc
+{{- if eq .Values.environment "prod"}}
+              subPath: postgres-app
+{{- end }}
       volumes:
         - name: configmap-volume
           configMap:
