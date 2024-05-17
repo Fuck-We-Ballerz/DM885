@@ -4,6 +4,6 @@ keycloak:
   HOSTNAME_BASE: https://zeruscloud.com
 
 ingress:
-  host: zeruscloud.com
+  HOST: zeruscloud.com
 
 environment: "prod"

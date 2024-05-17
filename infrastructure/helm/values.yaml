@@ -13,11 +13,12 @@ keycloak:
   KC_METRICS_ENABLED: "true"
   KC_HOSTNAME_URL: https://localhost/keycloak/
   KC_HOSTNAME_ADMIN_URL: https://localhost/keycloak/
+  HOSTNAME_BASE: localhost
 
 postgresApplication:
   POSTGRES_DB: postgres
 
 ingress:
-  host: localhost
+  HOST: localhost
 
 environment: "dev"

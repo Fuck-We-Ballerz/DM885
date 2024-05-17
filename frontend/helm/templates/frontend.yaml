@@ -74,3 +74,6 @@ spec:
 {{- if eq .Values.environment "dev"}}
           imagePullPolicy: Never
 {{- end }}
+          envFrom:
+            - configMapRef:
+                name: teacher
