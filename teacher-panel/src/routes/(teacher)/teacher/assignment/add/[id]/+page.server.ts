@@ -7,7 +7,7 @@ export async function load({cookies, params}) {
         const courseId = parseInt(params.id)
         const course = await db.query.course.findFirst({ where: eq(schema.course.id, courseId)})
 
-        //Get all students
+        //Get all students in the course
         const students = await db.select().from(schema.student)
                     .innerJoin(schema.student_to_course, eq(schema.student.id, schema.student_to_course.student_id))
                     .where(eq(schema.student_to_course.course_id, courseId))
@@ -24,6 +24,7 @@ export async function load({cookies, params}) {
         const teacherUsername = cookies.get('kc-username')!
         const teacher = await db.query.teacher.findFirst({ where: eq(schema.teacher.username, teacherUsername)})
         
+        //Get all assignments for the course that the teacher is teaching
         const assignments = await db.select().from(schema.assignment)
                                     .innerJoin(schema.teacher_to_assignment, eq(schema.assignment.id, schema.teacher_to_assignment.assignment_id))
                                     .where(

@@ -25,6 +25,17 @@ services:
       - infrastructure_application
     env_file:
       - ./teacher-panel/.env
+  teacher_api:
+    container_name: teacher_api
+    build:
+      context: teacher-api
+      dockerfile: Dockerfile
+    volumes:
+      - ./teacher-api/src:/app/src:ro
+    ports:
+      - 5000:5000
+    networks:
+      - infrastructure_application
 
 networks:
   infrastructure_application:
