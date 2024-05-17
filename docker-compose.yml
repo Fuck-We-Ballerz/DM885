@@ -11,6 +11,9 @@ services:
       - "5050:5050"
     networks:
       - infrastructure_application
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      
     restart: unless-stopped
   #teacher_service:
    # container_name: teacher_service
