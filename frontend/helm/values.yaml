@@ -2,9 +2,12 @@ environment: "dev"
 
 
 keycloak:
-  BASE_URL: http://localhost:3200/
-  REDIRECT_HOME_URL: http://localhost:5173/
-  POST_URL: http://keycloak:8080/admin/realms/DM885/users
+  PUBLIC_KEYCLOAK_BASE_URL: http://localhost:3200/
+  PUBLIC_KEYCLOAK_REDIRECT_HOME_URL: http://localhost:5173/
+  PUBLIC_KEYCLOAK_POST_URL: http://keycloak:8080/admin/realms/DM885/users
+
+students:
+  PUBLIC_STUDENT_LOGIN_URL: https://localhost:5050/login
   
 studentService:
   IMAGE: "python-custom"
