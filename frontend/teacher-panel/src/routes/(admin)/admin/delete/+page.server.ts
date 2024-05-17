@@ -1,4 +1,5 @@
 import { drizzle } from 'drizzle-orm/postgres-js'
+import { db } from '$lib'
 import * as schema from '$lib/db/schema'
 import type { Actions } from './$types'
 import type { PageServerLoad } from './$types'
@@ -6,12 +7,7 @@ import postgres from 'postgres'
 import { eq } from 'drizzle-orm'
 import { PUBLIC_KEYCLOAK_POST_URL } from '$env/static/public';
 
-
-const queryClient = postgres('postgres://admin:admin@postgres_application:5432/testdb') //Docker
-// const queryClient = postgres('postgres://admin:admin@localhost:5432/testdb')
-const db = drizzle(queryClient, {schema: {...schema}});
-
-export async function load({params}) {
+export async function load({}) {
         const teachers = await db.query.teacher.findMany() ?? []
         const students = await db.query.student.findMany() ?? []
 
@@ -43,11 +39,8 @@ export async function load({params}) {
 export const actions = {
     default: async ({cookies, request}) => {
         const token = cookies.get('kc-cookie');
-        console.log(token)
         
         const data = await request.formData();
-        console.log(data)
-
 
         for (const entry of data.entries()) {  //entries [username, "on"] indicating user to delete
             const username = entry[0].toString();
@@ -94,8 +87,8 @@ export const actions = {
                                 .where(eq(schema.teacher.id, teacherIdDb))
                         
                         console.log(`Deleting from teacher_to_assignment db table`)
-                        await db.delete(schema.teacherToAssignment)
-                                .where(eq(schema.teacherToAssignment.teacher_id, teacherIdDb))
+                        await db.delete(schema.teacher_to_assignment)
+                                .where(eq(schema.teacher_to_assignment.teacher_id, teacherIdDb))
         
                         console.log(`Deleting from teacher_to_course db table`)
                         await db.delete(schema.teacher_to_course)
@@ -115,8 +108,8 @@ export const actions = {
                         .where(eq(schema.student.id, studentIdDb))
                 
                 console.log("Deleting student from student_to_assignment db table")
-                await db.delete(schema.studentToAssignment)
-                        .where(eq(schema.studentToAssignment.student_id, studentIdDb))
+                await db.delete(schema.student_to_assignment)
+                        .where(eq(schema.student_to_assignment.student_id, studentIdDb))
 
                 console.log("Deleting student from student_to_course db table")
                 await db.delete(schema.student_to_course)

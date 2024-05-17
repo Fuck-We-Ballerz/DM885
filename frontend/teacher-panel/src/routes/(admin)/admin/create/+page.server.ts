@@ -1,12 +1,9 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
+import { db} from '$lib';
 import * as schema from '$lib/db/schema'
 import type { Actions } from './$types';
 import { PUBLIC_KEYCLOAK_POST_URL } from '$env/static/public';
 import postgres from 'postgres';
-
-const queryClient = postgres('postgres://admin:admin@postgres_application:5432/testdb') //Docker
-// const queryClient = postgres('postgres://admin:admin@localhost:5432/testdb')
-const db = drizzle(queryClient, {schema: {...schema}});
 
 export const actions = {
     default: async ({cookies, request}) => {
@@ -23,7 +20,7 @@ export const actions = {
             credentials: [
                 {
                     type: "password",
-                    value: "pass",
+                    value: "pass",  //initial temporary password
                     temporary: true
                 }
             ],

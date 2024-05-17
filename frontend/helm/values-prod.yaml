@@ -4,6 +4,9 @@ keycloak:
   PUBLIC_KEYCLOAK_BASE_URL: https://zeruscloud.com:3200/
   PUBLIC_KEYCLOAK_REDIRECT_HOME_URL: https://zeruscloud.com:5173/
   PUBLIC_KEYCLOAK_POST_URL: https://zeruscloud.com/keycloak/admin/realms/DM885/users
+
+students:
+  PUBLIC_STUDENT_LOGIN_URL: https://zeruscloud.com/students/login
  
 
 studentService:
