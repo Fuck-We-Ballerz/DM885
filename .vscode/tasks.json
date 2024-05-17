@@ -56,7 +56,25 @@
             "label": "Helm Cloud Deploy Infrastructure",
             "group": "build",
             "type": "shell",
-            "command": "helm package -d infrastructure/helm infrastructure/helm/. && gcloud builds submit --config infrastructure/cloudbuild-j.yaml"
+            "command": "helm package -d infrastructure/helm infrastructure/helm/. && helm install infrastructure infrastructure/helm/infrastructure-0.1.0.tgz --values infrastructure/helm/values-prod.yaml"
+        },
+        {
+            "label": "Helm Cloud Deploy Monitoring",
+            "group": "build",
+            "type": "shell",
+            "command": "helm package -d monitoring/helm monitoring/helm/. && helm install monitoring monitoring/helm/monitoring-0.1.0.tgz --values monitoring/helm/values-prod.yaml"
+        },
+        {
+            "label": "Helm Cloud Deploy Frontend",
+            "group": "build",
+            "type": "shell",
+            "command": "helm package -d frontend/helm frontend/helm/. && helm install frontend frontend/helm/frontend-0.1.0.tgz --values frontend/helm/values-prod.yaml"
+        },
+        {
+            "label": "Helm Cloud Deploy",
+            "group": "build",
+            "type": "shell",
+            "dependsOn":["Helm Cloud Deploy Infrastructure", "Helm Cloud Deploy Monitoring", "Helm Cloud Deploy Frontend"],
         }
   ]
 }
