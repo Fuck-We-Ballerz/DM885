@@ -3,11 +3,18 @@ data:
   relation.sql: |
     CREATE TABLE IF NOT EXISTS assignment_config (
       id INT GENERATED ALWAYS AS IDENTITY,
+      name VARCHAR(64) NOT NULL,
       max_ram INT NOT NULL,
       max_cpu FLOAT NOT NULL,
       max_time INTERVAL NOT NULL,
       max_submission INT NOT NULL,
       PRIMARY KEY(id)
+    );
+    
+    CREATE TABLE IF NOT EXISTS course (
+        id INT GENERATED ALWAYS AS IDENTITY,
+        name VARCHAR(64) NOT NULL,
+        PRIMARY KEY(id)
     );
 
     CREATE TABLE IF NOT EXISTS assignment (
@@ -15,10 +22,13 @@ data:
       start_date TIMESTAMP NOT NULL,
       end_date TIMESTAMP NOT NULL,
       is_visible BOOLEAN NOT NULL,
-      docker_image BYTEA, 
+      title VARCHAR(64) NOT NULL,
+      docker_image TEXT,
       config_id INT NOT NULL,
+      course_id INT NOT NULL,
       PRIMARY KEY(id),
-      FOREIGN KEY(config_id) REFERENCES assignment_config(id)
+      FOREIGN KEY(config_id) REFERENCES assignment_config(id),
+      FOREIGN KEY(course_id) REFERENCES course(id)
     );
 
     CREATE TABLE IF NOT EXISTS student (
@@ -34,16 +44,32 @@ data:
     CREATE TABLE IF NOT EXISTS teacher (
       id INT GENERATED ALWAYS AS IDENTITY,
       name VARCHAR(64) NOT NULL,
-      password VARCHAR(64) NOT NULL,
       username VARCHAR(64) NOT NULL,
       is_paused BOOLEAN DEFAULT FALSE NOT NULL,
+      PRIMARY KEY(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS student_to_course (
+      id INT GENERATED ALWAYS AS IDENTITY,
+      student_id INT NOT NULL,
+      course_id INT NOT NULL,
+      FOREIGN KEY(student_id) REFERENCES student(id),
+      FOREIGN KEY(course_id) REFERENCES course(id),
+      PRIMARY KEY(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS teacher_to_course (
+      id INT GENERATED ALWAYS AS IDENTITY,
+      teacher_id INT NOT NULL,
+      course_id INT NOT NULL,
+      FOREIGN KEY(teacher_id) REFERENCES teacher(id),
+      FOREIGN KEY(course_id) REFERENCES course(id),
       PRIMARY KEY(id)
     );
 
     CREATE TABLE IF NOT EXISTS admin (
       id INT GENERATED ALWAYS AS IDENTITY,
       name VARCHAR(64) NOT NULL,
-      password VARCHAR(64) NOT NULL,
       username VARCHAR(64) NOT NULL,
       PRIMARY KEY(id)
     );
@@ -52,7 +78,7 @@ data:
       id INT GENERATED ALWAYS AS IDENTITY,
       grade VARCHAR(64) DEFAULT 'Not graded' NOT NULL,
       status VARCHAR(64) DEFAULT 'Pending' NOT NULL,
-      submission BYTEA,
+      submission BYTEA, -- Zip file
       submission_std VARCHAR(64) DEFAULT '' NOT NULL,
       submission_err VARCHAR(64) DEFAULT '' NOT NULL,
       submission_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -62,6 +88,7 @@ data:
       FOREIGN KEY(student_id) REFERENCES student(id),
       PRIMARY KEY(id)
     );
+
 
     CREATE TABLE IF NOT EXISTS student_to_assignment (
       assignment_id INT,

@@ -69,11 +69,13 @@ spec:
         app: teacher-service
     spec:
       containers:
-        - name: student-service
+        - name: teacher-service
           image: {{ .Values.teacherService.IMAGE}}
           envFrom:
             - configMapRef:
                 name: teacher
+            - secretRef:
+                name: postgres-application
 {{- if eq .Values.environment "dev"}}
           imagePullPolicy: Never
 {{- end }}

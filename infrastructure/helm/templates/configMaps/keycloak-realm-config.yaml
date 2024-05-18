@@ -1217,10 +1217,10 @@ data:
         "alwaysDisplayInConsole": false,
         "clientAuthenticatorType": "client-secret",
         "redirectUris": [
-            "*"
+            "https://${HOSTNAME_BASE}/admin/*"
         ],
         "webOrigins": [
-            "*"
+            "https://${HOSTNAME_BASE}/admin"
         ],
         "notBefore": 0,
         "bearerOnly": false,
@@ -1234,6 +1234,7 @@ data:
         "protocol": "openid-connect",
         "attributes": {
             "client.secret.creation.time": "1715193157",
+            "post.logout.redirect.uris": "https://${HOSTNAME_BASE}/",
             "oauth2.device.authorization.grant.enabled": "false",
             "backchannel.logout.revoke.offline.tokens": "false",
             "use.refresh.tokens": "true",
@@ -1326,10 +1327,10 @@ data:
         "alwaysDisplayInConsole": false,
         "clientAuthenticatorType": "client-secret",
         "redirectUris": [
-            "/teacher/*"
+            "https://${HOSTNAME_BASE}/teacher/*"
         ],
         "webOrigins": [
-            "*"
+            "https://${HOSTNAME_BASE}/teacher"
         ],
         "notBefore": 0,
         "bearerOnly": false,
@@ -1344,7 +1345,7 @@ data:
         "attributes": {
             "oidc.ciba.grant.enabled": "false",
             "backchannel.logout.session.required": "true",
-            "post.logout.redirect.uris": "https://${HOSTNAME_BASE}/teacher/",
+            "post.logout.redirect.uris": "https://${HOSTNAME_BASE}/",
             "display.on.consent.screen": "false",
             "oauth2.device.authorization.grant.enabled": "false",
             "backchannel.logout.revoke.offline.tokens": "false"

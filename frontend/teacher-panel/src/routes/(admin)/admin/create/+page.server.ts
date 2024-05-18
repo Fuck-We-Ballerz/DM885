@@ -1,9 +1,8 @@
-import { drizzle } from 'drizzle-orm/postgres-js';
 import { db} from '$lib';
 import * as schema from '$lib/db/schema'
 import type { Actions } from './$types';
-import { PUBLIC_KEYCLOAK_POST_URL } from '$env/static/public';
-import postgres from 'postgres';
+import { PUBLIC_KEYCLOAK_POST_URL } from '$env/static/public'
+
 
 export const actions = {
     default: async ({cookies, request}) => {
@@ -25,10 +24,8 @@ export const actions = {
                 }
             ],
             groups: ["teacher-group"]
-            // groups: ["admin-group"]
         };
 
-        // const response = await fetch('http://localhost:3200/admin/realms/DM885/users', { //local
         const response = await fetch(`${ PUBLIC_KEYCLOAK_POST_URL }`, {
             method: 'POST',
             headers: {
@@ -53,14 +50,12 @@ export const actions = {
                     await db.insert(schema.teacher).values({
                         name: teacher.firstName + " " + teacher.lastName,
                         username: teacher.username,
-                        password: "pass",
                     })
                 }
                 if(teacher.groups[0] === 'admin-group'){
                     await db.insert(schema.admin).values({
                         name: teacher.firstName + " " + teacher.lastName,
                         username: teacher.username,
-                        password: "pass",
                     })
                 }
             }

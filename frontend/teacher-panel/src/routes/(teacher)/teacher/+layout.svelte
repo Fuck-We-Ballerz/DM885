@@ -6,6 +6,8 @@
     
     onMount(() => {
         if(!keycloak){
+            window.location.href = `${base}/`;
+        }else if(!keycloak.authenticated){
             window.location.reload();
         }
     });

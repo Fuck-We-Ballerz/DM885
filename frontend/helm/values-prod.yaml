@@ -5,6 +5,7 @@ keycloak:
   PUBLIC_KEYCLOAK_REDIRECT_HOME_URL: https://zeruscloud.com/teacher
   PUBLIC_KEYCLOAK_POST_URL: https://zeruscloud.com/keycloak/admin/realms/DM885/users
 
+
 students:
   PUBLIC_STUDENT_LOGIN_URL: https://zeruscloud.com/students/login
  

@@ -4,64 +4,80 @@ import * as schema from '$lib/db/schema'
 import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib';
 
-export const load: PageServerLoad = async ({cookies, params}) => {
-    // const date = new Date()
-    // date.toISOString()
+export const load: PageServerLoad = async ({cookies, params}) => {   
+    // const teacherUsername = cookies.get('kc-username')!
+    // const teacher = await db.query.teacher.findFirst({ where: eq(schema.teacher.username, teacherUsername)})
+    // console.log(teacher)
 
-    // const course = await db.insert(schema.course).values({
-    //     name: "DM885"
-    // }).returning()
+    // const configs = await db.query.assignmentConfig.findMany()
 
-    // await db.insert(schema.assignmentConfig).values({
-    //     max_cpu: 1,
-    //     max_ram: 1,
-    //     max_submission: 1,
-    //     max_time: 1,
-    // })
+    // let output = []
+    // //Get all assignments that a teacher has
+    // const res = await db.select().from(schema.assignment)
+    //                     .innerJoin(schema.teacher_to_assignment, eq(schema.assignment.id, schema.teacher_to_assignment.assignment_id))
+    //                     .where(eq(schema.teacher_to_assignment.teacher_id, teacher!.id))
 
-    // await db.insert(schema.assignment).values ({
-    //     config_id: 1,
-    //     is_visible: false,
-    //     start_date: date.toISOString(),
-    //     end_date: date.toISOString(),
-    //     title: "First assignment",
-    //     course_id: 1
-    // })
+    // console.log(res)
     
-    const teacherUsername = cookies.get('kc-username')!
-    const teacher = await db.query.teacher.findFirst({ where: eq(schema.teacher.username, teacherUsername)})
-    console.log(teacher)
+    // output = await Promise.all(res.map(async (ass) => {
+    //     const courseName = await db.query.course.findFirst({ where: eq(schema.course.id, ass.assignment.course_id)})
 
-    const configs = await db.query.assignmentConfig.findMany()
+    //     return {
+    //         title: ass.assignment.title,
+    //         assignmentId: ass.assignment.id,
+    //         course: ass.assignment.course_id,
+    //         courseName: courseName!.name,
+    //         dockerImage: ass.assignment.docker_image,
+    //         config: ass.assignment.config_id,
+    //         isVisible: ass.assignment.is_visible,
+    //         startDate: ass.assignment.start_date,
+    //         endDate: ass.assignment.end_date
+    //     }
+    // }))
 
-    let output = []
-    //Get all assignments that a teacher has
-    const res = await db.select().from(schema.assignment)
-                        .innerJoin(schema.teacher_to_assignment, eq(schema.assignment.id, schema.teacher_to_assignment.assignment_id))
-                        .where(eq(schema.teacher_to_assignment.teacher_id, teacher!.id))
+    // return {
+    //     assignmentConfigs: configs,
+    //     assignments: output
+	// };
+    try {
+        const teacherUsername = cookies.get('kc-username')!
+        const teacher = await db.query.teacher.findFirst({ where: eq(schema.teacher.username, teacherUsername)})
+        console.log(teacher)
 
-    console.log(res)
-    
-    output = await Promise.all(res.map(async (ass) => {
-        const courseName = await db.query.course.findFirst({ where: eq(schema.course.id, ass.assignment.course_id)})
+        const configs = await db.query.assignmentConfig.findMany()
+
+        let output = []
+        //Get all assignments that a teacher has
+        const res = await db.select().from(schema.assignment)
+                            .innerJoin(schema.teacher_to_assignment, eq(schema.assignment.id, schema.teacher_to_assignment.assignment_id))
+                            .where(eq(schema.teacher_to_assignment.teacher_id, teacher!.id))
+
+        console.log(res)
+        
+        output = await Promise.all(res.map(async (ass) => {
+            const courseName = await db.query.course.findFirst({ where: eq(schema.course.id, ass.assignment.course_id)})
+
+            return {
+                title: ass.assignment.title,
+                assignmentId: ass.assignment.id,
+                course: ass.assignment.course_id,
+                courseName: courseName!.name,
+                dockerImage: ass.assignment.docker_image,
+                config: ass.assignment.config_id,
+                isVisible: ass.assignment.is_visible,
+                startDate: ass.assignment.start_date,
+                endDate: ass.assignment.end_date
+            }
+        }))
 
         return {
-            title: ass.assignment.title,
-            assignmentId: ass.assignment.id,
-            course: ass.assignment.course_id,
-            courseName: courseName!.name,
-            dockerImage: ass.assignment.docker_image,
-            config: ass.assignment.config_id,
-            isVisible: ass.assignment.is_visible,
-            startDate: ass.assignment.start_date,
-            endDate: ass.assignment.end_date
-        }
-    }))
-
-    return {
-        assignmentConfigs: configs,
-        assignments: output
-	};
+            assignmentConfigs: configs,
+            assignments: output
+        };
+    } catch (error) {
+        console.log(error);
+        // Handle the error here
+    }
 };
 
 

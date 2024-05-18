@@ -32,7 +32,6 @@ export const student = pgTable('student', {
 export const teacher = pgTable('teacher', {
     id: serial('id').primaryKey(),
     name: varchar('name', {length: 64}).notNull(),
-    password: varchar('password', {length: 64}).notNull(),
     username: varchar('username', {length: 64}).notNull(),
     is_paused: boolean('is_paused').default(false).notNull(),
 });
@@ -40,7 +39,6 @@ export const teacher = pgTable('teacher', {
 export const admin = pgTable('admin', {
     id: serial('id').primaryKey(),
     name: varchar('name', {length: 64}).notNull(),
-    password: varchar('password', {length: 64}).notNull(),
     username: varchar('username', {length: 64}).notNull(),
 });
 
