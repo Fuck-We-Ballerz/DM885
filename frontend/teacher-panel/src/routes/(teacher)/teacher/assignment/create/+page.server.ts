@@ -9,7 +9,6 @@ export const actions = {
 	newConfig: async () => {
         console.log("Creating new config")
         await db.insert(schema.assignmentConfig).values({
-            // name: "Some Awesome Config",  //TODO: Add name to the postgress schema as well
             max_cpu: 1, 
             max_ram: 1,
             max_submission: 1,

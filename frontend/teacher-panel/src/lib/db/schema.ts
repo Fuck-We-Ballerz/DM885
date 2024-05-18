@@ -2,7 +2,6 @@ import { boolean, interval, foreignKey, integer, pgTable, primaryKey, serial, te
 
 export const assignmentConfig = pgTable('assignment_config', {
   id: serial('id').primaryKey(),
-//   name: varchar('name', {length: 64}).notNull(),   //Postgress db does not support name yet
   max_ram: integer('max_ram').notNull(),
   max_cpu: integer('max_cpu').notNull(),
   max_time: interval('max_time').notNull(),
