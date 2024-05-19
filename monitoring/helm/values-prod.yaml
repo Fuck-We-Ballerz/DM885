@@ -4,5 +4,5 @@ grafana:
   GF_AUTH_GENERIC_OAUTH_API_URL: "https://zeruscloud.com/keycloak/realms/DM885/protocol/openid-connect/userinfo"
   GF_AUTH_GENERIC_OAUTH_AUTH_URL: "https://zeruscloud.com/keycloak/realms/DM885/protocol/openid-connect/auth"
   GF_SERVER_ROOT_URL: "https://zeruscloud.com/grafana/"
-  IMAGE: "gcr.io/devsecops-422807/grafana"
+  IMAGE: "europe-west3-docker.pkg.dev/devsecops-422807/dm885-artifact-registry/grafana"
 
