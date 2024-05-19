@@ -5,27 +5,70 @@
 {% block content %}
 <div style="text-align: center;">
     <h1>Welcome to the home page.</h1>
-</div>
-<div style="text-align: center;">
-    <h2>Here are the statuses of your assignments.</h2>
+    <h2>Here are the statuses of your assignments:</h2>
 </div>
 
 <div class="list-group d-flex justify-content-center">
     {% if assignments %}
         {% for assignment in assignments %}
-            <a href="{{ url_for('submit_assignment', assignment_id=assignment.id) }}" class="list-group-item list-group-item-action text-center">
-                {{ assignment.name }}
-                <span style="height: 10px; width: 10px; background-color: 
+        <a href="{{ url_for('submit_assignment', assignment_id=assignment.id) }}" class="list-group-item list-group-item-action text-center">
+            <div>
+                <strong>Assignment:</strong> {{ assignment.course_name }}: {{ assignment.title }}<br>
+                <strong>Time Period:</strong> {{ assignment.start_date.strftime('%Y-%m-%d %H:%M:%S') }} - {{ assignment.end_date.strftime('%Y-%m-%d %H:%M:%S') }}
+                <strong>Status:</strong>
+                <span style="color: 
                     {% if assignment.status == 0 %}grey
                     {% elif assignment.status == 1 %}blue
                     {% elif assignment.status == 2 %}orange
                     {% elif assignment.status == 3 %}green
                     {% elif assignment.status == 4 %}red
-                    {% endif %}; border-radius: 50%; display: inline-block;"></span>
-            </a>
+                    {% endif %};">
+                    {% if assignment.status == 0 %}Not Started
+                    {% elif assignment.status == 1 %}In Progress
+                    {% elif assignment.status == 2 %}Under Review
+                    {% elif assignment.status == 3 %}Completed
+                    {% elif assignment.status == 4 %}Needs Revision
+                    {% endif %}
+                </span>
+            </div>
+        </a>
+        <button class="btn btn-danger cancel-btn" data-assignment-id="{{ assignment.id }}">Cancel</button>
+    </div>
         {% endfor %}
     {% else %}
-        <a href="#" class="list-group-item list-group-item-action text-center">No assignments available</a>
+        <div class="list-group-item text-center">No assignments available</div>
     {% endif %}
 </div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.cancel-btn').forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                const assignmentId = this.getAttribute('data-assignment-id');
+                fetch(`/student/cancel_assignment/${assignmentId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status: 0 })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Failed to cancel the assignment.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while canceling the assignment.');
+                });
+            });
+        });
+    });
+</script>
+
 {% endblock %}
