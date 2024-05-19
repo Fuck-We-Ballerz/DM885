@@ -28,18 +28,18 @@ jobs:
         
       - name: Build and push Docker image (python-custom)
         run: |
-          docker build -t gcr.io/${{ secrets.PROJECT_ID }}/python-custom -f frontend/user/Dockerfile frontend/user
-          docker push gcr.io/${{ secrets.PROJECT_ID }}/python-custom
+          docker build -t gcr.io/devsecops-422807/python-custom -f frontend/user/Dockerfile frontend/user
+          docker push gcr.io/devsecops-422807/python-custom
 
       - name: Build and push Docker image (node-custom)
         run: |
-          docker build -t gcr.io/${{ secrets.PROJECT_ID }}/node-custom -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
-          docker push gcr.io/${{ secrets.PROJECT_ID }}/node-custom
+          docker build -t gcr.io/devsecops-422807/node-custom -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
+          docker push gcr.io/devsecops-422807/node-custom
 
       - name: Build and push Docker image (grafana)
         run: |
-          docker build -t gcr.io/${{ secrets.PROJECT_ID }}/grafana -f monitoring/Dockerfile.grafana ./monitoring
-          docker push gcr.io/${{ secrets.PROJECT_ID }}/grafana
+          docker build -t gcr.io/devsecops-422807/grafana -f monitoring/Dockerfile.grafana ./monitoring
+          docker push gcr.io/devsecops-422807/grafana
 
       - name: Install Helm
         run: |
