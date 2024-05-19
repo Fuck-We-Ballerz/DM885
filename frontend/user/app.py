@@ -1,34 +1,34 @@
-from ast import Sub
-from re import sub
-from flask import Flask, request, render_template, redirect, url_for, jsonify, session
-from flask_bootstrap import Bootstrap  # Import Flask-Bootstrap
+from flask import Blueprint, Flask, request, render_template, redirect, url_for, jsonify, session
+from flask_bootstrap import Bootstrap
 from werkzeug.utils import secure_filename
 import os
 from logs_config import setup_logging
-import requests
-from datetime import datetime
-from sqlalchemy.dialects.postgresql import BYTEA
 from database import db, Student, Assignment, Course, AssignmentConfig, Submission, init_db, Student_to_assignment
 import docker
+from werkzeug.security import generate_password_hash, check_password_hash
+
+# Import the API blueprint
+from api import api
 
 # Set up logger
-# set log_terminal to True, if you want logs in the terminal, otherwise set to False
 log_terminal = True
 logger = setup_logging(log_terminal)
 
-app = Flask(__name__)
-bootstrap = Bootstrap(app)  # Initialize Flask-Bootstrap
+app = Flask(__name__, static_folder='static', template_folder='templates')
+bootstrap = Bootstrap(app)
+
 app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024  # for 64 MB limit
-
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:admin@postgres-application/postgres'
-
-
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'Jacobo'  # Set a secret key for session management
+
 # Initialize the database
 init_db(app)
 
-# In case we are not connected to the database, we can use this as fallback
+
+# Register the API blueprint
+app.register_blueprint(api, url_prefix='/api')
+# Fallback data
 fallback_assignments = [
     {"id": 1, "title": "Lav et sort-rød træ (Det kan du ikke)", "status": 0, "requirements": "No specific requirements"},
     {"id": 2, "title": "Bevis Chernoff", "status": 1, "requirements": "Nu skal du staffes"},
@@ -45,21 +45,14 @@ fallback_course = [
     {"id": 5, "name": "DM510_Operativsystemer"},
 ]
 
-
 @app.route("/")
-def homepage():
-    logger.debug("Redirecting from homepage to login")
-    return redirect(url_for('login', error="You must login first"))
-
-@app.route("/student")
-def student():
+def student_dashboard():
     if 'username' not in session:
         logger.warning("Access attempt without login")
         return redirect(url_for('login', error="You need to login first"))
-
+    
     username = session['username']
     try:
-        # Get the student's assignments with status
         student = Student.query.filter_by(username=username).first()
         assignments = db.session.query(
             Assignment.id,
@@ -82,69 +75,53 @@ def student():
 
     return render_template("student.html", nav=f"Dashboard for: {username}", assignments=assignments)
 
-'''
-@app.route('/login', methods=['GET', 'POST'])
-def login():
+@app.route('/register', methods=['GET', 'POST'])
+def register():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        if username and password: # Check if the inputs are not empty
-          
-            #headers = {'content-type': 'application/x-www-form-urlencoded',}
-            
-            # Define data for HTTP request
-            
-            data = {
-                'username': username,
-                'password': password,
-                'grant_type': 'password',
-                'client_id': 'student_service',
-                'client_secret': 'K0hdiACFA0sJOmgDc3xyMbwuhUh7fWpp'
-            }
+        if username and password:
+            hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+            new_student = Student(username=username, password=hashed_password)
             try:
-                response = requests.post('http://localhost:3200/auth/realms/DM855/protocol/openid-connect/token', headers=headers, data=data)
-                if response.status_code == 200:
-                    session['username'] = username
-                    return redirect(url_for('student'))
-                else:
-                    return redirect(url_for('login', nav="Login", error="Invalid username or password"))
+                db.session.add(new_student)
+                db.session.commit()
+                logger.info(f"User: {username} successfully registered.")
+                return redirect(url_for('login', nav="Login", success="Account created successfully"))
             except Exception as e:
-                    logger.error(f"HTTP request failed: {e}")
-                    return redirect(url_for('login', nav="Login", error="Invalid username or password"))    
-            
+                logger.error(f"Failed to register user: {username}, Error: {e}")
+                return redirect(url_for('register', nav="Register", error="Registration failed"))
         else:
-            logger.warning("Empty login submission")
-            return redirect(url_for('login', nav="Login", error="Input cannot be empty"))
+            logger.warning("Empty registration submission")
+            return redirect(url_for('register', nav="Register", error="Input cannot be empty"))
     else:
-        return render_template('login.html', nav="Login")
-'''
+        return render_template('register.html', nav="Register")
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    logger.info(url_for('login'))
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        if username and password: # Check if the inputs are not empty
+        if username and password:
             try:
                 student = Student.query.filter_by(username=username).first()
-                # Check if the student exists and the username and the password is correct
-                if student and username == student.username and password == student.password: # Check if the username and password are correct
+                if student and check_password_hash(student.password, password):
                     session['username'] = student.username 
-                    logger.info(f"User: {username} has succesfully logged in.")
-                    return redirect(url_for('student'))
+                    logger.info(f"User: {username} has successfully logged in.")
+                    return redirect(url_for('student_dashboard'))
                 else:
                     logger.debug(f"User: {username} failed to log in.")
                     return redirect(url_for('login', nav="Login", error="Invalid username or password"))
-            
-            # In case the database is not connected. Used for testing without db
             except Exception as e:
                 if username == "admin" and password == "admin":
                     session['username'] = username
                     logger.info(f"Bypass database using admin") 
-                    return redirect(url_for('student'))
+                    return redirect(url_for('student_dashboard'))
                 else:
                     logger.error(f"Database not connected: {e}")
                     return redirect(url_for('login', nav="Login", error="Invalid username or password"))
-                    
         else:
             logger.warning("Empty login submission")
             return redirect(url_for('login', nav="Login", error="Input cannot be empty"))
@@ -153,14 +130,12 @@ def login():
 
 @app.route('/logout')
 def logout():
-    # Clear the session
     username = session.get('username', 'No User')
     session.clear()
-    # Redirect to the login page
     logger.info(f"{username} logged out.")
     return redirect(url_for('login'))
 
-@app.route('/student/submit/<int:assignment_id>', methods=['GET', 'POST'])
+@app.route('/submit/<int:assignment_id>', methods=['GET', 'POST'])
 def submit_assignment(assignment_id):
     username = session.get('username', 'No user')
     session['assignment_id'] = assignment_id
@@ -170,14 +145,12 @@ def submit_assignment(assignment_id):
         assignment = Assignment.query.get(session.get('assignment_id'))
         logger.info(f"User clicked assignment: {assignment}")
     except Exception as e:
-        # Use a fallback if the database query fails
         assignment = next((a for a in fallback_assignments if a['id'] == assignment_id), None)
         assignment = Assignment(id=assignment['id'], title=assignment['title'], status=assignment['status'], requirements=assignment['requirements'])
         logger.info(f"Using the fallback list the user: {username} clicked assignment: {assignment}, Error: {e}")
     return render_template('submit.html', nav=f"{assignment.course}: {assignment.title}", assignment=assignment)
 
-
-@app.route('/student/cancel_assignment/<int:assignment_id>', methods=['POST'])
+@app.route('/cancel_assignment/<int:assignment_id>', methods=['POST'])
 def cancel_assignment(assignment_id):
     if 'username' not in session:
         return jsonify({'success': False, 'error': 'You need to login first'}), 403
@@ -199,18 +172,15 @@ def cancel_assignment(assignment_id):
         logger.error(f"Failed to cancel assignment {assignment_id}: {e}")
         return jsonify({'success': False, 'error': 'Failed to cancel assignment'}), 500
 
-
-
-@app.route('/student/upload', methods=['POST'])
+@app.route('/upload', methods=['POST'])
 def upload_file():
     assignment_id = session.get('assignment_id', 'No Assignment')
     logger.info(f"Uploading for assignment: {assignment_id}")
     
-    upload_folder= '/user/upload'
+    upload_folder = '/user/upload'
     username = session.get('username', 'No User')
     assignment_id = session.get('assignment_id', 'No Assignment')
     
-    # Check if directory exists, and if not, create it
     if not os.path.exists(upload_folder):
         try:
             os.makedirs(upload_folder, exist_ok=True)
@@ -231,9 +201,8 @@ def upload_file():
         filename = secure_filename(file.filename)
         file_path = os.path.join(upload_folder, filename)
         file.save(file_path)
-        logger.info(f"{username} succesfully uploaded file: {filename}")
+        logger.info(f"{username} successfully uploaded file: {filename}")
         
-        # SQL create submission
         try:
             with open(file_path, 'rb') as f:
                 data = f.read()
@@ -248,14 +217,13 @@ def upload_file():
             logger.info(f"Submission created for assignment: {assignment_id} by student: {username}")
             logger.info(f"Student_to_assignment created for assignment: {assignment_id} by student: {username} with status 1")
             
-            # Run Docker container with the uploaded file
             run_docker(student.id, assignment_id, new_submission.id, file_path)
         except Exception as e:
             print("Error in submission", e)
             db.session.rollback()
             logger.error(f"Failed to create submission for assignment: {assignment_id}, Error {e}")
         
-        return redirect(url_for('student', nav="Student", error=f"You Succesfully uploaded: {filename}")) 
+        return redirect(url_for('student_dashboard', nav="Student", error=f"You successfully uploaded: {filename}")) 
     else:
         logger.debug(f"{username} tried to upload a file of invalid file type: {filename}")
         return jsonify({'error': 'Invalid file type'}), 400
@@ -265,7 +233,6 @@ def allowed_file(filename):
 
 def run_docker(user_id, assignment_id, submission_id, file_path):
     try:
-        # Get information from the database
         assignment = Assignment.query.get(assignment_id)
         config = AssignmentConfig.query.filter_by(id=assignment_id).first()
         if not assignment or not config:
@@ -274,15 +241,12 @@ def run_docker(user_id, assignment_id, submission_id, file_path):
         image = assignment.docker_image if assignment.docker_image else "python:3.12-slim"
         submission_id = Submission.query.get(submission_id).id
 
-        # Docker client setup
         client = docker.DockerClient(base_url='unix://var/run/docker.sock')
 
-        # Bind the directory containing the zip file
         host_directory = os.path.dirname(file_path)
         container_directory = "/app"
         file_name = os.path.basename(file_path)
 
-        # Ensure memory limit is at least 6MB
         mem_limit = max(int(config.max_ram), 6 * 1024 * 1024)
         cpu_count = int(config.max_cpu)
 
@@ -295,18 +259,15 @@ def run_docker(user_id, assignment_id, submission_id, file_path):
             volumes={host_directory: {'bind': container_directory, 'mode': 'rw'}}
         )
 
-        # Wait for the container to finish
         container.wait()
 
-        # Fetch logs
         stdout = container.logs(stdout=True, stderr=False)
         stderr = container.logs(stdout=False, stderr=True)
 
-        # Update the submission with the output
         submission = Submission.query.get(submission_id)
         submission.submission_std = stdout.decode('utf-8') if stdout else ''
         submission_err = stderr.decode('utf-8') if stderr else ''
-        submission.submission_err = submission_err[:64]  # Truncate to 64 characters
+        submission.submission_err = submission_err[:64]  
         submission.grade = "passed" if not stderr else "failed"
         submission.status = 3 if not stderr else 4
 
@@ -315,18 +276,17 @@ def run_docker(user_id, assignment_id, submission_id, file_path):
     except docker.errors.DockerException as de:
         logger.error(f"Docker error for assignment {assignment_id}: {de}")
         submission = Submission.query.get(submission_id)
-        submission.submission_err = str(de)[:64]  # Truncate to 64 characters
+        submission.submission_err = str(de)[:64]  
         submission.grade = "failed"
         submission.status = 4
         db.session.commit()
     except Exception as e:
         logger.error(f"Error running docker for assignment {assignment_id}, Error: {e}")
         submission = Submission.query.get(submission_id)
-        submission.submission_err = str(e)[:64]  # Truncate to 64 characters
+        submission.submission_err = str(e)[:64]  
         submission.grade = "failed"
         submission.status = 4
         db.session.commit()
 
-
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True, port=5050)
+    app.run(host="0.0.0.0", port=5050, debug=True)
