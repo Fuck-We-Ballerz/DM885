@@ -28,7 +28,8 @@ jobs:
 
       - name: XD
         run: |
-          gcloud auth configure-docker --quiet        
+          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://us-west3-docker.pkg.dev
+
       - name: Build and push Docker image (python-custom)
         run: |
           docker build -t gcr.io/devsecops-422807/python-custom -f frontend/user/Dockerfile frontend/user
