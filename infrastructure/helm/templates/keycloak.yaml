@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+spec:
+  selector:
+    app: keycloak
+  ports:
+    - port: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+        - name: keycloak
+          image: keycloak/keycloak:latest
+          args: ["start-dev", "--import-realm"]
+#{{- if eq .Values.environment "dev" }}
+#          args: ["start-dev", "--import-realm"]
+#{{- end }}
+#{{- if eq .Values.environment "prod" }}
+#          args: ["start-prod", "--import-realm"]
+#{{- end }}
+          envFrom:
+            - secretRef:
+                name: keycloak
+            - configMapRef:
+                name: keycloak
+          volumeMounts:
+            - name: keycloak-volume
+              mountPath: /opt/keycloak/data/import
+      volumes:
+        - name: keycloak-volume
+          configMap:
+            name: keycloak-realm

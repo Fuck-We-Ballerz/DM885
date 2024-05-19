@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: student-service
+spec:
+  selector:
+    app: student-service
+  ports:
+    - port: 5050
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: student-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: student-service
+  template:
+    metadata:
+      labels:
+        app: student-service
+    spec:
+      containers:
+        - name: student-service
+          image: {{ .Values.studentService.IMAGE }}
+{{- if eq .Values.environment "dev"}}
+          imagePullPolicy: Never
+{{- end }}
+          env:
+          - name: DOCKER_HOST
+            value: "tcp://dind:2376"
+          - name: DOCKER_CERT_PATH
+            value: "/certs/client"
+          - name: DOCKER_TLS_VERIFY
+            value: "1"
+          volumeMounts:
+          - name: dind-certs
+            mountPath: "/certs/client"
+            readOnly: true
+      volumes:
+      - name: dind-certs
+        persistentVolumeClaim:
+          claimName: dind-certs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: teacher-service
+spec:
+  selector:
+    app: teacher-service
+  ports:
+    - port: 5173
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: teacher-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: teacher-service
+  template:
+    metadata:
+      labels:
+        app: teacher-service
+    spec:
+      containers:
+        - name: teacher-service
+          image: {{ .Values.teacherService.IMAGE}}
+{{- if eq .Values.environment "dev"}}
+          imagePullPolicy: Never
+{{- end }}

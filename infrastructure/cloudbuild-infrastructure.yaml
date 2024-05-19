@@ -1,0 +1,13 @@
+options:
+  env:
+    - 'CLOUDSDK_COMPUTE_ZONE=europe-west3-a'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=dm885-grading-system'
+
+steps:
+  - name: 'gcr.io/devsecops-422807/helm'
+    args:
+      - 'install'
+      - 'infrastructure'
+      - 'infrastructure/helm/infrastructure-0.1.0.tgz'
+      - '--values'
+      - 'infrastructure/helm/values-prod.yaml'

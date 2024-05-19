@@ -1,0 +1,24 @@
+keycloak:
+  # Secrets
+  CUSTOM_KC_APPLICATION_REALM_SECRET: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+  CUSTOM_KC_GRAFANA_REALM_SECRET: Z3UIkhnpy7fXPKnrhjkrUov1379wUgTU
+  KC_DB_PASSWORD: postgres
+  KC_DB_USERNAME: postgres
+  KEYCLOAK_ADMIN: admin
+  KEYCLOAK_ADMIN_PASSWORD: admin
+
+  # ConfigMap
+  KC_DB: postgres
+  KC_DB_URL: jdbc:postgresql://postgres-keycloak:5432/postgres
+  KC_METRICS_ENABLED: "true"
+  KC_HOSTNAME_URL: https://localhost/keycloak/
+  KC_HOSTNAME_ADMIN_URL: https://localhost/keycloak/
+  HOSTNAME_BASE: localhost
+
+postgresApplication:
+  POSTGRES_DB: postgres
+
+ingress:
+  HOST: localhost
+
+environment: "dev"

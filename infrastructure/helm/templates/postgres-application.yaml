@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-application
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-application
+  template:
+    metadata:
+      labels:
+        app: postgres-application
+    spec:
+      containers:
+        - name: postgres-application
+          image: postgres:latest
+          envFrom:
+            - secretRef:
+                name: postgres-application
+            - configMapRef:
+                name: postgres-application
+          volumeMounts:
+            - mountPath: /docker-entrypoint-initdb.d
+              name: configmap-volume
+              readOnly: true
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-application-pvc
+{{- if eq .Values.environment "prod"}}
+              subPath: postgres-app
+{{- end }}
+      volumes:
+        - name: configmap-volume
+          configMap:
+            name: relation-sql
+        - name: postgres-application-pvc
+          persistentVolumeClaim:
+            claimName: postgres-application-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-application
+spec:
+  selector:
+    app: postgres-application
+  ports:
+    - port: 5432
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-application-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+{{- if eq .Values.environment "dev"}}
+  hostPath:
+    path: "/mnt/data/postgres-application"
+{{- else if eq .Values.environment "prod"}}
+  gcePersistentDisk:
+    pdName: postgres-disk
+    fsType: ext4
+{{- end }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-application-pvc
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

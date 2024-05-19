@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dind-certs
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dind
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dind
+  template:
+    metadata:
+      labels:
+        app: dind
+    spec:
+      hostname: dind
+      containers:
+      - name: dind
+        image: docker:dind
+        ports:
+        - containerPort: 2376
+        env:
+        - name: DOCKER_TLS_CERTDIR
+          value: "/certs"
+        volumeMounts:
+        - name: dind-certs
+          mountPath: "/certs/client"
+        securityContext:
+          privileged: true
+      volumes:
+      - name: dind-certs
+        persistentVolumeClaim:
+          claimName: dind-certs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dind
+spec:
+  selector:
+    app: dind
+  ports:
+    - port: 2376
