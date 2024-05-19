@@ -10,6 +10,6 @@ students:
  
 
 studentService:
-  IMAGE: "europe-west3-docker.pkg.dev/devsecops-422807/dm885-artifact-registry/python-custom"
+  IMAGE: "gcr.io/devsecops-422807/python-custom"
 teacherService:
-  IMAGE: "europe-west3-docker.pkg.dev/devsecops-422807/dm885-artifact-registry/grafana/node-custom"
+  IMAGE: "gcr.io/devsecops-422807/node-custom"
