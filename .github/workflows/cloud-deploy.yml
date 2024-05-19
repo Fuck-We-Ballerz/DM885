@@ -38,6 +38,11 @@ jobs:
       - name: Set gcloud compute zone
         run: gcloud config set compute/zone ${{ env.CLOUDSDK_COMPUTE_ZONE }}
 
+      - name: Install gke-gcloud-auth-plugin
+        run: |
+          gcloud components update --quiet
+          gcloud components install gke-gcloud-auth-plugin --quiet
+          echo "export USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> $GITHUB_ENV
       - name: Get GKE credentials
         run: gcloud container clusters get-credentials ${{ env.CLOUDSDK_CONTAINER_CLUSTER }}
 
@@ -45,7 +50,6 @@ jobs:
         run: |
           docker build -t gcr.io/devsecops-422807/python-custom -f frontend/user/Dockerfile frontend/user
           docker push gcr.io/devsecops-422807/python-custom
-
       - name: Build and push Docker image (node-custom)
         run: |
           docker build -t gcr.io/devsecops-422807/node-custom -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
@@ -55,22 +59,13 @@ jobs:
         run: |
           docker build -t gcr.io/devsecops-422807/grafana -f monitoring/Dockerfile.grafana ./monitoring
           docker push gcr.io/devsecops-422807/grafana
-
       - name: Install Helm
         run: |
           curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-
-      - name: Install gke-gcloud-auth-plugin
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
-          export USE_GKE_GCLOUD_AUTH_PLUGIN=True
-
       - name: Package and deploy Helm chart (Infrastructure)
         run: |
           helm package -d infrastructure/helm infrastructure/helm/.
           helm upgrade infrastructure infrastructure/helm/infrastructure-0.1.0.tgz --values infrastructure/helm/values-prod.yaml
-
       - name: Package and deploy Helm chart (Monitoring)
         run: |
           helm package -d monitoring/helm monitoring/helm/.
