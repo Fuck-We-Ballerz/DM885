@@ -5,7 +5,14 @@ ENV PORT=5173
 
 COPY . .
 
-RUN cat secrets.env config.env > .env
+ARG ENVIRONMENT=dev
+
+# Copy the appropriate environment file based on the value of ENVIRONMENT
+RUN if [ "$ENVIRONMENT" = "dev" ]; then \
+        cat secrets.env config.env > .env; \
+    else \
+        cat secrets-prod.env config-prod.env > .env; \
+    fi
 
 RUN npm install
 
