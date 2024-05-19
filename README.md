@@ -116,7 +116,7 @@ For deployment on the Google Cloud Platform (GCP), we leverage GitHub Actions. T
 * It simplifies the deployment process, reducing the potential for human error.
 * It ensures that our project on GCP is always up-to-date with the latest version of our code.
 
-To maintain the integrity of our main branch, we have implemented branch protection rules. These rules help us manage the changes to the project and ensure that the main branch always has production-ready code. Each merge to the master branch triggers a deploy on the Google Cloud Platform (GCP) using GitHub Actions, and each pull request triggers a CI build on our [SonarCloud](https://sonarcloud.io/project/overview?id=Fuck-We-Ballerz_DM885). A PR must *always* pass the the SonarCloud quality gate; otherwise, merge to master is disallowed.
+To maintain the integrity of our main branch, we have implemented branch protection rules. These rules help us manage the changes to the project and ensure that the main branch always has production-ready code. Each merge to the master branch triggers a deploy on the Google Cloud Platform (GCP) using GitHub Actions, and each pull request triggers a CI build on our [SonarCloud](https://sonarcloud.io/project/overview?id=Fuck-We-Ballerz_DM885). A PR must *always* pass the SonarCloud quality gate; otherwise, merge to master is disallowed.
 
 We welcome contributions from all developers. Before contributing, please read through the above guidelines and ensure your changes adhere to them. Thank you for your interest in our project!
 
