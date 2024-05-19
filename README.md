@@ -41,6 +41,9 @@ Exploring microservices using Kubernetes!
       <a href="#👨‍💻-assisting-dev-tools">👨‍💻 Assisting Dev Tools</a>
     </li>
     <li>
+        <a href="#🤝-contribute">🤝 Contribute</a>
+    </li>
+    <li>
         <a href="#✅-todo">✅ TODO</a>
     </li>
     <li>
@@ -104,6 +107,18 @@ This separation of environments is achieved by creating two secret configuration
 We have integrated SonarCloud into our development process to ensure the consistent and efficient delivery of high-quality code. This code review tool seamlessly integrates with GitHub, enhancing our CI/CD workflow with quality gates. It provides immediate feedback on all pull requests, enabling us to maintain our coding standards. Anyone can access our SonarCloud dashboard [HERE](https://sonarcloud.io/organizations/fuck-we-ballerz). Besides analyzing pull requests, it is also possible to synchronize the SonarLint plugin in our IDE with the rules defined in our SonarCloud server. This ensures that the code violations identified by SonarLint match those detected by SonarCloud after pushing to the repository. We have not implemented this yet, but it could be a worthwhile addition to our workflow.
 
 In addition, we have set up Dependabot to scan our repository for updates to packages and Docker images. Using outdated versions can often lead to vulnerabilities that have not been addressed. Dependabot helps mitigate these risks by automatically creating pull requests for these updates. We can then review and merge these updates as deemed appropriate. This ensures our codebase remains secure and up-to-date.
+
+## 🤝 Contribute
+We have automated our local development process using VSCode tasks to create a simulated pipeline. This allows us to streamline our development workflow and ensure consistency across our team. Detailed instructions on how to set up and use these tasks is provided in the section [Getting Started](👷‍♂️-getting-started).
+
+For deployment on the Google Cloud Platform (GCP), we leverage GitHub Actions. This powerful tool allows us to build, test, and deploy our project directly from our GitHub repository to GCP. The advantage of this approach is twofold:
+
+* It simplifies the deployment process, reducing the potential for human error.
+* It ensures that our project on GCP is always up-to-date with the latest version of our code.
+
+To maintain the integrity of our main branch, we have implemented branch protection rules. These rules help us manage the changes to the project and ensure that the main branch always has production-ready code. Each merge to the master branch triggers a deploy on the Google Cloud Platform (GCP) using GitHub Actions, and each pull request triggers a CI build on our [SonarCloud](https://sonarcloud.io/project/overview?id=Fuck-We-Ballerz_DM885). A PR must *always* pass the the SonarCloud quality gate; otherwise, merge to master is disallowed.
+
+We welcome contributions from all developers. Before contributing, please read through the above guidelines and ensure your changes adhere to them. Thank you for your interest in our project!
 
 ## ✅ TODO
 This section is dedicated to highlighting areas in the project that require further attention or improvement. These areas could be related to functionality, maintainability, or even critical aspects such as security. The following list provides a brief overview of the tasks that need to be addressed:
