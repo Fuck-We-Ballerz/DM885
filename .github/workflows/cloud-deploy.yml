@@ -28,8 +28,7 @@ jobs:
 
       - name: XD
         run: |
-          gcloud auth configure-docker europe-docker.pkg.dev
-        
+          gcloud auth configure-docker --quiet        
       - name: Build and push Docker image (python-custom)
         run: |
           docker build -t gcr.io/devsecops-422807/python-custom -f frontend/user/Dockerfile frontend/user
