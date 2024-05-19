@@ -28,7 +28,7 @@ jobs:
 
       - name: XD
         run: |
-          gcloud auth configure-docker europe-west1-docker.pkg.dev
+          gcloud auth configure-docker europe-docker.pkg.dev
         
       - name: Build and push Docker image (python-custom)
         run: |
