@@ -15,18 +15,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v0.4.0'
         with:
-          project_id: ${{ secrets.PROJECT_ID }}
-          service_account_key: ${{ secrets.GKE_SA_KEY }}
-
-      - name: Authenticate to GCP
-        run: gcloud auth activate-service-account --key-file=${{ secrets.GKE_SA_KEY }}
-
-      - name: Configure Docker for GCR
-        run: gcloud auth configure-docker
-
+          workload_identity_provider: projects/1017953054992/locations/global/workloadIdentityPools/my-pool/providers/my-provider
+          service_account: gitaction@devsecops-422807.iam.gserviceaccount.com
+        
       - name: Build and push Docker image (python-custom)
         run: |
           docker build -t gcr.io/${{ secrets.PROJECT_ID }}/python-custom -f frontend/user/Dockerfile frontend/user
