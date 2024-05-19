@@ -19,12 +19,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - id: 'auth'
-        name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v0.4.0'
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
         with:
-          workload_identity_provider: projects/1017953054992/locations/global/workloadIdentityPools/my-pool/providers/my-provider
-          service_account: gitaction@devsecops-422807.iam.gserviceaccount.com
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
+          project_id: ${{ secrets.PROJECT_ID }}
+        
+      - name: check gcloud setup
+        run: gcloud auth list
 
       # - name: XD
       #   run: |
@@ -45,21 +47,21 @@ jobs:
       #     docker build -t gcr.io/devsecops-422807/grafana -f monitoring/Dockerfile.grafana ./monitoring
       #     docker push gcr.io/devsecops-422807/grafana
 
-      - name: Install Helm
-        run: |
-          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+     # - name: Install Helm
+      #  run: |
+       #   curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+#
+ #     - name: Package and deploy Helm chart (Infrastructure)
+  #      run: |
+   #       helm package -d infrastructure/helm infrastructure/helm/.
+    #      helm upgrade infrastructure infrastructure/helm/infrastructure-0.1.0.tgz --values infrastructure/helm/values-prod.yaml
+#
+ #     - name: Package and deploy Helm chart (Monitoring)
+  #      run: |
+   #       helm package -d monitoring/helm monitoring/helm/.
+    #      helm upgrade monitoring monitoring/helm/monitoring-0.1.0.tgz --values monitoring/helm/values-prod.yaml
 
-      - name: Package and deploy Helm chart (Infrastructure)
-        run: |
-          helm package -d infrastructure/helm infrastructure/helm/.
-          helm upgrade infrastructure infrastructure/helm/infrastructure-0.1.0.tgz --values infrastructure/helm/values-prod.yaml
-
-      - name: Package and deploy Helm chart (Monitoring)
-        run: |
-          helm package -d monitoring/helm monitoring/helm/.
-          helm upgrade monitoring monitoring/helm/monitoring-0.1.0.tgz --values monitoring/helm/values-prod.yaml
-
-      - name: Package and deploy Helm chart (Frontend)
-        run: |
-          helm package -d frontend/helm frontend/helm/.
-          helm upgrade frontend frontend/helm/frontend-0.1.0.tgz --values frontend/helm/values-prod.yaml
+#      - name: Package and deploy Helm chart (Frontend)
+ #       run: |
+  #        helm package -d frontend/helm frontend/helm/.
+   #       helm upgrade frontend frontend/helm/frontend-0.1.0.tgz --values frontend/helm/values-prod.yaml
