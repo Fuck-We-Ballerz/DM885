@@ -28,7 +28,6 @@ jobs:
 
       - name: XD
         run: |
-          gcloud auth login 
           gcloud info
         
       - name: Build and push Docker image (python-custom)
