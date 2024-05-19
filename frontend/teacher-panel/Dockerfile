@@ -7,7 +7,6 @@ COPY . .
 
 ARG ENVIRONMENT=dev
 
-# Copy the appropriate environment file based on the value of ENVIRONMENT
 RUN if [ "$ENVIRONMENT" = "dev" ]; then \
         cat secrets.env config.env > .env; \
     else \
