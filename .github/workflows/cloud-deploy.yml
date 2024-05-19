@@ -1,0 +1,62 @@
+name: CI/CD Pipeline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      CLOUDSDK_COMPUTE_ZONE: europe-west3-a
+      CLOUDSDK_CONTAINER_CLUSTER: dm885-grading-system
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Authenticate to GCP
+        run: gcloud auth activate-service-account --key-file=${{ secrets.GCP_SA_KEY }}
+
+      - name: Configure Docker for GCR
+        run: gcloud auth configure-docker
+
+      - name: Build and push Docker image (python-custom)
+        run: |
+          docker build -t gcr.io/${{ secrets.PROJECT_ID }}/python-custom -f frontend/user/Dockerfile frontend/user
+          docker push gcr.io/${{ secrets.PROJECT_ID }}/python-custom
+
+      - name: Build and push Docker image (node-custom)
+        run: |
+          docker build -t gcr.io/${{ secrets.PROJECT_ID }}/node-custom -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
+          docker push gcr.io/${{ secrets.PROJECT_ID }}/node-custom
+
+      - name: Build and push Docker image (grafana)
+        run: |
+          docker build -t gcr.io/${{ secrets.PROJECT_ID }}/grafana -f monitoring/Dockerfile.grafana ./monitoring
+          docker push gcr.io/${{ secrets.PROJECT_ID }}/grafana
+
+      - name: Install Helm
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+      - name: Package and deploy Helm chart (Infrastructure)
+        run: |
+          helm package -d infrastructure/helm infrastructure/helm/.
+          helm upgrade infrastructure infrastructure/helm/infrastructure-0.1.0.tgz --values infrastructure/helm/values-prod.yaml
+
+      - name: Package and deploy Helm chart (Monitoring)
+        run: |
+          helm package -d monitoring/helm monitoring/helm/.
+          helm upgrade monitoring monitoring/helm/monitoring-0.1.0.tgz --values monitoring/helm/values-prod.yaml
+
+      - name: Package and deploy Helm chart (Frontend)
+        run: |
+          helm package -d frontend/helm frontend/helm/.
+          helm upgrade frontend frontend/helm/frontend-0.1.0.tgz --values frontend/helm/values-prod.yaml
