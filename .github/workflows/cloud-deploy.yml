@@ -41,9 +41,10 @@ jobs:
       - name: Get GKE credentials
         run: gcloud container clusters get-credentials ${{ env.CLOUDSDK_CONTAINER_CLUSTER }}
 
-      - name: Check if gcloud is correctly configured
-        run: gcloud config list
-
+      - name: Build and push Docker image (python-custom)
+        run: |
+          docker build -t gcr.io/devsecops-422807/python-custom -f frontend/user/Dockerfile frontend/user
+          docker push gcr.io/devsecops-422807/python-custom
 
       
 
