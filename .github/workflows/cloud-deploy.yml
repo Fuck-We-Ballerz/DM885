@@ -24,6 +24,10 @@ jobs:
         with:
           service_account_key: ${{ secrets.GKE_SA_KEY }}
           project_id: ${{ secrets.PROJECT_ID }}
+
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker
         
       - name: check gcloud setup
         run: gcloud auth list
