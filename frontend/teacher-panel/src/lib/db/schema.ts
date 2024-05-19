@@ -2,7 +2,6 @@ import { boolean, interval, foreignKey, integer, pgTable, primaryKey, serial, te
 
 export const assignmentConfig = pgTable('assignment_config', {
   id: serial('id').primaryKey(),
-//   name: varchar('name', {length: 64}).notNull(),   //Postgress db does not support name yet
   max_ram: integer('max_ram').notNull(),
   max_cpu: integer('max_cpu').notNull(),
   max_time: interval('max_time').notNull(),
@@ -32,7 +31,6 @@ export const student = pgTable('student', {
 export const teacher = pgTable('teacher', {
     id: serial('id').primaryKey(),
     name: varchar('name', {length: 64}).notNull(),
-    password: varchar('password', {length: 64}).notNull(),
     username: varchar('username', {length: 64}).notNull(),
     is_paused: boolean('is_paused').default(false).notNull(),
 });
@@ -40,7 +38,6 @@ export const teacher = pgTable('teacher', {
 export const admin = pgTable('admin', {
     id: serial('id').primaryKey(),
     name: varchar('name', {length: 64}).notNull(),
-    password: varchar('password', {length: 64}).notNull(),
     username: varchar('username', {length: 64}).notNull(),
 });
 
