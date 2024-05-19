@@ -19,10 +19,10 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: ${{ secrets.PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
 
       - name: Authenticate to GCP
-        run: gcloud auth activate-service-account --key-file=${{ secrets.GCP_SA_KEY }}
+        run: gcloud auth activate-service-account --key-file=${{ secrets.GKE_SA_KEY }}
 
       - name: Configure Docker for GCR
         run: gcloud auth configure-docker
