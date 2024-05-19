@@ -26,24 +26,24 @@ jobs:
           workload_identity_provider: projects/1017953054992/locations/global/workloadIdentityPools/my-pool/providers/my-provider
           service_account: gitaction@devsecops-422807.iam.gserviceaccount.com
 
-      - name: XD
-        run: |
-          docker login -u oauth2accesstoken ya29.a0AXooCgttZOsNJNmvZifPsrDBmN616Ht6ipl_PLXnTDrYWGUOyWKtwTa7SMq-QwbmAQRSHJ1IrC2mJ8TG47DgY1VBXyglrRiFzqUrQw_sw9fC25pMY5GnOrmFREYFzwqDDq_vAmQJjUmSdM1Bx32PWRU008NqM5K9cdxTRf400N4aCgYKASQSARISFQHGX2MikF7i1MWRZ557LhX4er-f_g0178 https://us-west3-docker.pkg.dev
+      # - name: XD
+      #   run: |
+      #     docker login -u oauth2accesstoken ya29.a0AXooCgttZOsNJNmvZifPsrDBmN616Ht6ipl_PLXnTDrYWGUOyWKtwTa7SMq-QwbmAQRSHJ1IrC2mJ8TG47DgY1VBXyglrRiFzqUrQw_sw9fC25pMY5GnOrmFREYFzwqDDq_vAmQJjUmSdM1Bx32PWRU008NqM5K9cdxTRf400N4aCgYKASQSARISFQHGX2MikF7i1MWRZ557LhX4er-f_g0178 https://us-west3-docker.pkg.dev
 
-      - name: Build and push Docker image (python-custom)
-        run: |
-          docker build -t gcr.io/devsecops-422807/python-custom -f frontend/user/Dockerfile frontend/user
-          docker push gcr.io/devsecops-422807/python-custom
+      # - name: Build and push Docker image (python-custom)
+      #   run: |
+      #     docker build -t gcr.io/devsecops-422807/python-custom -f frontend/user/Dockerfile frontend/user
+      #     docker push gcr.io/devsecops-422807/python-custom
 
-      - name: Build and push Docker image (node-custom)
-        run: |
-          docker build -t gcr.io/devsecops-422807/node-custom -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
-          docker push gcr.io/devsecops-422807/node-custom
+      # - name: Build and push Docker image (node-custom)
+      #   run: |
+      #     docker build -t gcr.io/devsecops-422807/node-custom -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
+      #     docker push gcr.io/devsecops-422807/node-custom
 
-      - name: Build and push Docker image (grafana)
-        run: |
-          docker build -t gcr.io/devsecops-422807/grafana -f monitoring/Dockerfile.grafana ./monitoring
-          docker push gcr.io/devsecops-422807/grafana
+      # - name: Build and push Docker image (grafana)
+      #   run: |
+      #     docker build -t gcr.io/devsecops-422807/grafana -f monitoring/Dockerfile.grafana ./monitoring
+      #     docker push gcr.io/devsecops-422807/grafana
 
       - name: Install Helm
         run: |
