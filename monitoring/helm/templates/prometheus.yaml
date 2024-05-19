@@ -28,7 +28,7 @@ spec:
             - --config.file=/etc/prometheus/prometheus.yaml
             - --storage.tsdb.path=/prometheus
 {{- if eq .Values.environment "prod" }}
-          securityContext: 
+          securityContext:
             runAsUser: 1000
             runAsNonRoot: true
             runAsGroup: 65534
