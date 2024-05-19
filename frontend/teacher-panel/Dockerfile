@@ -1,11 +1,14 @@
 FROM node:latest
 WORKDIR /app
 
+ENV PORT=5173
+
 COPY . .
+
+RUN cat secrets.env config.env > .env
 
 RUN npm install
 
-ENV PORT=5173
 # build the app 
 RUN npm run build 
 

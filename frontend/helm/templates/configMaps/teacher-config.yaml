@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: teacher
-data:
-  PUBLIC_KEYCLOAK_BASE_URL: {{ .Values.keycloak.PUBLIC_KEYCLOAK_BASE_URL | quote}}
-  PUBLIC_KEYCLOAK_REDIRECT_HOME_URL: {{ .Values.keycloak.PUBLIC_KEYCLOAK_REDIRECT_HOME_URL | quote}}
-  PUBLIC_KEYCLOAK_POST_URL: {{ .Values.keycloak.PUBLIC_KEYCLOAK_POST_URL | quote}}
-  DB: {{ .Values.application.DB | quote}}
