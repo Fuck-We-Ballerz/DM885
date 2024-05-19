@@ -49,18 +49,18 @@ jobs:
 
       - name: Build and push Docker image (python-custom)
         run: |
-          docker build -t gcr.io/devsecops-422807/python-custom -f frontend/user/Dockerfile frontend/user
-          docker push gcr.io/devsecops-422807/python-custom
+          docker build -t europe-west3-docker.pkg.dev/devsecops-422807/dm885-artifact-registry/grafana -f frontend/user/Dockerfile frontend/user
+          docker push europe-west3-docker.pkg.dev/devsecops-422807/dm885-artifact-registry/grafana
 
       - name: Build and push Docker image (node-custom)
         run: |
-          docker build -t gcr.io/devsecops-422807/node-custom -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
-          docker push gcr.io/devsecops-422807/node-custom
+          docker build -t europe-west3-docker.pkg.dev/devsecops-422807/dm885-artifact-registry/node-custom -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
+          docker push europe-west3-docker.pkg.dev/devsecops-422807/dm885-artifact-registry/node-custom
       
       - name: Build and push Docker image (grafana)
         run: |
-          docker build -t gcr.io/devsecops-422807/grafana -f monitoring/Dockerfile.grafana ./monitoring
-          docker push gcr.io/devsecops-422807/grafana
+          docker build -t europe-west3-docker.pkg.dev/devsecops-422807/dm885-artifact-registry/grafana -f monitoring/Dockerfile.grafana ./monitoring
+          docker push europe-west3-docker.pkg.dev/devsecops-422807/dm885-artifact-registry//grafana
 
       - name: Install Helm
         run: |
