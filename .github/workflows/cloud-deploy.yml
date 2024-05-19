@@ -25,6 +25,11 @@ jobs:
         with:
           workload_identity_provider: projects/1017953054992/locations/global/workloadIdentityPools/my-pool/providers/my-provider
           service_account: gitaction@devsecops-422807.iam.gserviceaccount.com
+
+      - name: Authenticate to Google Cloud
+        run: |
+          gcloud auth login 
+          gcloud info
         
       - name: Build and push Docker image (python-custom)
         run: |
