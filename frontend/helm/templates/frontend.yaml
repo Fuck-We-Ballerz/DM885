@@ -25,9 +25,7 @@ spec:
       containers:
         - name: student-service
           image: {{ .Values.studentService.IMAGE }}
-{{- if eq .Values.environment "dev"}}
-          imagePullPolicy: Never
-{{- end }}
+          imagePullPolicy: {{ .Values.studentService.IMAGE_PULL_POLICY }}
           env:
           - name: DOCKER_HOST
             value: "tcp://dind:2376"

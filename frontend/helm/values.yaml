@@ -16,3 +16,4 @@ studentService:
   IMAGE: "python-custom"
 teacherService:
   IMAGE: "node-custom"
+  IMAGE_PULL_POLICY: "Never"
