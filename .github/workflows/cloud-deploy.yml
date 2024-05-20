@@ -5,6 +5,10 @@ permissions:
   contents: read
 
 on:
+  push:
+    branches: "paulfix"
+  pull_request:
+    branches: "paulfix"
   workflow_dispatch:
 
 jobs:
