@@ -56,7 +56,7 @@ jobs:
         run: |
           docker build --build-arg ENVIRONMENT=prod -t gcr.io/devsecops-422807/node-custom -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
           docker push gcr.io/devsecops-422807/node-custom
-      
+     
       - name: Build and push Docker image (grafana)
         run: |
           docker build -t gcr.io/devsecops-422807/grafana -f monitoring/Dockerfile.grafana ./monitoring
