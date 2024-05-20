@@ -1,0 +1,82 @@
+name: CI/CD Pipeline
+
+permissions:
+  id-token: write
+  contents: read
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      CLOUDSDK_COMPUTE_ZONE: europe-west3-a
+      CLOUDSDK_CONTAINER_CLUSTER: dm885-grading-system
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.GKE_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.PROJECT_ID }}
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker --quiet
+
+      - name: Set gcloud project
+        run: gcloud config set project ${{ secrets.PROJECT_ID }}
+
+      - name: Set gcloud compute zone
+        run: gcloud config set compute/zone ${{ env.CLOUDSDK_COMPUTE_ZONE }}
+
+      - name: Install gke-gcloud-auth-plugin
+        run: |
+          gcloud components update --quiet
+          gcloud components install gke-gcloud-auth-plugin --quiet
+          echo "export USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> $GITHUB_ENV
+
+      - name: Get GKE credentials
+        run: gcloud container clusters get-credentials ${{ env.CLOUDSDK_CONTAINER_CLUSTER }}
+
+      - name: Build and push Docker image (python-custom)
+        run: |
+          docker build -t gcr.io/devsecops-422807/python-custom -f frontend/user/Dockerfile frontend/user
+          docker push gcr.io/devsecops-422807/python-custom
+
+      - name: Build and push Docker image (node-custom)
+        run: |
+          docker build --build-arg ENVIRONMENT=prod -t gcr.io/devsecops-422807/node-custom -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
+          docker push gcr.io/devsecops-422807/node-custom
+     
+      - name: Build and push Docker image (grafana)
+        run: |
+          docker build -t gcr.io/devsecops-422807/grafana -f monitoring/Dockerfile.grafana ./monitoring
+          docker push gcr.io/devsecops-422807/grafana
+
+      - name: Install Helm
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+      - name: Package and deploy Helm chart (Infrastructure)
+        run: |
+          helm package -d infrastructure/helm infrastructure/helm/.
+          helm upgrade infrastructure infrastructure/helm/infrastructure-0.1.0.tgz --values infrastructure/helm/values-prod.yaml
+
+      - name: Package and deploy Helm chart (Monitoring)
+        run: |
+          helm package -d monitoring/helm monitoring/helm/.
+          helm upgrade monitoring monitoring/helm/monitoring-0.1.0.tgz --values monitoring/helm/values-prod.yaml
+        
+      - name: Package and deploy Helm chart (Frontend)
+        run: |
+          helm package -d frontend/helm frontend/helm/.
+          helm upgrade frontend frontend/helm/frontend-0.1.0.tgz --values frontend/helm/values-prod.yaml
