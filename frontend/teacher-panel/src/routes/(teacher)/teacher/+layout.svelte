@@ -14,12 +14,9 @@
 </script>
 
 <nav>
-    <a href="{base}/teacher/assignment">List Assignments</a>
-    <a href="{base}/teacher/assignment/create">Create Assignment</a>
-    <a href="{base}/teacher/assignment/add">Add Students To Assignment</a>
-    <a href="{base}/teacher/assignment/delete">Remove Students From An Assignment</a>
-    <a href="{base}/teacher/course/create">Create Course</a>
-    <a href="{base}/teacher/course/add">Add Students To Course</a>
+    <a href="{base}/teacher/course">Courses</a>
+    <a href="{base}/teacher/assignment">Assignments</a>
+    <a href="{base}/teacher/submission">Submissions</a>
     <a href="{base}/teacher/logout">Logout</a>
 </nav>
 <slot></slot>

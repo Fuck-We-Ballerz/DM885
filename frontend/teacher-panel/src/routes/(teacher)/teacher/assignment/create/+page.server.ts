@@ -7,13 +7,17 @@ import type { Actions } from './$types';
 
 export const actions = {
 	newConfig: async () => {
-        console.log("Creating new config")
-        await db.insert(schema.assignmentConfig).values({
-            max_cpu: 1, 
-            max_ram: 1,
-            max_submission: 1,
-            max_time: "1",
-        })
+        try {
+            console.log("Creating new config");
+            await db.insert(schema.assignmentConfig).values({
+                max_cpu: 1,
+                max_ram: 1,
+                max_submission: 1,
+                max_time: "1",
+            });
+        } catch (error) {
+            console.error("Error creating new config:", error);
+        }
     },
     
     newAssignment: async ({ cookies, request }) => {

@@ -36,12 +36,15 @@ export const actions = {
         
         // Retrieve the course
         const course = data.get('course')
+        console.log(course)
         const courseId = parseInt(course!.toString())
         console.log(courseId)
 
-            // Retrieve a list of student IDs
+        // Retrieve a list of student IDs, TODO: FIx filterig out students where studnet id == course id
         const studentIds = Array.from(data.values())
-            .filter(value => value !== course);
+            .slice(1)
+            .filter(value => value);
+        
 
         console.log(studentIds);
         
