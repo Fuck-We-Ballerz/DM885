@@ -1,7 +1,4 @@
 environment: "dev"
-
-application:
-  DB: postgres
   
 studentService:
   IMAGE: "python-custom"
