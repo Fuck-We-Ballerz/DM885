@@ -2,6 +2,7 @@ environment: "prod"
 
 studentService:
   IMAGE: "gcr.io/devsecops-422807/python-custom"
+  IMAGE_PULL_POLICY: "Always"
 teacherService:
   IMAGE: "gcr.io/devsecops-422807/node-custom"
   IMAGE_PULL_POLICY: "Always"

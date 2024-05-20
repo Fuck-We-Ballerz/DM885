@@ -69,6 +69,4 @@ spec:
       containers:
         - name: teacher-service
           image: {{ .Values.teacherService.IMAGE}}
-{{- if eq .Values.environment "dev"}}
-          imagePullPolicy: Never
-{{- end }}
+          imagePullPolicy: {{ .Values.teacherService.IMAGE_PULL_POLICY }}
