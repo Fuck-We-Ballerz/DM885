@@ -52,7 +52,8 @@ export const actions = {
 
         // Retrieve a list of student IDs from the formData
         const studentIds = Array.from(data.values())
-            .filter(value => value !== assignment);
+            .slice(1)
+            .filter(value => value);
         
         // Array of form [{student_id: <student_id>, assignment_id: <assignment_id>}, {student_id: <student_id>, assignment_id: <assignment_id>}, ...]}]
         const insertStudents = studentIds.map(studentId => ({
