@@ -8,9 +8,7 @@ export const ssr = false;
 export const csr = true;
 
 export const load: LayoutLoad = async ({data}) => {
-  console.log("KC URL")
-  console.log(`${PUBLIC_KEYCLOAK_BASE_URL}`)
-
+  
   let instance = {
     url: `${PUBLIC_KEYCLOAK_BASE_URL}`,
     realm: 'DM885',

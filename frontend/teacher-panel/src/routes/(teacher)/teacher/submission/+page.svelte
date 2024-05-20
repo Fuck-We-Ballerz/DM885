@@ -18,8 +18,6 @@
                 <button on:click={() => window.location.href = `${base}/teacher/submission/${assignment.assignmentId}`}>
                     Check Submissions
                 </button>
-                <button>Extract logs in Zip file</button>
-                <button>Extract metadata in CSV </button>
             </div>
         </td>
     </tr>
