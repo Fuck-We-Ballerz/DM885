@@ -4,6 +4,6 @@ grafana:
   GF_AUTH_GENERIC_OAUTH_API_URL: "https://zeruscloud.com/keycloak/realms/DM885/protocol/openid-connect/userinfo"
   GF_AUTH_GENERIC_OAUTH_AUTH_URL: "https://zeruscloud.com/keycloak/realms/DM885/protocol/openid-connect/auth"
   GF_SERVER_ROOT_URL: "https://zeruscloud.com/grafana/"
-  repository: gcr.io/devsecops-422807/grafana
-  tag: latest # This will be overridden by the Helm command
+  image: gcr.io/devsecops-422807/grafana
+  tag: latest
 
