@@ -6,7 +6,6 @@ metadata:
     app: adminer
     group: db
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: adminer
