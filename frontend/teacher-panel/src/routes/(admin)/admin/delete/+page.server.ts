@@ -10,8 +10,6 @@ export async function load({}) {
     const teachers = await db.query.teacher.findMany() ?? []
     const students = await db.query.student.findMany() ?? []
 
-    // console.log(teachers[0].name)
-
     let teachersOutput = teachers.map((teacher) => {
         return {
             name: teacher.name,
@@ -57,11 +55,9 @@ export const actions = {
                         'Content-Type': 'application/json'
                     }
                 });
-                console.log(response.status)
 
                 if(response.status === 200){
                     const responJ = await response.json();
-                    console.log(JSON.stringify(responJ))
                     const userId = responJ[0].id;
                     
                     console.log(`Deleting user from keycloak`)
@@ -92,7 +88,6 @@ export const actions = {
                     }
                 } else{
                     console.log(`Failed to get ${username} from keycloak`);
-                    console.log(response.status)
                 }
             } else if(resStudent){
                 const studentIdDb = resStudent.id

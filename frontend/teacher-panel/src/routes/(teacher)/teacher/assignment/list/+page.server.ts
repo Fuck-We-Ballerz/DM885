@@ -6,8 +6,6 @@ import { db } from '$lib';
 export const load: PageServerLoad = async ({cookies, params}) => {   
     const teacherUsername = cookies.get('kc-username')!
     const teacher = await db.query.teacher.findFirst({ where: eq(schema.teacher.username, teacherUsername)})
-    console.log(teacher)
-
     const configs = await db.query.assignmentConfig.findMany()
 
     let output = []
@@ -15,8 +13,6 @@ export const load: PageServerLoad = async ({cookies, params}) => {
     const res = await db.select().from(schema.assignment)
                         .innerJoin(schema.teacher_to_assignment, eq(schema.assignment.id, schema.teacher_to_assignment.assignment_id))
                         .where(eq(schema.teacher_to_assignment.teacher_id, teacher!.id))
-
-    console.log(res)
     
     output = await Promise.all(res.map(async (ass) => {
         const courseName = await db.query.course.findFirst({ where: eq(schema.course.id, ass.assignment.course_id)})
@@ -43,16 +39,11 @@ export const load: PageServerLoad = async ({cookies, params}) => {
 
 export const actions = {
     updateAssignment: async ({cookies, request}) => {
-        // const token = cookies.get('kc-cookie');
-        // console.log(token)
-        console.log("update")
 
         const data = await request.formData();
-        console.log(data)
         const assignmentId = parseInt(data.get("assignmentId")!.toString())
 
         const oldAssignment = await db.select().from(schema.assignment).where(eq(schema.assignment.id, assignmentId));
-        console.log(oldAssignment[0].start_date);
 
         
         let isVisible = true
@@ -78,11 +69,8 @@ export const actions = {
     },
 
     deleteAssignment: async ({cookies, request}) => {
-        // const token = cookies.get('kc-cookie');
-        // console.log(token)
-        console.log("delete")
         const data = await request.formData();
-        console.log(data)
+
         const assignmentId = parseInt(data.get("assignmentId")!.toString())
 
         try {

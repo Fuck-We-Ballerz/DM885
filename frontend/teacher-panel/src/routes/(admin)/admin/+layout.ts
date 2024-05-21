@@ -8,8 +8,6 @@ export const ssr = false;
 export const csr = true;
 
 export const load: LayoutLoad = async () => {
-  console.log("KC URL")
-  console.log(`${PUBLIC_KEYCLOAK_BASE_URL}`)
 
   let instance = {
     url: `${PUBLIC_KEYCLOAK_BASE_URL}`,
@@ -26,10 +24,8 @@ export const load: LayoutLoad = async () => {
   let keycloakPromise;
   if (browser) {
     keycloakPromise = keycloak.init(kcInitOpts).then((auth) => {
-      console.log("Auth", auth)
       if (auth) {
         document.cookie= "kc-cookie=" + keycloak.token + "; path=/; SameSite=strict";
-        console.log("KC token", keycloak.token)
         return keycloak;
       }
     });

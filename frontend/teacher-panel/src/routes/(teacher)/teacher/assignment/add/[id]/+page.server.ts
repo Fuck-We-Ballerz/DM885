@@ -61,8 +61,6 @@ export const actions = {
             assignment_id: assignmentId
         }))
 
-        console.log(insertStudents)
-
         //insert all students into the student_to_assignment table
         await db.insert(schema.student_to_assignment).values(insertStudents)
     }

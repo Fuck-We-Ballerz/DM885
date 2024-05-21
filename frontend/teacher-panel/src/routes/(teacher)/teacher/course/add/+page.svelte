@@ -17,13 +17,6 @@
                 method: 'POST',
                 body: formData
             });
-
-            if (response.ok) {
-                console.log('Form data sent successfully');
-                location.reload();
-            } else {
-                console.error('Failed to send form data');
-            }
         }
     }
 </script>
