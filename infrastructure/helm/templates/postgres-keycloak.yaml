@@ -19,6 +19,9 @@ spec:
       app: postgres-keycloak
   template:
     metadata:
+      annotations:
+        checksum/config: {{ include "infrastructure/templates/configMaps/postgres-keycloak-config.yaml" . | sha256sum }}
+        checksum/secret: {{ include "infrastructure/templates/secrets/postgres-keycloak-secret.yaml" . | sha256sum }}
       labels:
         app: postgres-keycloak
     spec:

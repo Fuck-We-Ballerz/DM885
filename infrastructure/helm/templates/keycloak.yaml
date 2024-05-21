@@ -19,6 +19,9 @@ spec:
       app: keycloak
   template:
     metadata:
+      annotations:
+        checksum/config: {{ include "infrastructure/templates/configMaps/keycloak-config.yaml" . | sha256sum }}
+        checksum/secret: {{ include "infrastructure/templates/secrets/keycloak-secret.yaml" . | sha256sum }}
       labels:
         app: keycloak
     spec:
@@ -26,12 +29,6 @@ spec:
         - name: keycloak
           image: keycloak/keycloak:latest
           args: ["start-dev", "--import-realm"]
-#{{- if eq .Values.environment "dev" }}
-#          args: ["start-dev", "--import-realm"]
-#{{- end }}
-#{{- if eq .Values.environment "prod" }}
-#          args: ["start-prod", "--import-realm"]
-#{{- end }}
           envFrom:
             - secretRef:
                 name: keycloak

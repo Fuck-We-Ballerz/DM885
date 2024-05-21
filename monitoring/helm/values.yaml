@@ -5,4 +5,5 @@ grafana:
   GF_AUTH_GENERIC_OAUTH_AUTH_URL: "https://localhost/keycloak/realms/DM885/protocol/openid-connect/auth"
   GF_SERVER_ROOT_URL: "https://localhost/grafana/"
   GF_AUTH_GENERIC_OAUTH_TOKEN_URL: "http://keycloak:8080/realms/DM885/protocol/openid-connect/token"
-  IMAGE: "grafana-custom"
+  image: grafana-custom
+  tag: latest

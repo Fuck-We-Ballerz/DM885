@@ -2,8 +2,6 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  annotations:
-    reloader.stakater.com/auto: "true"
   labels:
     app: promtail
   name: promtail
@@ -13,6 +11,8 @@ spec:
       app: promtail
   template:
     metadata:
+      annotations:
+        checksum/config: {{ include "monitoring/templates/configMaps/promtail.yaml" . | sha256sum }}
       labels:
         app: promtail
     spec:
