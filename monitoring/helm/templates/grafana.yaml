@@ -2,14 +2,15 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: grafana
-  annotations:
-    reloader.stakater.com/auto: "true"
 spec:
   selector:
     matchLabels:
       app: grafana
   template:
     metadata:
+      annotations:
+        checksum/config: {{ include "monitoring/templates/configMaps/grafana-datasources-config.yaml" . | sha256sum }}
+        checksum/config: {{ include "monitoring/templates/configMaps/grafana.yaml" . | sha256sum }}
       labels:
         app: grafana
     spec:
