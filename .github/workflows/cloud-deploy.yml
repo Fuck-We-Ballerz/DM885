@@ -47,24 +47,39 @@ jobs:
       - name: Get GKE credentials
         run: gcloud container clusters get-credentials ${{ env.CLOUDSDK_CONTAINER_CLUSTER }}
 
+      - name: Install Helm
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+      - name: Paths Filter
+        id: changes
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            grafana:
+              - 'monitoring/dashboards/**'
+            user:
+              - 'frontend/user/**'
+            teacher-panel:
+              - 'frontend/teacher-panel/**'
+
       - name: Build and push Docker image (python-custom)
+        if: steps.changes.outputs.user == 'true'
         run: |
           docker build -t gcr.io/devsecops-422807/python-custom -f frontend/user/Dockerfile frontend/user
           docker push gcr.io/devsecops-422807/python-custom
 
       - name: Build and push Docker image (node-custom)
+        if: steps.changes.outputs.teacher-panel == 'true'
         run: |
           docker build --build-arg ENVIRONMENT=prod -t gcr.io/devsecops-422807/node-custom -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
           docker push gcr.io/devsecops-422807/node-custom
-     
+
       - name: Build and push Docker image (grafana)
+        if: steps.changes.outputs.grafana == 'true'
         run: |
           docker build -t gcr.io/devsecops-422807/grafana -f monitoring/Dockerfile.grafana ./monitoring
           docker push gcr.io/devsecops-422807/grafana
-
-      - name: Install Helm
-        run: |
-          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
       - name: Package and deploy Helm chart (Infrastructure)
         run: |

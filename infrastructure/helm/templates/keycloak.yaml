@@ -18,6 +18,9 @@ spec:
       app: keycloak
   template:
     metadata:
+      annotations:
+        checksum/config: {{ include "infrastructure/templates/configMaps/keycloak-config.yaml" . | sha256sum }}
+        checksum/secret: {{ include "infrastructure/templates/secrets/keycloak-secret.yaml" . | sha256sum }}
       labels:
         app: keycloak
     spec:
