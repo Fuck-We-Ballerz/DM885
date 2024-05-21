@@ -79,7 +79,7 @@ Regarding the infrastructure, we are using:
 
 Our user interface is built using Django and Svelte. We chose different frameworks to allow our teams to work independently and reduce the need for communication. This means we can develop different parts of the system separately and connect them later. The user interface includes a panel for users and a panel for teachers.
 
-Finally, our project is live on Google Cloud and can be accessed on https://zeruscloud.com with additional services exposed on [/api](https://zeruscloud.com/api), [/grafana](https://zeruscloud.com/grafana), or [/keycloak](https://zeruscloud.com/keycloak). 
+Finally, our project is live on Google Cloud and can be accessed on https://zeruscloud.com with additional services exposed on [/api](<a href="url">https://zeruscloud.com/api</a>), [/grafana](https://zeruscloud.com/grafana), or [/keycloak](https://zeruscloud.com/keycloak). 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
