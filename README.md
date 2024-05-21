@@ -79,7 +79,7 @@ Regarding the infrastructure, we are using:
 
 Our user interface is built using Django and Svelte. We chose different frameworks to allow our teams to work independently and reduce the need for communication. This means we can develop different parts of the system separately and connect them later. The user interface includes a panel for users and a panel for teachers.
 
-Finally, our project is live on Google Cloud and can be accessed on https://zeruscloud.com with additional services exposed on [/api](https://zeruscloud.com/api), [/grafana](https://zeruscloud.com/grafana), or [/keycloak](https://zeruscloud.com/keycloak). 
+Finally, our project is live on Google Cloud and can be accessed on https://zeruscloud.com with additional services exposed on [/api]([https://zeruscloud.com](https://zeruscloud.com)), [/grafana](https://zeruscloud.com/grafana), or [/keycloak](https://zeruscloud.com/keycloak). 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -113,7 +113,40 @@ We have integrated SonarCloud into our development process to ensure the consist
 In addition, we have set up Dependabot to scan our repository for updates to packages and Docker images. Using outdated versions can often lead to vulnerabilities that have not been addressed. Dependabot helps mitigate these risks by automatically creating pull requests for these updates. We can then review and merge these updates as deemed appropriate. This ensures our codebase remains secure and up-to-date.
 
 ## 🏭 The Pipeline
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+The Pipeline automates the build, test and deployment stages. It is currently configured to function with google cloud kubernetes engine and its associated services, but can be migrated to any cloud platform.
+
+__Prerequisite__:\
+Before you can run the workflow, you need to create a Google Cloud service account with the following permissions: \
+**Kubernetes Engine Admin**\
+**Artifact Registry Admin**\
+**Remote Build Execution Admin**\
+
+Once You have created the account, you can export the service account secret key as a .json.
+
+__Github Action secrets__:\
+To run the CI/CD Pipeline you will need to add some secrets in the __Github&rarr;Settings&rarr;Secrets & Variables__:\
+
+* **[GCR_HOSTNAME]**: The region that your GCKE cluster is deployed in.
+* **[CLOUDSDK_CONTAINER_CLUSTER]**: Specifies the name of your cluster
+* **[PROJECT_ID]**: Your Google Cloud Project ID
+* **[GKE_SA_KEY]**: The contents of the secret key .json file.
+
+__Running the workflow__:\
+Once everything has been set up according to the directions here, the workflow can be executed by going to __Github&rarr;Actions&rarr;CI/CD Pipeline&rarr;Run Workflow__ and then specify the branch to run the file on.\
+Alternatively, you can edit the part of the CI/CD Pipeline file that looks like this:\
+```yml
+on:
+  workflow_dispatch:
+```
+To specify a set of branches to automatically deploy on when a push to that branch occurs:
+```yml
+on:
+  push:
+    branches: [ "main", "otherBranch" ]
+  pull_request:
+    branches: [ "main", "otherBranch" ]
+  workflow_dispatch:
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
