@@ -1,11 +1,11 @@
-from flask import Blueprint, Flask, request, render_template, redirect, url_for, jsonify, session
+from flask import flash, Flask, request, render_template, redirect, url_for, jsonify, session
 from flask_bootstrap import Bootstrap
 from werkzeug.utils import secure_filename
 import os
 from logs_config import setup_logging
 from database import db, Student, Assignment, Course, AssignmentConfig, Submission, init_db, Student_to_assignment
 import docker
-from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 # Import the API blueprint
 from api import api
@@ -19,10 +19,11 @@ bootstrap = Bootstrap(app)
 
 app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024  # for 64 MB limit
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:admin@postgres-application/postgres'
+# Set up the database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@postgres-application:5432/postgres'
 
 
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'Jacobo'  # Set a secret key for session management
 
 # Initialize the database
@@ -84,17 +85,19 @@ def register():
         username = request.form.get('username')
         password = request.form.get('password')
         if username and password:
-            hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-            new_student = Student(username=username, password=hashed_password)
+            new_student = Student(username=username, password=password, name=username)
             try:
                 db.session.add(new_student)
                 db.session.commit()
+                flash("Account created successfully", "success")
                 logger.info(f"User: {username} successfully registered.")
                 return redirect(url_for('login', nav="Login", success="Account created successfully"))
             except Exception as e:
+                flash("Registration failed", "error")
                 logger.error(f"Failed to register user: {username}, Error: {e}")
                 return redirect(url_for('register', nav="Register", error="Registration failed"))
         else:
+            flash("Registration failed, due to empty input", "error")
             logger.warning("Empty registration submission")
             return redirect(url_for('register', nav="Register", error="Input cannot be empty"))
     else:
@@ -110,21 +113,23 @@ def login():
         if username and password:
             try:
                 student = Student.query.filter_by(username=username).first()
-                if student and check_password_hash(student.password, password):
+                logger.info(f'User: {username} trying to log in')
+                logger.info(f"Student: {student.username} found with password: {student.password}")
+                if student and student.password == password:
                     session['username'] = student.username 
-                    logger.info(f"User: {username} has successfully logged in.")
+                    logger.info(f"Student: {student.username} logged in successfully.")
                     return redirect(url_for('student_dashboard'))
                 else:
                     if username == "admin" and password == "admin":
                         session['username'] = username
-                        logger.info(f"Bypass database using admin") 
-                        return redirect(url_for('student')) 
+                        logger.info("Bypass database using admin")
+                        return redirect(url_for('student_dashboard'))
                     logger.debug(f"User: {username} failed to log in.")
                     return redirect(url_for('login', nav="Login", error="Invalid username or password"))
             except Exception as e:
                 if username == "admin" and password == "admin":
                     session['username'] = username
-                    logger.info(f"Bypass database using admin") 
+                    logger.info("Bypass database using admin")
                     return redirect(url_for('student_dashboard'))
                 else:
                     logger.error(f"Database not connected: {e}")
@@ -134,7 +139,7 @@ def login():
             return redirect(url_for('login', nav="Login", error="Input cannot be empty"))
     else:
         return render_template('login.html', nav="Login")
-
+    
 @app.route('/logout')
 def logout():
     username = session.get('username', 'No User')
@@ -224,7 +229,7 @@ def upload_file():
             logger.info(f"Submission created for assignment: {assignment_id} by student: {username}")
             logger.info(f"Student_to_assignment created for assignment: {assignment_id} by student: {username} with status 1")
             
-            run_docker(student.id, assignment_id, new_submission.id, file_path)
+            run_docker(student.id, assignment_id, new_submission.id)
         except Exception as e:
             print("Error in submission", e)
             db.session.rollback()
@@ -238,62 +243,99 @@ def upload_file():
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() == 'zip'
 
-def run_docker(user_id, assignment_id, submission_id, file_path):
+def run_docker(user_id, assignment_id, submission_id):
+    logger.info(f"Running Docker for user_id: {user_id}, assignment_id: {assignment_id}, submission_id: {submission_id}")
     try:
+        logger.debug(f"Fetching assignment {assignment_id} from database")
         assignment = Assignment.query.get(assignment_id)
         config = AssignmentConfig.query.filter_by(id=assignment_id).first()
         if not assignment or not config:
             raise ValueError("Invalid assignment or configuration")
+        logger.info(f"Assignment and configuration found for assignment_id: {assignment_id}")
 
-        image = assignment.docker_image if assignment.docker_image else "python:3.12-slim"
-        submission_id = Submission.query.get(submission_id).id
+        image = "alpine"
+        logger.debug(f"Fetching submission {submission_id} from database")
+        submission = Submission.query.get(submission_id)
 
-        client = docker.DockerClient(base_url='unix://var/run/docker.sock')
-
-        host_directory = os.path.dirname(file_path)
-        container_directory = "/app"
-        file_name = os.path.basename(file_path)
+        client = docker.from_env()
+        logger.debug("Docker client initialized")
 
         mem_limit = max(int(config.max_ram), 6 * 1024 * 1024)
         cpu_count = int(config.max_cpu)
+        logger.info(f"Running container with mem_limit: {mem_limit}, cpu_count: {cpu_count}")
 
         container = client.containers.run(
             image,
-            command=f"sh -c 'unzip /app/{file_name} -d /app && python3 /app/test.py'",
+            command="echo 'Hello World'",
             detach=True,
             mem_limit=mem_limit,
             cpu_count=cpu_count,
-            volumes={host_directory: {'bind': container_directory, 'mode': 'rw'}}
         )
+        logger.info(f"Container started for assignment_id: {assignment_id}")
 
         container.wait()
+        logger.info(f"Container execution completed for assignment_id: {assignment_id}")
 
         stdout = container.logs(stdout=True, stderr=False)
         stderr = container.logs(stdout=False, stderr=True)
 
-        submission = Submission.query.get(submission_id)
+        logger.debug("Fetching submission to update")
         submission.submission_std = stdout.decode('utf-8') if stdout else ''
         submission_err = stderr.decode('utf-8') if stderr else ''
-        submission.submission_err = submission_err[:64]  
+        submission.submission_err = submission_err[:64]
         submission.grade = "passed" if not stderr else "failed"
         submission.status = 3 if not stderr else 4
 
+        # Update the Student_to_assignment status
+        student_to_assignment = Student_to_assignment.query.filter_by(
+            student_id=user_id,
+            assignment_id=assignment_id
+        ).first()
+        if student_to_assignment:
+            student_to_assignment.status = submission.status
+            logger.info(f"Updated Student_to_assignment status to {student_to_assignment.status} for user_id: {user_id}, assignment_id: {assignment_id}")
+
         db.session.commit()
+        logger.info(f"Submission updated successfully for assignment_id: {assignment_id}, status: {submission.status}, grade: {submission.grade}")
 
     except docker.errors.DockerException as de:
         logger.error(f"Docker error for assignment {assignment_id}: {de}")
         submission = Submission.query.get(submission_id)
-        submission.submission_err = str(de)[:64]  
+        submission.submission_err = str(de)[:64]
         submission.grade = "failed"
         submission.status = 4
         db.session.commit()
+        logger.warning(f"Docker error handled for assignment_id: {assignment_id}, status set to failed")
+
+        # Update the Student_to_assignment status
+        student_to_assignment = Student_to_assignment.query.filter_by(
+            student_id=user_id,
+            assignment_id=assignment_id
+        ).first()
+        if student_to_assignment:
+            student_to_assignment.status = submission.status
+            db.session.commit()
+            logger.warning(f"Updated Student_to_assignment status to {student_to_assignment.status} for user_id: {user_id}, assignment_id: {assignment_id}")
+
     except Exception as e:
         logger.error(f"Error running docker for assignment {assignment_id}, Error: {e}")
         submission = Submission.query.get(submission_id)
-        submission.submission_err = str(e)[:64]  
+        submission.submission_err = str(e)[:64]
         submission.grade = "failed"
         submission.status = 4
         db.session.commit()
+        logger.warning(f"General error handled for assignment_id: {assignment_id}, status set to failed")
+
+        # Update the Student_to_assignment status
+        student_to_assignment = Student_to_assignment.query.filter_by(
+            student_id=user_id,
+            assignment_id=assignment_id
+        ).first()
+        if student_to_assignment:
+            student_to_assignment.status = submission.status
+            db.session.commit()
+            logger.warning(f"Updated Student_to_assignment status to {student_to_assignment.status} for user_id: {user_id}, assignment_id: {assignment_id}")
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5050, debug=True)

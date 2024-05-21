@@ -13,7 +13,7 @@
                 <h2 class="fw-bold mb-2 text-uppercase">Register</h2>
                 <p class="text-white-50 mb-5">Please enter your details to create an account!</p>
   
-                <form method="post" action="/register">
+                <form method="post" action="{{ url_for('register') }}">
                     <div class="form-outline form-white mb-4">
                         <input type="text" name="username" id="typeUsernameX" class="form-control form-control-lg" required/>
                         <label class="form-label" for="typeUsernameX">Username</label>
@@ -27,10 +27,11 @@
                     <button class="btn btn-primary" type="submit">Register</button>
                 </form>
                 
-              <div>
-                <p class="mb-0">Already have an account? <a href="/login" class="text-white-50 fw-bold">Login</a></p>
-              </div>
+                <div>
+                    <p class="mb-0">Already have an account? <a href="{{ url_for('login') }}" class="text-white-50 fw-bold">Login</a></p>
+                </div>
   
+              </div>
             </div>
           </div>
         </div>
