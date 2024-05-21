@@ -15,8 +15,8 @@
 <a href="https://github.com/Fuck-We-Ballerz/DM885/blob/main/LICENSE" style="text-decoration:none;">
   <img src="https://img.shields.io/github/license/Fuck-We-Ballerz/DM885.svg?style=for-the-badge" style="padding-bottom: 5px;/">
 </a>
-<a href="https://fuck-we-ballerz.github.io/DM885/" style="text-decoration:none;">
-  <img src="https://img.shields.io/website?url=https%3A%2F%2Ffuck-we-ballerz.github.io%2FDM885%2F&style=for-the-badge" style="padding-bottom: 5px;"/>
+<a href="https://zeruscloud.com" style="text-decoration:none;">
+  <img src="https://img.shields.io/website?url=https%3A%2F%2Fzeruscloud.com&style=for-the-badge" style="padding-bottom: 5px;"/>
 </a>
 </p>
 
@@ -79,7 +79,7 @@ Regarding the infrastructure, we are using:
 
 Our user interface is built using Django and Svelte. We chose different frameworks to allow our teams to work independently and reduce the need for communication. This means we can develop different parts of the system separately and connect them later. The user interface includes a panel for users and a panel for teachers.
 
-Finally, our project is live on Google Cloud and can be accessed through these URLs: [list]. 
+Finally, our project is live on Google Cloud and can be accessed on https://zeruscloud.com with additional services exposed on [/api](https://zeruscloud.com/api), [/grafana](https://zeruscloud.com/grafana), or [/keycloak](https://zeruscloud.com/keycloak). 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -88,7 +88,7 @@ To run this project, you need to install Docker, Minikube, and Helm. Docker pack
 
 Deploying locally has been simplified with the use of VSCode tasks. These tasks mimic a real pipeline, efficiently managing the necessary stages of deployment. This process includes the creation of helm Charts and the building custom Docker images that are referenced in the Kubernetes YAML files.
 
-The tasks are designed with inherent dependencies, allowing the execution of a single task to trigger multiple stages, enhancing performance. The entire project can be deployed using the ` minikube start -> Enable Ingress -> Helm Deploy -> minikube tunnel` tasks. However, there are several tasks available for specific needs:
+The tasks are designed with inherent dependencies, allowing the execution of a single task to trigger multiple stages, enhancing performance. The entire project can be deployed using the `minikube start` -> `Enable Ingress` -> `Helm Deploy` -> `minikube tunnel` tasks. However, there are several tasks available for specific needs:
 
 * `Build Grafana`: For creating a custom Grafana image.
 * `Build User`: For creating a custom User service image.
