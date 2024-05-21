@@ -1,11 +1,38 @@
 <script lang="ts">
-	import { submission } from '$lib/db/schema';
-import type { PageData } from './$types';
+    import type { PageData } from './$types';
+    import { onMount} from 'svelte';
+    import { getZIP,getCSV } from '$lib/utils';
+
 	export let data: PageData;
+
+    onMount(() => {
+        if (data && data.submissions && data.submissions.length > 0){
+
+            const CSVData = data.submissions.map(submission => ({
+                studentName: data.studentName,
+                id: submission.id,
+                grade: submission.grade,
+                submissionTime: submission.submission_time.toString(),
+                status: submission.status, 
+            }));
+
+            const ZIPData = data.submissions.map(submission => ({
+                studentName: data.studentName,
+                id: submission.id,
+                std: submission.submission_std,
+                err: submission.submission_err 
+            }));
+
+            getCSV(CSVData, true);
+            getZIP(ZIPData, true);
+        }
+    });
 
 </script>
 
 <h1>Submissions for {data.studentName}</h1>
+<button id="csv">Extract CSV Metadata</button>
+<button id="zip">Extract ZIP Logs</button>
 
 {#each data.submissions as submission, i}
 

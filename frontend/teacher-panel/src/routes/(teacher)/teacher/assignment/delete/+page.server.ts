@@ -12,8 +12,6 @@ export async function load({cookies}) {
                     .innerJoin(schema.teacher_to_assignment, eq(schema.assignment.id, schema.teacher_to_assignment.assignment_id))
                     .where(eq(schema.teacher_to_assignment.teacher_id, teacher!.id))
     
-    console.log(assignments)
-
     let output = await Promise.all(assignments.map(async (asg) => {
         const courseName = await db.query.course.findFirst({ where: eq(schema.course.id, asg.assignment.course_id)})
 
