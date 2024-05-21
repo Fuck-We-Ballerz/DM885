@@ -115,6 +115,8 @@ In addition, we have set up Dependabot to scan our repository for updates to pac
 ## 🏭 The Pipeline
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ## 🤝 Contribute
 We have automated our local development process using VSCode tasks to create a simulated pipeline. This allows us to streamline our development workflow and ensure consistency across our team. Detailed instructions on how to set up and use these tasks is provided in the section [Getting Started](👷‍♂️-getting-started).
 
