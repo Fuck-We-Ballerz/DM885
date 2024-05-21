@@ -13,7 +13,6 @@ kind: Deployment
 metadata:
   name: keycloak
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: keycloak
