@@ -14,7 +14,6 @@ jobs:
     env:
       CLOUDSDK_COMPUTE_ZONE: europe-west3-a
       CLOUDSDK_CONTAINER_CLUSTER: dm885-grading-system
-      IMAGE_TAG: ${{ github.sha }}
 
     steps:
       - name: Checkout code
@@ -59,13 +58,19 @@ jobs:
           filters: |
             grafana:
               - 'monitoring/dashboards/**'
+            user:
+              - 'frontend/user/**'
+            teacher-panel:
+              - 'frontend/teacher-panel/**'
 
       - name: Build and push Docker image (python-custom)
+        if: steps.changes.outputs.user == 'true'
         run: |
           docker build -t gcr.io/devsecops-422807/python-custom -f frontend/user/Dockerfile frontend/user
           docker push gcr.io/devsecops-422807/python-custom
 
       - name: Build and push Docker image (node-custom)
+        if: steps.changes.outputs.teacher-panel == 'true'
         run: |
           docker build --build-arg ENVIRONMENT=prod -t gcr.io/devsecops-422807/node-custom -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
           docker push gcr.io/devsecops-422807/node-custom
@@ -73,8 +78,8 @@ jobs:
       - name: Build and push Docker image (grafana)
         if: steps.changes.outputs.grafana == 'true'
         run: |
-          docker build -t gcr.io/devsecops-422807/grafana:${{ env.IMAGE_TAG }} -f monitoring/Dockerfile.grafana ./monitoring
-          docker push gcr.io/devsecops-422807/grafana:${{ env.IMAGE_TAG }}
+          docker build -t gcr.io/devsecops-422807/grafana -f monitoring/Dockerfile.grafana ./monitoring
+          docker push gcr.io/devsecops-422807/grafana
 
       - name: Package and deploy Helm chart (Infrastructure)
         run: |
@@ -82,10 +87,9 @@ jobs:
           helm upgrade infrastructure infrastructure/helm/infrastructure-0.1.0.tgz --values infrastructure/helm/values-prod.yaml
 
       - name: Package and deploy Helm chart (Monitoring)
-        if: steps.changes.outputs.grafana == 'true'
         run: |
           helm package -d monitoring/helm monitoring/helm/.
-          helm upgrade monitoring monitoring/helm/monitoring-0.1.0.tgz --values monitoring/helm/values-prod.yaml --set grafana.tag=${{ env.IMAGE_TAG }}
+          helm upgrade monitoring monitoring/helm/monitoring-0.1.0.tgz --values monitoring/helm/values-prod.yaml
         
       - name: Package and deploy Helm chart (Frontend)
         run: |
