@@ -6,13 +6,43 @@ from logs_config import setup_logging
 from database import db, Student, Assignment, Course, AssignmentConfig, Submission, init_db, Student_to_assignment
 import docker
 from datetime import datetime
+from keycloak import KeycloakOpenID
+from dotenv import load_dotenv
 
 # Import the API blueprint
 from api import api
+load_dotenv()
 
-# Set up logger
 log_terminal = True
 logger = setup_logging(log_terminal)
+
+#Load environment variables
+KEYCLOAK_SERVER_URL = os.getenv('KEYCLOAK_SERVER_URL')
+KEYCLOAK_REALM = os.getenv('KEYCLOAK_REALM')
+KEYCLOAK_CLIENT_ID = os.getenv('KEYCLOAK_CLIENT_ID')
+KEYCLOAK_CLIENT_SECRET = os.getenv('KEYCLOAK_CLIENT_SECRET')
+KEYCLOAK_REDIRECT_URI = os.getenv('KEYCLOAK_REDIRECT_URI')
+
+logger.info(f"Keycloak Server URL: {KEYCLOAK_SERVER_URL}")
+logger.info(f"Keycloak Realm: {KEYCLOAK_REALM}")
+logger.info(f"Keycloak Client ID: {KEYCLOAK_CLIENT_ID}")
+logger.info(f"Keycloak Client Secret: {KEYCLOAK_CLIENT_SECRET}")
+logger.info(f"Keycloak Redirect URI: {KEYCLOAK_REDIRECT_URI}")
+
+
+
+if not all([KEYCLOAK_SERVER_URL, KEYCLOAK_REALM, KEYCLOAK_CLIENT_ID, KEYCLOAK_CLIENT_SECRET, KEYCLOAK_REDIRECT_URI]):
+    raise ValueError("One or more Keycloak configuration environment variables are missing")
+
+keycloak_openid = KeycloakOpenID(
+    server_url=KEYCLOAK_SERVER_URL,
+    client_id=KEYCLOAK_CLIENT_ID,
+    realm_name=KEYCLOAK_REALM,
+    client_secret_key=KEYCLOAK_CLIENT_SECRET
+)
+
+# Set up logger
+
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 bootstrap = Bootstrap(app)
@@ -78,7 +108,7 @@ def student_dashboard():
         assignments = fallback_assignments  # Use the fallback assignments if the query fails
 
     return render_template("student.html", nav=f"Dashboard for: {username}", assignments=assignments)
-
+"""
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -139,7 +169,28 @@ def login():
             return redirect(url_for('login', nav="Login", error="Input cannot be empty"))
     else:
         return render_template('login.html', nav="Login")
-    
+"""
+
+@app.route('/login')
+def login():
+    redirect_uri = os.getenv('KEYCLOAK_REDIRECT_URI')
+    auth_url = keycloak_openid.auth_url(redirect_uri=redirect_uri, scope="openid")
+    return redirect(auth_url)
+
+@app.route('/callback')
+def callback():
+    code = request.args.get('code')
+    if code:
+        token = keycloak_openid.token(
+            grant_type='authorization_code',
+            code=code,
+            redirect_uri=os.getenv('KEYCLOAK_REDIRECT_URI')
+        )
+        userinfo = keycloak_openid.userinfo(token['access_token'])
+        session['user'] = userinfo
+        return redirect(url_for('student_dashboard'))
+    return 'Error: No code provided.', 400
+
 @app.route('/logout')
 def logout():
     username = session.get('username', 'No User')

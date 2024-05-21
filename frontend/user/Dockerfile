@@ -1,6 +1,16 @@
 # Use an official Python runtime as a parent image
 FROM python:3.12-slim
 
+
+# Set the working directory in the container
+WORKDIR /usr/src/app
+
+# Copy the config.env file before any RUN commands that need it
+COPY config.env .
+
+# Run the command to move config.env to .env
+RUN cat config.env > .env
+
 RUN apt-get update && apt-get install -y lsb-release
 RUN apt-get -y update; apt-get -y install curl
 RUN curl -fsSLo /usr/share/keyrings/docker-archive-keyring.asc \
@@ -10,9 +20,6 @@ RUN echo "deb [arch=$(dpkg --print-architecture) \
   https://download.docker.com/linux/debian \
   $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
 RUN apt-get update && apt-get install -y docker-ce-cli
-
-# Set the working directory in the container
-WORKDIR /usr/src/app
 
 # Define environment variable
 ENV SCRIPT_NAME=/student

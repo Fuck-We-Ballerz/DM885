@@ -1,10 +1,11 @@
-Flask 
+Flask
 Flask-Bootstrap
-Werkzeug 
-Flask-SQLAlchemy 
+Werkzeug
+Flask-SQLAlchemy
 psycopg2-binary==2.9.9
 requests
 docker
 gunicorn
 selenium
-unittest
+python-keycloak
+python-dotenv
