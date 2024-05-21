@@ -1,7 +1,7 @@
 apiVersion: 1
 
 providers:
-  # <string> an unique provider name TEST
+  # <string> an unique provider name
 - name: 'provider'
   # <string, required> provider type. Required
   type: file
