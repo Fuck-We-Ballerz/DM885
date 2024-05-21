@@ -9,8 +9,6 @@ export const actions = {
         const token = cookies.get('kc-cookie');
         const data = await request.formData();
 
-        console.log(token);
-
         const teacher = {
             username: data.get('username'),
             firstName: data.get('firstName'),
@@ -34,8 +32,6 @@ export const actions = {
             },
             body: JSON.stringify(teacher)
         });
-
-        console.log(response.status);
 
         if (response.status === 201) {
             console.log('User created successfully');

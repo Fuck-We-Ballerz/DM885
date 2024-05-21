@@ -47,7 +47,7 @@
             button.addEventListener('click', function (event) {
                 event.preventDefault();
                 const assignmentId = this.getAttribute('data-assignment-id');
-                fetch(`/student/cancel_assignment/${assignmentId}`, {
+                fetch("{{ url_for('cancel_assignment', assignment_id=123456789) }}".replace("123456789", assignmentId), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

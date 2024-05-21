@@ -1,16 +1,8 @@
 environment: "prod"
 
-keycloak: 
-  PUBLIC_KEYCLOAK_BASE_URL: https://zeruscloud.com/keycloak
-  PUBLIC_KEYCLOAK_REDIRECT_HOME_URL: https://zeruscloud.com/teacher
-  PUBLIC_KEYCLOAK_POST_URL: https://zeruscloud.com/keycloak/admin/realms/DM885/users
-
-
-students:
-  PUBLIC_STUDENT_LOGIN_URL: https://zeruscloud.com/students/login
- 
-
 studentService:
   IMAGE: "gcr.io/devsecops-422807/python-custom"
+  IMAGE_PULL_POLICY: "Always"
 teacherService:
   IMAGE: "gcr.io/devsecops-422807/node-custom"
+  IMAGE_PULL_POLICY: "Always"

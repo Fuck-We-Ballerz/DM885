@@ -3,19 +3,6 @@
   import { base } from '$app/paths';
 
   export let data: PageData;
-
-  function saveChanges() {
-    console.log("Save changes");
-  }
-
-  function discardChanges() {
-    console.log("Discard changes");
-    data.data.max_cpu = data.copy.max_cpu;
-    data.data.max_ram = data.copy.max_ram;
-    data.data.max_submission = data.copy.max_submission;
-    data.data.max_time = parseInt(data.copy.max_time);
-  }
-
 </script>
 
 <h1>Edit Config</h1>
@@ -51,8 +38,6 @@
     </tr>
   </table>
   <button type="submit">Save</button>
-  <!-- <button type="reset">Discard</button> -->
-  <!-- <button on:click|preventDefault={discardChanges}>Discard</button> -->
 </form>
   
 <button on:click={() => { window.location.href = `${base}/teacher/assignment/create`; }}>Back to assignments</button>

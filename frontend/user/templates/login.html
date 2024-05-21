@@ -14,7 +14,7 @@
                 <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
                 <p class="text-white-50 mb-5">Please enter your login and password!</p>
   
-                <form method="post" action="/login">
+                <form method="post" action="{{ url_for('login') }}">
                     <div class="form-outline form-white mb-4">
                         <input type="text" name="username" id="typeUsernameX" class="form-control form-control-lg" />
                         <label class="form-label" for="typeUsernameX">Username</label>

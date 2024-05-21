@@ -12,10 +12,16 @@ metadata:
     nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
     nginx.ingress.kubernetes.io/proxy-body-size: "64m"
 {{- if eq .Values.environment "prod"}}
-    cert-manager.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: letsencrypt-production
 {{- end}}
 
 spec:
+{{- if eq .Values.environment "prod" }}
+  tls:
+    - hosts:
+        - "zeruscloud.com"
+      secretName: zeruscloud-com-tls
+{{- end }}
   ingressClassName: "nginx"
   rules:
     - host: "{{ .Values.ingress.HOST }}"
@@ -35,7 +41,7 @@ spec:
                 name: keycloak
                 port:
                   number: 8080
-          - path: "/student(/|$)(.*)"
+          - path: "/()(student(/|$).*)"
             pathType: ImplementationSpecific
             backend:
               service:
@@ -56,8 +62,3 @@ spec:
                 name: teacher-service
                 port:
                   number: 5173
-  tls:
-    - hosts:
-        - "zeruscloud.com"
-        - "www.zeruscloud.com"
-      secretName: keycloak-tls

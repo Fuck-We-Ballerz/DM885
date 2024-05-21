@@ -14,7 +14,6 @@ kind: Deployment
 metadata:
   name: dind
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: dind

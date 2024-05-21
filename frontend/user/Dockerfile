@@ -15,9 +15,7 @@ RUN apt-get update && apt-get install -y docker-ce-cli
 WORKDIR /usr/src/app
 
 # Define environment variable
-ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
-ENV FLASK_RUN_PORT=5050
+ENV SCRIPT_NAME=/student
 
 # Copy the current directory contents into the container at /usr/src/app
 COPY . .
@@ -26,4 +24,4 @@ COPY . .
 RUN pip install -r requirements.txt 
 
 # Run app.py when the container launches
-CMD ["flask", "run"]
+CMD ["gunicorn", "-b" ,":5050", "app:app"]
