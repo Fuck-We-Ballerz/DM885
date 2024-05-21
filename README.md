@@ -15,8 +15,8 @@
 <a href="https://github.com/Fuck-We-Ballerz/DM885/blob/main/LICENSE" style="text-decoration:none;">
   <img src="https://img.shields.io/github/license/Fuck-We-Ballerz/DM885.svg?style=for-the-badge" style="padding-bottom: 5px;/">
 </a>
-<a href="https://fuck-we-ballerz.github.io/DM885/" style="text-decoration:none;">
-  <img src="https://img.shields.io/website?url=https%3A%2F%2Ffuck-we-ballerz.github.io%2FDM885%2F&style=for-the-badge" style="padding-bottom: 5px;"/>
+<a href="https://zeruscloud.com" style="text-decoration:none;">
+  <img src="https://img.shields.io/website?url=https%3A%2F%2Fzeruscloud.com&style=for-the-badge" style="padding-bottom: 5px;"/>
 </a>
 </p>
 
