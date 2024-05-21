@@ -3,6 +3,10 @@ keycloak:
   KC_HOSTNAME_ADMIN_URL: https://zeruscloud.com/keycloak/
   HOSTNAME_BASE: https://zeruscloud.com
 
+  # Secrets
+  KEYCLOAK_ADMIN: ""
+  KEYCLOAK_ADMIN_PASSWORD: ""
+
 ingress:
   HOST: zeruscloud.com
 
