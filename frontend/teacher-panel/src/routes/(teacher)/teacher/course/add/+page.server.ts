@@ -32,26 +32,22 @@ export async function load({cookies}) {
 export const actions = {
     default: async ({cookies, request}) => {
         const data = await request.formData();
-        console.log(data)
         
         // Retrieve the course
         const course = data.get('course')
         const courseId = parseInt(course!.toString())
-        console.log(courseId)
 
-            // Retrieve a list of student IDs
+        // Retrieve a list of student IDs, TODO: FIx filterig out students where studnet id == course id
         const studentIds = Array.from(data.values())
-            .filter(value => value !== course);
-
-        console.log(studentIds);
+            .slice(1)
+            .filter(value => value);
+        
         
         // Array of form [{student_id: <student_id>, course_id: <course_id>}, {student_id: <student_id>, course_id: <course_id>},, ...]}]
         const insertStudents = studentIds.map(studentId => ({
             student_id: parseInt(studentId.toString()),
             course_id: courseId
         }))
-
-        console.log(insertStudents)
 
         //insert all students into the student_to_course table
         await db.insert(schema.student_to_course).values(insertStudents)

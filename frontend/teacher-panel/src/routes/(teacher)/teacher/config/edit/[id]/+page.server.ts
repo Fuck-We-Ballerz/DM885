@@ -21,7 +21,7 @@ export const actions = {
 
 export const load: PageServerLoad = async ({params}) => {
     const config = await db.query.assignmentConfig.findFirst({where: eq(schema.assignmentConfig.id, parseInt(params.id))})
-    console.log(config);
+
     if (!config) {
         error(404, "Did not find any configuration with that ID");
     }

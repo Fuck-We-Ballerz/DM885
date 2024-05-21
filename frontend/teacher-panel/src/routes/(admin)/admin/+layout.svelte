@@ -5,8 +5,9 @@
     export let {keycloak} = data;
     
     onMount(() => {
-        console.log("Is keycloak", keycloak);
         if(!keycloak){
+            window.location.href = `${base}/`;
+        }else if(!keycloak.authenticated){
             window.location.reload();
         }
     });

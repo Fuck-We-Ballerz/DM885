@@ -9,8 +9,6 @@ import { eq } from 'drizzle-orm'
 export async function load({}) {
         const teachers = await db.query.teacher.findMany() ?? []
 
-        // console.log(teachers[0].name)
-
         let output = teachers.map((teacher) => {
             return {
                 name: teacher.name,
@@ -18,7 +16,6 @@ export async function load({}) {
                 isPaused: teacher.is_paused
             }
         })
-        // console.log(output)
         return {
             teachers: output
         }
@@ -28,7 +25,6 @@ export async function load({}) {
 export const actions = {
     default: async ({cookies, request}) => {
         const data = await request.formData();
-        console.log(data)
         for (const entry of data.entries()) {  //entries [username, value]
             console.log(`inserting ${entry[0]} into teacher`)
             
