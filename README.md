@@ -151,7 +151,7 @@ on:
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## 🤝 Contribute
-We have automated our local development process using VSCode tasks to create a simulated pipeline. This allows us to streamline our development workflow and ensure consistency across our team. Detailed instructions on how to set up and use these tasks is provided in the section [Getting Started](👷‍♂️-getting-started).
+We have automated our local development process using VSCode tasks to create a simulated pipeline. This allows us to streamline our development workflow and ensure consistency across our team. Detailed instructions on how to set up and use these tasks is provided in the section <a href="#👷‍♂️-getting-started">Getting Started</a>.
 
 For deployment on the Google Cloud Platform (GCP), we leverage GitHub Actions. This powerful tool allows us to build, test, and deploy our project directly from our GitHub repository to GCP. The advantage of this approach is twofold:
 
