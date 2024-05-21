@@ -26,12 +26,6 @@ spec:
         - name: keycloak
           image: keycloak/keycloak:latest
           args: ["start-dev", "--import-realm"]
-#{{- if eq .Values.environment "dev" }}
-#          args: ["start-dev", "--import-realm"]
-#{{- end }}
-#{{- if eq .Values.environment "prod" }}
-#          args: ["start-prod", "--import-realm"]
-#{{- end }}
           envFrom:
             - secretRef:
                 name: keycloak
