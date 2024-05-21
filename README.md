@@ -41,6 +41,9 @@ Exploring microservices using Kubernetes!
       <a href="#👨‍💻-assisting-dev-tools">👨‍💻 Assisting Dev Tools</a>
     </li>
     <li>
+      <a href="#🏭-the-pipeline">🏭 The Pipeline</a>
+    </li>
+    <li>
         <a href="#🤝-contribute">🤝 Contribute</a>
     </li>
     <li>
@@ -108,6 +111,9 @@ This separation of environments is achieved by creating two secret configuration
 We have integrated SonarCloud into our development process to ensure the consistent and efficient delivery of high-quality code. This code review tool seamlessly integrates with GitHub, enhancing our CI/CD workflow with quality gates. It provides immediate feedback on all pull requests, enabling us to maintain our coding standards. Anyone can access our SonarCloud dashboard [HERE](https://sonarcloud.io/organizations/fuck-we-ballerz). Besides analyzing pull requests, it is also possible to synchronize the SonarLint plugin in our IDE with the rules defined in our SonarCloud server. This ensures that the code violations identified by SonarLint match those detected by SonarCloud after pushing to the repository. We have not implemented this yet, but it could be a worthwhile addition to our workflow.
 
 In addition, we have set up Dependabot to scan our repository for updates to packages and Docker images. Using outdated versions can often lead to vulnerabilities that have not been addressed. Dependabot helps mitigate these risks by automatically creating pull requests for these updates. We can then review and merge these updates as deemed appropriate. This ensures our codebase remains secure and up-to-date.
+
+## 🏭 The Pipeline
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
 
 ## 🤝 Contribute
 We have automated our local development process using VSCode tasks to create a simulated pipeline. This allows us to streamline our development workflow and ensure consistency across our team. Detailed instructions on how to set up and use these tasks is provided in the section [Getting Started](👷‍♂️-getting-started).
