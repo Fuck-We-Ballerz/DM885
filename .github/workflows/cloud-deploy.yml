@@ -57,24 +57,18 @@ jobs:
         uses: dorny/paths-filter@v2
         with:
           filters: |
-            python-custom:
-              - 'frontend/user/**'
-            node-custom:
-              - 'frontend/teacher-panel/**'
             grafana:
-              - 'monitoring/**'
+              - 'monitoring/dashboards/**'
 
       - name: Build and push Docker image (python-custom)
-        if: steps.changes.outputs.python-custom == 'true'
         run: |
-          docker build -t gcr.io/devsecops-422807/python-custom:${{ env.IMAGE_TAG }} -f frontend/user/Dockerfile frontend/user
-          docker push gcr.io/devsecops-422807/python-custom:${{ env.IMAGE_TAG }}
+          docker build -t gcr.io/devsecops-422807/python-custom -f frontend/user/Dockerfile frontend/user
+          docker push gcr.io/devsecops-422807/python-custom
 
       - name: Build and push Docker image (node-custom)
-        if: steps.changes.outputs.node-custom == 'true'
         run: |
-          docker build --build-arg ENVIRONMENT=prod -t gcr.io/devsecops-422807/node-custom:${{ env.IMAGE_TAG }} -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
-          docker push gcr.io/devsecops-422807/node-custom:${{ env.IMAGE_TAG }}
+          docker build --build-arg ENVIRONMENT=prod -t gcr.io/devsecops-422807/node-custom -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
+          docker push gcr.io/devsecops-422807/node-custom
 
       - name: Build and push Docker image (grafana)
         if: steps.changes.outputs.grafana == 'true'
@@ -83,10 +77,9 @@ jobs:
           docker push gcr.io/devsecops-422807/grafana:${{ env.IMAGE_TAG }}
 
       - name: Package and deploy Helm chart (Infrastructure)
-        if: steps.changes.outputs.python-custom == 'true' || steps.changes.outputs.node-custom == 'true' || steps.changes.outputs.grafana == 'true'
         run: |
           helm package -d infrastructure/helm infrastructure/helm/.
-          helm upgrade infrastructure infrastructure/helm/infrastructure-0.1.0.tgz --values infrastructure/helm/values-prod.yaml --set image.tag=${{ env.IMAGE_TAG }}
+          helm upgrade infrastructure infrastructure/helm/infrastructure-0.1.0.tgz --values infrastructure/helm/values-prod.yaml
 
       - name: Package and deploy Helm chart (Monitoring)
         if: steps.changes.outputs.grafana == 'true'
@@ -95,7 +88,6 @@ jobs:
           helm upgrade monitoring monitoring/helm/monitoring-0.1.0.tgz --values monitoring/helm/values-prod.yaml --set image.tag=${{ env.IMAGE_TAG }}
         
       - name: Package and deploy Helm chart (Frontend)
-        if: steps.changes.outputs.python-custom == 'true' || steps.changes.outputs.node-custom == 'true'
         run: |
           helm package -d frontend/helm frontend/helm/.
-          helm upgrade frontend frontend/helm/frontend-0.1.0.tgz --values frontend/helm/values-prod.yaml --set image.tag=${{ env.IMAGE_TAG }}
+          helm upgrade frontend frontend/helm/frontend-0.1.0.tgz --values frontend/helm/values-prod.yaml
