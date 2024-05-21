@@ -88,7 +88,7 @@ To run this project, you need to install Docker, Minikube, and Helm. Docker pack
 
 Deploying locally has been simplified with the use of VSCode tasks. These tasks mimic a real pipeline, efficiently managing the necessary stages of deployment. This process includes the creation of helm Charts and the building custom Docker images that are referenced in the Kubernetes YAML files.
 
-The tasks are designed with inherent dependencies, allowing the execution of a single task to trigger multiple stages, enhancing performance. The entire project can be deployed using the ` minikube start -> Enable Ingress -> Helm Deploy -> minikube tunnel` task. However, there are several tasks available for specific needs:
+The tasks are designed with inherent dependencies, allowing the execution of a single task to trigger multiple stages, enhancing performance. The entire project can be deployed using the ` minikube start -> Enable Ingress -> Helm Deploy -> minikube tunnel` tasks. However, there are several tasks available for specific needs:
 
 * `Build Grafana`: For creating a custom Grafana image.
 * `Build User`: For creating a custom User service image.
