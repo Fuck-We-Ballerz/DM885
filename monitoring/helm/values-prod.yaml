@@ -6,4 +6,3 @@ grafana:
   GF_SERVER_ROOT_URL: "https://zeruscloud.com/grafana/"
   image: gcr.io/devsecops-422807/grafana
   tag: latest
-
