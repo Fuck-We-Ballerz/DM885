@@ -85,7 +85,7 @@ jobs:
         if: steps.changes.outputs.grafana == 'true'
         run: |
           helm package -d monitoring/helm monitoring/helm/.
-          helm upgrade monitoring monitoring/helm/monitoring-0.1.0.tgz --values monitoring/helm/values-prod.yaml --set image.tag=${{ env.IMAGE_TAG }}
+          helm upgrade monitoring monitoring/helm/monitoring-0.1.0.tgz --values monitoring/helm/values-prod.yaml --set grafana.tag=${{ env.IMAGE_TAG }}
         
       - name: Package and deploy Helm chart (Frontend)
         run: |
