@@ -66,25 +66,31 @@ jobs:
       - name: Build and push Docker image (python-custom)
         if: steps.changes.outputs.user == 'true'
         run: |
-          docker build -t gcr.io/devsecops-422807/python-custom -f frontend/user/Dockerfile frontend/user
-          docker push gcr.io/devsecops-422807/python-custom
+          docker build -t gcr.io/${{ secrets.PROJECT_ID }}/python-custom -f frontend/user/Dockerfile frontend/user
+          docker push gcr.io/${{ secrets.PROJECT_ID }}/python-custom
 
       - name: Build and push Docker image (node-custom)
         if: steps.changes.outputs.teacher-panel == 'true'
         run: |
-          docker build --build-arg ENVIRONMENT=prod -t gcr.io/devsecops-422807/node-custom -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
-          docker push gcr.io/devsecops-422807/node-custom
+          docker build --build-arg ENVIRONMENT=prod -t gcr.io/${{ secrets.PROJECT_ID }}/node-custom -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
+          docker push gcr.io/${{ secrets.PROJECT_ID }}/node-custom
 
       - name: Build and push Docker image (grafana)
         if: steps.changes.outputs.grafana == 'true'
         run: |
-          docker build -t gcr.io/devsecops-422807/grafana -f monitoring/Dockerfile.grafana ./monitoring
-          docker push gcr.io/devsecops-422807/grafana
+          docker build -t gcr.io/${{ secrets.PROJECT_ID }}/grafana -f monitoring/Dockerfile.grafana ./monitoring
+          docker push gcr.io/${{ secrets.PROJECT_ID }}/grafana
 
       - name: Package and deploy Helm chart (Infrastructure)
         run: |
           helm package -d infrastructure/helm infrastructure/helm/.
-          helm upgrade infrastructure infrastructure/helm/infrastructure-0.1.0.tgz --values infrastructure/helm/values-prod.yaml
+          helm upgrade infrastructure \
+            infrastructure/helm/infrastructure-0.1.0.tgz \
+            --values infrastructure/helm/values-prod.yaml \
+            --set keycloak.KEYCLOAK_ADMIN=${{ secrets.KEYCLOAK_ADMIN }} \
+            --set keycloak.KEYCLOAK_ADMIN_PASSWORD=${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
+
+          helm upgrade infrastructure infrastructure/helm/infrastructure-0.1.0.tgz --values infrastructure/helm/values-prod.yaml --set keycloak.KEYCLOAK_ADMIN=${{ secrets.KEYCLOAK_ADMIN }} --set keycloak.KEYCLOAK_ADMIN_PASSWORD=${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
 
       - name: Package and deploy Helm chart (Monitoring)
         run: |
