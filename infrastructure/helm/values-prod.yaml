@@ -9,10 +9,13 @@ keycloak:
 
   KC_HOSTNAME_URL: https://zeruscloud.com/keycloak/
   KC_HOSTNAME_ADMIN_URL: https://zeruscloud.com/keycloak/
-  HOSTNAME_BASE: https://zeruscloud.com
 
+postgresApplication:
+  POSTGRES_USER: "${POSTGRES_USER}"
+  POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
 
 ingress:
   HOST: zeruscloud.com
 
+namespace: infrastructure-prod
 environment: "prod"
