@@ -17,5 +17,4 @@ postgresApplication:
 ingress:
   HOST: zeruscloud.com
 
-namespace: infrastructure-prod
 environment: "prod"
