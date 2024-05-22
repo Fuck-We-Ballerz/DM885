@@ -1,4 +1,4 @@
-name: Fresh Deploy
+name: CI/CD Pipeline
 
 permissions:
   id-token: write
@@ -16,11 +16,11 @@ jobs:
       CLOUDSDK_CONTAINER_CLUSTER: dm885-grading-system
       KEYCLOAK_ADMIN: ${{ secrets.KEYCLOAK_ADMIN }}
       KEYCLOAK_ADMIN_PASSWORD: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
-      CUSTOM_KC_GRAFANA_REALM_SECRET: ${{ secrets.GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET }}
-      GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET: ${{ secrets.GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET }}
+      CUSTOM_KC_GRAFANA_REALM_SECRET: ${{ secrets.CUSTOM_KC_GRAFANA_REALM_SECRET }}
       CUSTOM_KC_APPLICATION_REALM_SECRET: ${{ secrets.CUSTOM_KC_APPLICATION_REALM_SECRET }}
       KC_DB_PASSWORD: ${{ secrets.KC_DB_PASSWORD }}
       KC_DB_USERNAME: ${{ secrets.KC_DB_USERNAME }}
+      GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET: ${{ secrets.GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET }}
       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
       POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
 
@@ -60,17 +60,32 @@ jobs:
         run: |
           curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
+      - name: Paths Filter
+        id: changes
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            grafana:
+              - 'monitoring/dashboards/**'
+            user:
+              - 'frontend/user/**'
+            teacher-panel:
+              - 'frontend/teacher-panel/**'
+
       - name: Build and push Docker image (python-custom)
+        if: steps.changes.outputs.user == 'true'
         run: |
           docker build -t gcr.io/devsecops-422807/python-custom -f frontend/user/Dockerfile frontend/user
           docker push gcr.io/devsecops-422807/python-custom
 
       - name: Build and push Docker image (node-custom)
+        if: steps.changes.outputs.teacher-panel == 'true'
         run: |
           docker build --build-arg ENVIRONMENT=prod -t gcr.io/devsecops-422807/node-custom -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
           docker push gcr.io/devsecops-422807/node-custom
 
       - name: Build and push Docker image (grafana)
+        if: steps.changes.outputs.grafana == 'true'
         run: |
           docker build -t gcr.io/devsecops-422807/grafana -f monitoring/Dockerfile.grafana ./monitoring
           docker push gcr.io/devsecops-422807/grafana

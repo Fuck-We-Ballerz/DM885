@@ -36,7 +36,7 @@
             "label": "Helm Deploy Monitoring",
             "group": "build",
             "type": "shell",
-            "dependsOn":["Helm Deploy Infrastructure", "Build Grafana"],
+            "dependsOn":["Build Grafana"],
             "command": "helm package -d monitoring/helm monitoring/helm/. && helm install monitoring monitoring/helm/monitoring-0.1.0.tgz"
         },
         {
@@ -50,7 +50,7 @@
             "label": "Helm Deploy",
             "group": "build",
             "type": "shell",
-            "dependsOn":["Helm Deploy Monitoring", "Helm Deploy Frontend"],
+            "dependsOn":["Helm Deploy Infrastructure", "Helm Deploy Monitoring", "Helm Deploy Frontend"],
         },
   ]
 }

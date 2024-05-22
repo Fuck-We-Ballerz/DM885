@@ -115,25 +115,25 @@ In addition, we have set up Dependabot to scan our repository for updates to pac
 ## 🏭 The Pipeline
 The Pipeline automates the build, test and deployment stages. It is currently configured to function with google cloud kubernetes engine and its associated services, but can be migrated to any cloud platform.
 
-__Prerequisite__:\
-Before you can run the workflow, you need to create a Google Cloud service account with the following permissions: \
-**Kubernetes Engine Admin**\
-**Artifact Registry Admin**\
-**Remote Build Execution Admin**\
+__Prerequisite__:
+Before you can run the workflow, you need to create a Google Cloud service account with the following permissions: 
+**Kubernetes Engine Admin**
+**Artifact Registry Admin**
+**Remote Build Execution Admin**
 
 Once You have created the account, you can export the service account secret key as a .json.
 
-__Github Action secrets__:\
-To run the CI/CD Pipeline you will need to add some secrets in the __Github&rarr;Settings&rarr;Secrets & Variables__:\
+__Github Action secrets__:
+To run the CI/CD Pipeline you will need to add some secrets in the `Github` -> `Settings` -> `Secrets & Variables`:
 
 * **[GCR_HOSTNAME]**: The region that your GCKE cluster is deployed in.
 * **[CLOUDSDK_CONTAINER_CLUSTER]**: Specifies the name of your cluster
 * **[PROJECT_ID]**: Your Google Cloud Project ID
 * **[GKE_SA_KEY]**: The contents of the secret key .json file.
 
-__Running the workflow__:\
-Once everything has been set up according to the directions here, the workflow can be executed by going to __Github&rarr;Actions&rarr;CI/CD Pipeline&rarr;Run Workflow__ and then specify the branch to run the file on.\
-Alternatively, you can edit the part of the CI/CD Pipeline file that looks like this:\
+__Running the workflow__:
+Once everything has been set up according to the directions here, the workflow can be executed by going to `Github` -> `Actions` -> `CI/CD Pipeline` -> `Run Workflow` and then specify the branch to run the file on.
+Alternatively, you can edit the part of the CI/CD Pipeline file that looks like this:
 ```yml
 on:
   workflow_dispatch:
@@ -171,10 +171,10 @@ This section is dedicated to highlighting areas in the project that require furt
 * Upload of Files: Develop a secure and efficient file upload feature.
 * Tracking of Submissions: Create a system to track user submissions. This could involve logging submission times, user details, and the status of the submission.
 * Stop Submission: Implement a feature that allows users or administrators to stop or cancel a submission process. This could be useful in situations where an error has been identified, or a change needs to be made.
-* Create Self-Signed Certificates for Development: For local development and testing, generate self-signed SSL certificates. This will allow for testing of HTTPS connections and other SSL-dependent features.
-* Signed Certificates for Production: For the production environment, obtain SSL certificates signed by a trusted Certificate Authority (CA). This is crucial for ensuring the security of data in transit and building trust with end users.
 
 Remember, this is a living document. As the project evolves, new tasks may emerge and existing ones may become irrelevant.
+
+For a succinct overview of the hard requirements, please refer to [PROJECT_TASKS.md](./PROJECT_TASKS.md), and our user stories are available [HERE](./USER_STORIES.pdf).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
