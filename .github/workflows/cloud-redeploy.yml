@@ -1,4 +1,4 @@
-name: Fresh Deploy
+name: CI/CD Pipeline
 
 permissions:
   id-token: write
@@ -60,17 +60,32 @@ jobs:
         run: |
           curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
+      - name: Paths Filter
+        id: changes
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            grafana:
+              - 'monitoring/dashboards/**'
+            user:
+              - 'frontend/user/**'
+            teacher-panel:
+              - 'frontend/teacher-panel/**'
+
       - name: Build and push Docker image (python-custom)
+        if: steps.changes.outputs.user == 'true'
         run: |
           docker build -t gcr.io/devsecops-422807/python-custom -f frontend/user/Dockerfile frontend/user
           docker push gcr.io/devsecops-422807/python-custom
 
       - name: Build and push Docker image (node-custom)
+        if: steps.changes.outputs.teacher-panel == 'true'
         run: |
           docker build --build-arg ENVIRONMENT=prod -t gcr.io/devsecops-422807/node-custom -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
           docker push gcr.io/devsecops-422807/node-custom
 
       - name: Build and push Docker image (grafana)
+        if: steps.changes.outputs.grafana == 'true'
         run: |
           docker build -t gcr.io/devsecops-422807/grafana -f monitoring/Dockerfile.grafana ./monitoring
           docker push gcr.io/devsecops-422807/grafana
@@ -78,16 +93,16 @@ jobs:
       - name: Package and deploy Helm chart (Infrastructure)
         run: |
           helm package -d infrastructure/helm infrastructure/helm/.
-          helm install infrastructure infrastructure/helm/infrastructure-0.1.0.tgz \
+          helm upgrade infrastructure infrastructure/helm/infrastructure-0.1.0.tgz \
             --values infrastructure/helm/values-prod.yaml
 
       - name: Package and deploy Helm chart (Monitoring)
         run: |
           helm package -d monitoring/helm monitoring/helm/.
-          helm install monitoring monitoring/helm/monitoring-0.1.0.tgz \
+          helm upgrade monitoring monitoring/helm/monitoring-0.1.0.tgz \
             --values monitoring/helm/values-prod.yaml
       
       - name: Package and deploy Helm chart (Frontend)
         run: |
-          helm package -d frontend/helm frontend/helm/.
-          helm install frontend frontend/helm/frontend-0.1.0.tgz --values frontend/helm/values-prod.yaml
+          helm build -d frontend/helm frontend/helm/.
+          helm upgrade frontend frontend/helm/frontend-0.1.0.tgz --values frontend/helm/values-prod.yaml
