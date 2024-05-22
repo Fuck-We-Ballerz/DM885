@@ -38,7 +38,6 @@ Project tasks
   - [x] add teachers
   - [ ] pause a teacher
   - [ ] delete a student or a teacher
-  
 
 * System Developer
 
