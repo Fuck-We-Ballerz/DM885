@@ -77,12 +77,14 @@ jobs:
 
       - name: Package and deploy Helm chart (Infrastructure)
         run: |
+          envsubst < infrastructure/helm/values-prod.yaml > out.yaml && mv out.yaml infrastructure/helm/values-prod.yaml
           helm package -d infrastructure/helm infrastructure/helm/.
           helm install infrastructure infrastructure/helm/infrastructure-0.1.0.tgz \
             --values infrastructure/helm/values-prod.yaml
 
       - name: Package and deploy Helm chart (Monitoring)
         run: |
+          envsubst < monitoring/helm/values-prod.yaml > out.yaml && mv out.yaml monitoring/helm/values-prod.yaml
           helm package -d monitoring/helm monitoring/helm/.
           helm install monitoring monitoring/helm/monitoring-0.1.0.tgz \
             --values monitoring/helm/values-prod.yaml

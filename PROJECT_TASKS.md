@@ -38,15 +38,14 @@ Project tasks
   - [x] add teachers
   - [ ] pause a teacher
   - [ ] delete a student or a teacher
-  
 
 * System Developer
 
   - [x] Use Continuous Integration and Deployment
   - [x] Infrastructure as a Code with an automatic DevOps pipeline
   - [x] Scalable, supporting multiple users exploiting if needed more resources in the cloud (note: an assignment validation requires a vCPU and therefore the number of vCPUs limits the number of parallel evaluations possible.)
-  - [ ] Have tests to test the system (at least unit test, integration) | <span style="color:orange">PARTIALLY DONE: We have some tests but not part of the pipeline.</span>
-  - [x] Security (proper credential management and common standard security practices enforced). Note that the evaluation of the docker must not tamper with the remaining part of the system since potentially the code of the students is non-trusted | <span style="color:orange">PARTIALLY DONE: DinD technically have some vulnerabilities</span>
+  - [ ] Have tests to test the system (at least unit test, integration) <span style="color:orange">- PARTIALLY DONE: We have some tests but not part of the pipeline.</span>
+  - [x] Security (proper credential management and common standard security practices enforced). Note that the evaluation of the docker must not tamper with the remaining part of the system since potentially the code of the students is non-trusted <span style="color:orange">- PARTIALLY DONE: DinD technically have some vulnerabilities</span>
   - [x] Provide user stories to explain how the system is intended to be used
   - [x] Provide minimal documentation to deploy and run the system
   - [x] The possibility to deploy on multi-clouds and avoid vendor lock-in is a plus

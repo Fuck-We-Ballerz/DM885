@@ -79,7 +79,7 @@ Regarding the infrastructure, we are using:
 
 Our user interface is built using Django and Svelte. We chose different frameworks to allow our teams to work independently and reduce the need for communication. This means we can develop different parts of the system separately and connect them later. The user interface includes a panel for users and a panel for teachers.
 
-Finally, our project is live on Google Cloud and can be accessed on https://zeruscloud.com with additional services exposed on [/api]([https://zeruscloud.com](https://zeruscloud.com)), [/grafana](https://zeruscloud.com/grafana), or [/keycloak](https://zeruscloud.com/keycloak). 
+Finally, our project is live on Google Cloud and can be accessed on [https://zeruscloud.com](https://zeruscloud.com) with additional services exposed on [/api]([https://zeruscloud.com](https://zeruscloud.com)), [/grafana](https://zeruscloud.com/grafana), or [/keycloak](https://zeruscloud.com/keycloak). 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -158,7 +158,7 @@ For deployment on the Google Cloud Platform (GCP), we leverage GitHub Actions. T
 * It simplifies the deployment process, reducing the potential for human error.
 * It ensures that our project on GCP is always up-to-date with the latest version of our code.
 
-To maintain the integrity of our main branch, we have implemented branch protection rules. These rules help us manage the changes to the project and ensure that the main branch always has production-ready code. Each merge to the master branch triggers a deploy on the Google Cloud Platform (GCP) using GitHub Actions, and each pull request triggers a CI build on our [SonarCloud](https://sonarcloud.io/project/overview?id=Fuck-We-Ballerz_DM885). A PR must *always* pass the SonarCloud quality gate; otherwise, merge to master is disallowed.
+To maintain the integrity of our main branch, we have implemented branch protection rules. These rules help us manage the changes to the project and ensure that the main branch always has production-ready code. Each merge to the master branch triggers a deployment on the Google Cloud Platform (GCP) using GitHub Actions, and each pull request triggers a CI build on our [SonarCloud](https://sonarcloud.io/project/overview?id=Fuck-We-Ballerz_DM885). A PR must *always* pass the SonarCloud quality gate; otherwise, merge to master is disallowed.
 
 We welcome contributions from all developers. Before contributing, please read through the above guidelines and ensure your changes adhere to them. Thank you for your interest in our project!
 
