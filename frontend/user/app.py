@@ -1,20 +1,25 @@
 from flask import flash, Flask, request, render_template, redirect, url_for, jsonify, session
 from flask_bootstrap import Bootstrap
+import requests
 from werkzeug.utils import secure_filename
 import os
 from logs_config import setup_logging
 from database import db, Student, Assignment, Course, AssignmentConfig, Submission, init_db, Student_to_assignment
 import docker
 from datetime import datetime
-from keycloak import KeycloakOpenID
+from keycloak import KeycloakOpenID, KeycloakAdmin, KeycloakOpenIDConnection
 from dotenv import load_dotenv
 
 # Import the API blueprint
 from api import api
 load_dotenv()
 
+
+# Set up logger
 log_terminal = True
 logger = setup_logging(log_terminal)
+
+
 
 #Load environment variables
 KEYCLOAK_SERVER_URL = os.getenv('KEYCLOAK_SERVER_URL')
@@ -22,27 +27,42 @@ KEYCLOAK_REALM = os.getenv('KEYCLOAK_REALM')
 KEYCLOAK_CLIENT_ID = os.getenv('KEYCLOAK_CLIENT_ID')
 KEYCLOAK_CLIENT_SECRET = os.getenv('KEYCLOAK_CLIENT_SECRET')
 KEYCLOAK_REDIRECT_URI = os.getenv('KEYCLOAK_REDIRECT_URI')
+KEYCLOAK_REALM_ADMIN = os.getenv('KEYCLOAK_REALM_ADMIN')
+KEYCLOAK_ADMIN_USERNAME = os.getenv('KEYCLOAK_ADMIN_USERNAME')
+KEYCLOAK_ADMIN_PASSWORD = os.getenv('KEYCLOAK_ADMIN_PASSWORD')
+KEYCLOAK_SERVER_URL_POST = os.getenv('KEYCLOAK_SERVER_URL_POST')
 
 logger.info(f"Keycloak Server URL: {KEYCLOAK_SERVER_URL}")
 logger.info(f"Keycloak Realm: {KEYCLOAK_REALM}")
 logger.info(f"Keycloak Client ID: {KEYCLOAK_CLIENT_ID}")
 logger.info(f"Keycloak Client Secret: {KEYCLOAK_CLIENT_SECRET}")
 logger.info(f"Keycloak Redirect URI: {KEYCLOAK_REDIRECT_URI}")
+logger.info(f"Keycloak Admin Username: {KEYCLOAK_ADMIN_USERNAME}")
+logger.info(f"Keycloak Admin Password: {KEYCLOAK_ADMIN_PASSWORD}")
+logger.info(f"Keycloak Server URL POST: {KEYCLOAK_SERVER_URL_POST}")
 
 
 
-if not all([KEYCLOAK_SERVER_URL, KEYCLOAK_REALM, KEYCLOAK_CLIENT_ID, KEYCLOAK_CLIENT_SECRET, KEYCLOAK_REDIRECT_URI]):
+if not all([KEYCLOAK_SERVER_URL_POST, KEYCLOAK_SERVER_URL, KEYCLOAK_REALM, KEYCLOAK_CLIENT_ID, KEYCLOAK_CLIENT_SECRET, KEYCLOAK_REDIRECT_URI]):
     raise ValueError("One or more Keycloak configuration environment variables are missing")
+
+
+# Check Keycloak server accessibility
+try:
+    response = requests.get(KEYCLOAK_SERVER_URL_POST)
+    logger.info(f"RESPONSE: {response.status_code}")
+    response.raise_for_status()
+    logger.info("Keycloak server is accessible")
+except requests.exceptions.RequestException as e:
+    logger.error(f"Failed to reach Keycloak server: {e}")
 
 keycloak_openid = KeycloakOpenID(
     server_url=KEYCLOAK_SERVER_URL,
     client_id=KEYCLOAK_CLIENT_ID,
     realm_name=KEYCLOAK_REALM,
     client_secret_key=KEYCLOAK_CLIENT_SECRET
+    #verify=False
 )
-
-# Set up logger
-
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 bootstrap = Bootstrap(app)
@@ -88,6 +108,9 @@ def student_dashboard():
     username = session['username']
     try:
         student = Student.query.filter_by(username=username).first()
+        if not student:
+            raise ValueError(f"Student with username {username} not found")
+        
         assignments = db.session.query(
             Assignment.id,
             Assignment.title,
@@ -108,68 +131,55 @@ def student_dashboard():
         assignments = fallback_assignments  # Use the fallback assignments if the query fails
 
     return render_template("student.html", nav=f"Dashboard for: {username}", assignments=assignments)
-"""
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        if username and password:
-            new_student = Student(username=username, password=password, name=username)
-            try:
-                db.session.add(new_student)
-                db.session.commit()
-                flash("Account created successfully", "success")
-                logger.info(f"User: {username} successfully registered.")
-                return redirect(url_for('login', nav="Login", success="Account created successfully"))
-            except Exception as e:
-                flash("Registration failed", "error")
-                logger.error(f"Failed to register user: {username}, Error: {e}")
-                return redirect(url_for('register', nav="Register", error="Registration failed"))
-        else:
-            flash("Registration failed, due to empty input", "error")
-            logger.warning("Empty registration submission")
-            return redirect(url_for('register', nav="Register", error="Input cannot be empty"))
-    else:
-        return render_template('register.html', nav="Register")
+        username = request.form['username']
+        password = request.form['password']
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        email = request.form['email']
+
+        try:
+            logger.info("Establishing Keycloak connection")
+            keycloak_connection = KeycloakOpenIDConnection(
+                server_url=KEYCLOAK_SERVER_URL_POST,
+                username=KEYCLOAK_ADMIN_USERNAME,
+                password=KEYCLOAK_ADMIN_PASSWORD,
+                realm_name=KEYCLOAK_REALM_ADMIN,
+                client_id='',
+                client_secret_key='',
+                verify=True
+            )
+            logger.info("Keycloak connection established")
+            keycloak_admin = KeycloakAdmin(connection=keycloak_connection)
+            logger.info("Keycloak admin connection established")
+            new_user = keycloak_admin.create_user({
+                "email": email,
+                "username": username,
+                "enabled": True,
+                "firstName": first_name,
+                "lastName": last_name,
+                "credentials": [{"value": password, "type": "password"}]
+            }, exist_ok=False)
+            logger.info(f"User {username} created successfully")
+            flash('Account created successfully!', 'success')
+            return redirect(url_for('login'))
+        except Exception as e:
+            flash(f'Error creating account: {str(e)}', 'danger')
+            logger.error(f"Failed to create account: {e}")
+            return redirect(url_for('register'))
+
+    return render_template('register.html', nav='Register')
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    logger.info(url_for('login'))
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        if username and password:
-            try:
-                student = Student.query.filter_by(username=username).first()
-                logger.info(f'User: {username} trying to log in')
-                logger.info(f"Student: {student.username} found with password: {student.password}")
-                if student and student.password == password:
-                    session['username'] = student.username 
-                    logger.info(f"Student: {student.username} logged in successfully.")
-                    return redirect(url_for('student_dashboard'))
-                else:
-                    if username == "admin" and password == "admin":
-                        session['username'] = username
-                        logger.info("Bypass database using admin")
-                        return redirect(url_for('student_dashboard'))
-                    logger.debug(f"User: {username} failed to log in.")
-                    return redirect(url_for('login', nav="Login", error="Invalid username or password"))
-            except Exception as e:
-                if username == "admin" and password == "admin":
-                    session['username'] = username
-                    logger.info("Bypass database using admin")
-                    return redirect(url_for('student_dashboard'))
-                else:
-                    logger.error(f"Database not connected: {e}")
-                    return redirect(url_for('login', nav="Login", error="Invalid username or password"))
-        else:
-            logger.warning("Empty login submission")
-            return redirect(url_for('login', nav="Login", error="Input cannot be empty"))
-    else:
-        return render_template('login.html', nav="Login")
-"""
+
+@app.route('/landing')
+def home():
+    return render_template('landing_page.html', nav='Home')
+
 
 @app.route('/login')
 def login():
@@ -180,23 +190,37 @@ def login():
 @app.route('/callback')
 def callback():
     code = request.args.get('code')
-    if code:
+    if not code:
+        logger.info("No code provided")
+        return 'Error: No code provided.', 400
+    
+    try:
         token = keycloak_openid.token(
             grant_type='authorization_code',
             code=code,
-            redirect_uri=os.getenv('KEYCLOAK_REDIRECT_URI')
+            redirect_uri=KEYCLOAK_REDIRECT_URI
         )
         userinfo = keycloak_openid.userinfo(token['access_token'])
+        session['username'] = userinfo['preferred_username']
         session['user'] = userinfo
+        logger.info(f"User: {userinfo['preferred_username']} logged in successfully.")
         return redirect(url_for('student_dashboard'))
-    return 'Error: No code provided.', 400
+    except Exception as e:
+        logger.error(f"Failed to process callback: {e}")
+        return 'Error: Failed to process callback.', 500
+
 
 @app.route('/logout')
 def logout():
     username = session.get('username', 'No User')
     session.clear()
     logger.info(f"{username} logged out.")
-    return redirect(url_for('login'))
+
+    # Construct the Keycloak logout URL
+    keycloak_logout_url = f"{KEYCLOAK_SERVER_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/logout?redirect_uri={KEYCLOAK_REDIRECT_URI}"
+
+    return redirect(keycloak_logout_url)
+
 
 @app.route('/submit/<int:assignment_id>', methods=['GET', 'POST'])
 def submit_assignment(assignment_id):
