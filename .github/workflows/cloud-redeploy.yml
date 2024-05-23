@@ -81,6 +81,7 @@ jobs:
       - name: Build and push Docker image (node-custom)
         if: steps.changes.outputs.teacher-panel == 'true'
         run: |
+          envsubst < frontend/teacher-panel/secrets-prod.env > out.env && mv out.env frontend/teacher-panel/secrets-prod.env
           docker build --build-arg ENVIRONMENT=prod -t gcr.io/devsecops-422807/node-custom -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
           docker push gcr.io/devsecops-422807/node-custom
 
