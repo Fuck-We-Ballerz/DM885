@@ -84,7 +84,7 @@ jobs:
 
       - name: Package and deploy Helm chart (Monitoring)
         run: |
-          envsubst < monitoring/helm/values-prod.yaml > out.yaml && mv out.yaml monitoring/helm/values-prod.yaml
+          envsubst < monitoring/helm/values-prod.yaml > monitoring/helm/values-prod.yaml.tmp && mv monitoring/helm/values-prod.yaml.tmp monitoring/helm/values-prod.yaml
           helm package -d monitoring/helm monitoring/helm/.
           helm install monitoring monitoring/helm/monitoring-0.1.0.tgz \
             --values monitoring/helm/values-prod.yaml
