@@ -7,30 +7,28 @@ from logs_config import setup_logging
 from database import db, Student, Assignment, Course, AssignmentConfig, Submission, init_db, Student_to_assignment
 import docker
 from datetime import datetime
-from keycloak import KeycloakOpenID, KeycloakAdmin, KeycloakOpenIDConnection
+from keycloak import KeycloakOpenID
 from dotenv import load_dotenv
 
-# Import the API blueprint
-from api import api
 load_dotenv()
-
 
 # Set up logger
 log_terminal = True
 logger = setup_logging(log_terminal)
 
-
-
-#Load environment variables
+# Load environment variables
 KEYCLOAK_SERVER_URL = os.getenv('KEYCLOAK_SERVER_URL')
 KEYCLOAK_REALM = os.getenv('KEYCLOAK_REALM')
 KEYCLOAK_CLIENT_ID = os.getenv('KEYCLOAK_CLIENT_ID')
 KEYCLOAK_CLIENT_SECRET = os.getenv('KEYCLOAK_CLIENT_SECRET')
 KEYCLOAK_REDIRECT_URI = os.getenv('KEYCLOAK_REDIRECT_URI')
-KEYCLOAK_REALM_ADMIN = os.getenv('KEYCLOAK_REALM_ADMIN')
 KEYCLOAK_ADMIN_USERNAME = os.getenv('KEYCLOAK_ADMIN_USERNAME')
 KEYCLOAK_ADMIN_PASSWORD = os.getenv('KEYCLOAK_ADMIN_PASSWORD')
-KEYCLOAK_SERVER_URL_POST = os.getenv('KEYCLOAK_SERVER_URL_POST')
+BASE_URL = os.getenv('BASE_URL')
+KEYCLOAK_LOGOUT_URL = os.getenv('KEYCLOAK_LOGOUT_URL')
+
+KEYCLOAK_TOKEN_URL = f"{KEYCLOAK_SERVER_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/token"
+KEYCLOAK_USER_CREATION_URL = f"{KEYCLOAK_SERVER_URL}/admin/realms/{KEYCLOAK_REALM}/users"
 
 logger.info(f"Keycloak Server URL: {KEYCLOAK_SERVER_URL}")
 logger.info(f"Keycloak Realm: {KEYCLOAK_REALM}")
@@ -39,17 +37,13 @@ logger.info(f"Keycloak Client Secret: {KEYCLOAK_CLIENT_SECRET}")
 logger.info(f"Keycloak Redirect URI: {KEYCLOAK_REDIRECT_URI}")
 logger.info(f"Keycloak Admin Username: {KEYCLOAK_ADMIN_USERNAME}")
 logger.info(f"Keycloak Admin Password: {KEYCLOAK_ADMIN_PASSWORD}")
-logger.info(f"Keycloak Server URL POST: {KEYCLOAK_SERVER_URL_POST}")
 
-
-
-if not all([KEYCLOAK_SERVER_URL_POST, KEYCLOAK_SERVER_URL, KEYCLOAK_REALM, KEYCLOAK_CLIENT_ID, KEYCLOAK_CLIENT_SECRET, KEYCLOAK_REDIRECT_URI]):
+if not all([KEYCLOAK_SERVER_URL, KEYCLOAK_REALM, KEYCLOAK_CLIENT_ID, KEYCLOAK_CLIENT_SECRET, KEYCLOAK_REDIRECT_URI]):
     raise ValueError("One or more Keycloak configuration environment variables are missing")
-
 
 # Check Keycloak server accessibility
 try:
-    response = requests.get(KEYCLOAK_SERVER_URL_POST)
+    response = requests.get(KEYCLOAK_SERVER_URL)
     logger.info(f"RESPONSE: {response.status_code}")
     response.raise_for_status()
     logger.info("Keycloak server is accessible")
@@ -61,43 +55,32 @@ keycloak_openid = KeycloakOpenID(
     client_id=KEYCLOAK_CLIENT_ID,
     realm_name=KEYCLOAK_REALM,
     client_secret_key=KEYCLOAK_CLIENT_SECRET
-    #verify=False
 )
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 bootstrap = Bootstrap(app)
 
 app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024  # for 64 MB limit
-
-# Set up the database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@postgres-application:5432/postgres'
-
-
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = 'Jacobo'  # Set a secret key for session management
+app.secret_key = os.getenv('SECRET_KEY')  # Set a secret key for session management
 
 # Initialize the database
 init_db(app)
 
 
-# Register the API blueprint
-app.register_blueprint(api, url_prefix='/api')
-# Fallback data
-fallback_assignments = [
-    {"id": 1, "title": "Lav et sort-rød træ (Det kan du ikke)", "status": 0, "requirements": "No specific requirements", "start_date":datetime.now(), "end_date":datetime.now(), "course_name": "Rizzology"},
-    {"id": 2, "title": "Bevis Chernoff", "status": 1, "requirements": "Nu skal du staffes", "start_date":datetime.now(), "end_date":datetime.now(), "course_name": "Rizzology"},
-    {"id": 3, "title": "Brug Bayes Theorem", "status": 3, "requirements": "No specific requirements", "start_date":datetime.now(), "end_date":datetime.now(), "course_name": "Rizzology"},
-    {"id": 4, "title": "Skriv .parralel()", "status": 4, "requirements": "No specific requirements", "start_date":datetime.now(), "end_date":datetime.now(), "course_name": "Rizzology"},
-    {"id": 5, "title": "Opfind Linux", "status": 2, "requirements": "No specific requirements", "start_date":datetime.now(), "end_date":datetime.now(), "course_name": "Rizzology"}
-]
-
-fallback_course = [
-    {"id": 1, "name": "DM507_AlgoDat"},
-    {"id": 2, "name": "DM551_AlgoSand"},
-    {"id": 3, "name": "DM566_DmMl"},
-    {"id": 4, "name": "DM563_CP"},
-    {"id": 5, "name": "DM510_Operativsystemer"},
-]
+def get_admin_token():
+    payload = {
+        'client_id': KEYCLOAK_CLIENT_ID,
+        'client_secret': KEYCLOAK_CLIENT_SECRET,
+        'grant_type': 'password',
+        'username': KEYCLOAK_ADMIN_USERNAME,
+        'password': KEYCLOAK_ADMIN_PASSWORD
+    }
+    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    response = requests.post(KEYCLOAK_TOKEN_URL, data=payload, headers=headers)
+    response.raise_for_status()
+    return response.json()['access_token']
 
 @app.route("/")
 def student_dashboard():
@@ -106,32 +89,32 @@ def student_dashboard():
         return redirect(url_for('login', error="You need to login first"))
     
     username = session['username']
+    student_assignments = []
+    
     try:
         student = Student.query.filter_by(username=username).first()
+        
         if not student:
             raise ValueError(f"Student with username {username} not found")
         
-        assignments = db.session.query(
-            Assignment.id,
-            Assignment.title,
-            Assignment.start_date,
-            Assignment.end_date,
-            Course.name.label('course_name'),
-            db.case(
-                (Student_to_assignment.status.isnot(None), Student_to_assignment.status),
-                else_=0
-            ).label('status')
-            ).outerjoin(Student_to_assignment, 
-                        (Assignment.id == Student_to_assignment.assignment_id) & 
-                        (Student_to_assignment.student_id == student.id))\
-            .join(Course, Assignment.course_id == Course.id)\
-            .order_by('status').all()
+        assignments = db.session.query(Assignment).all()
+        
+        for assignment in assignments:
+            submission = Submission.query.filter_by(assignment_id=assignment.id, student_id=student.id).first()
+            grade = submission.grade if submission else "Not submitted"
+            student_assignments.append({
+                'id': assignment.id,  # Ensure 'id' is included
+                'course_name': assignment.course.name if assignment.course else 'No Course',
+                'title': assignment.title,
+                'start_date': assignment.start_date,
+                'end_date': assignment.end_date,
+                'grade': grade
+            })
     except Exception as e:
         logger.error(f"Failed to retrieve assignments: {e}")
-        assignments = fallback_assignments  # Use the fallback assignments if the query fails
+        student_assignments = []
 
-    return render_template("student.html", nav=f"Dashboard for: {username}", assignments=assignments)
-
+    return render_template("student.html", nav=f"Dashboard for: {username}", assignments=student_assignments)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -143,28 +126,32 @@ def register():
         email = request.form['email']
 
         try:
-            logger.info("Establishing Keycloak connection")
-            keycloak_connection = KeycloakOpenIDConnection(
-                server_url=KEYCLOAK_SERVER_URL_POST,
-                username=KEYCLOAK_ADMIN_USERNAME,
-                password=KEYCLOAK_ADMIN_PASSWORD,
-                realm_name=KEYCLOAK_REALM_ADMIN,
-                client_id='',
-                client_secret_key='',
-                verify=True
-            )
-            logger.info("Keycloak connection established")
-            keycloak_admin = KeycloakAdmin(connection=keycloak_connection)
-            logger.info("Keycloak admin connection established")
-            new_user = keycloak_admin.create_user({
-                "email": email,
+            token = get_admin_token()
+            headers = {
+                'Content-Type': 'application/json',
+                'Authorization': f"Bearer {token}"
+            }
+            user_data = {
                 "username": username,
-                "enabled": True,
+                "email": email,
                 "firstName": first_name,
                 "lastName": last_name,
-                "credentials": [{"value": password, "type": "password"}]
-            }, exist_ok=False)
+                "enabled": True,
+                "credentials": [{
+                    "type": "password",
+                    "value": password,
+                    "temporary": False
+                }]
+            }
+            response = requests.post(KEYCLOAK_USER_CREATION_URL, json=user_data, headers=headers)
+            response.raise_for_status()
             logger.info(f"User {username} created successfully")
+            
+            # Create a new student in the database
+            new_student = Student(username=username, name=first_name, password="")
+            db.session.add(new_student)
+            db.session.commit()
+            
             flash('Account created successfully!', 'success')
             return redirect(url_for('login'))
         except Exception as e:
@@ -174,12 +161,9 @@ def register():
 
     return render_template('register.html', nav='Register')
 
-
-
 @app.route('/landing')
 def home():
     return render_template('landing_page.html', nav='Home')
-
 
 @app.route('/login')
 def login():
@@ -203,6 +187,7 @@ def callback():
         userinfo = keycloak_openid.userinfo(token['access_token'])
         session['username'] = userinfo['preferred_username']
         session['user'] = userinfo
+        session['token'] = token  # Save the token in the session
         logger.info(f"User: {userinfo['preferred_username']} logged in successfully.")
         return redirect(url_for('student_dashboard'))
     except Exception as e:
@@ -212,14 +197,26 @@ def callback():
 
 @app.route('/logout')
 def logout():
-    username = session.get('username', 'No User')
+    token = session.get('token', {})
+    refresh_token = token.get('refresh_token')
+    if refresh_token:
+        try:
+            requests.post(
+                KEYCLOAK_LOGOUT_URL,
+                data={
+                    'client_id': KEYCLOAK_CLIENT_ID,
+                    'client_secret': KEYCLOAK_CLIENT_SECRET,
+                    'refresh_token': refresh_token
+                },
+                headers={'Content-Type': 'application/x-www-form-urlencoded'}
+            )
+            logger.info("Logged out of Keycloak successfully.")
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Failed to log out from Keycloak: {e}")
+
     session.clear()
-    logger.info(f"{username} logged out.")
-
-    # Construct the Keycloak logout URL
-    keycloak_logout_url = f"{KEYCLOAK_SERVER_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/logout?redirect_uri={KEYCLOAK_REDIRECT_URI}"
-
-    return redirect(keycloak_logout_url)
+    logger.info("User session cleared.")
+    return redirect(BASE_URL)
 
 
 @app.route('/submit/<int:assignment_id>', methods=['GET', 'POST'])
@@ -232,9 +229,7 @@ def submit_assignment(assignment_id):
         assignment = Assignment.query.get(session.get('assignment_id'))
         logger.info(f"User clicked assignment: {assignment}")
     except Exception as e:
-        assignment = next((a for a in fallback_assignments if a['id'] == assignment_id), None)
-        assignment = Assignment(id=assignment['id'], title=assignment['title'], status=assignment['status'], requirements=assignment['requirements'])
-        logger.info(f"Using the fallback list the user: {username} clicked assignment: {assignment}, Error: {e}")
+        logger.info(f" Error: {e}")
     return render_template('submit.html', nav=f"{assignment.course}: {assignment.title}", assignment=assignment)
 
 @app.route('/cancel_assignment/<int:assignment_id>', methods=['POST'])
@@ -246,7 +241,6 @@ def cancel_assignment(assignment_id):
         assignment = Student_to_assignment.query.filter_by(assignment_id=assignment_id, student_id=student_id).first()
         submission = Submission.query.filter_by(assignment_id=assignment_id, student_id=student_id).first()
         if assignment:
-            assignment.status = 0
             db.session.delete(submission)
             db.session.delete(assignment)
             db.session.commit()
@@ -296,7 +290,7 @@ def upload_file():
                 
             student = Student.query.filter_by(username=username).first()
             new_submission = Submission(assignment_id=assignment_id, student_id=student.id, submission=data)
-            new_student_to_assignment = Student_to_assignment(assignment_id=assignment_id, student_id=student.id, status=1)
+            new_student_to_assignment = Student_to_assignment(assignment_id=assignment_id, student_id=student.id)
             
             db.session.add(new_submission)
             db.session.add(new_student_to_assignment)
@@ -323,8 +317,9 @@ def run_docker(user_id, assignment_id, submission_id):
     try:
         logger.debug(f"Fetching assignment {assignment_id} from database")
         assignment = Assignment.query.get(assignment_id)
-        config = AssignmentConfig.query.filter_by(id=assignment_id).first()
+        config = AssignmentConfig.query.filter_by(id=assignment.config_id).first()
         if not assignment or not config:
+            logger.error(f'Invalid assignment or configuration for assignment_id: {assignment_id} and config_id: {config.id}')
             raise ValueError("Invalid assignment or configuration")
         logger.info(f"Assignment and configuration found for assignment_id: {assignment_id}")
 
@@ -359,58 +354,48 @@ def run_docker(user_id, assignment_id, submission_id):
         submission_err = stderr.decode('utf-8') if stderr else ''
         submission.submission_err = submission_err[:64]
         submission.grade = "passed" if not stderr else "failed"
-        submission.status = 3 if not stderr else 4
 
-        # Update the Student_to_assignment status
         student_to_assignment = Student_to_assignment.query.filter_by(
             student_id=user_id,
             assignment_id=assignment_id
         ).first()
         if student_to_assignment:
-            student_to_assignment.status = submission.status
-            logger.info(f"Updated Student_to_assignment status to {student_to_assignment.status} for user_id: {user_id}, assignment_id: {assignment_id}")
+            logger.info(f"Updated Student_to_assignment status to for user_id: {user_id}, assignment_id: {assignment_id}")
 
         db.session.commit()
-        logger.info(f"Submission updated successfully for assignment_id: {assignment_id}, status: {submission.status}, grade: {submission.grade}")
+        logger.info(f"Submission updated successfully for assignment_id: {assignment_id}, grade: {submission.grade}")
 
     except docker.errors.DockerException as de:
         logger.error(f"Docker error for assignment {assignment_id}: {de}")
         submission = Submission.query.get(submission_id)
         submission.submission_err = str(de)[:64]
         submission.grade = "failed"
-        submission.status = 4
         db.session.commit()
         logger.warning(f"Docker error handled for assignment_id: {assignment_id}, status set to failed")
 
-        # Update the Student_to_assignment status
         student_to_assignment = Student_to_assignment.query.filter_by(
             student_id=user_id,
             assignment_id=assignment_id
         ).first()
         if student_to_assignment:
-            student_to_assignment.status = submission.status
             db.session.commit()
-            logger.warning(f"Updated Student_to_assignment status to {student_to_assignment.status} for user_id: {user_id}, assignment_id: {assignment_id}")
+            logger.warning(f"Updated Student_to_assignment status to for user_id: {user_id}, assignment_id: {assignment_id}")
 
     except Exception as e:
         logger.error(f"Error running docker for assignment {assignment_id}, Error: {e}")
         submission = Submission.query.get(submission_id)
         submission.submission_err = str(e)[:64]
         submission.grade = "failed"
-        submission.status = 4
         db.session.commit()
         logger.warning(f"General error handled for assignment_id: {assignment_id}, status set to failed")
 
-        # Update the Student_to_assignment status
         student_to_assignment = Student_to_assignment.query.filter_by(
             student_id=user_id,
             assignment_id=assignment_id
         ).first()
         if student_to_assignment:
-            student_to_assignment.status = submission.status
             db.session.commit()
-            logger.warning(f"Updated Student_to_assignment status to {student_to_assignment.status} for user_id: {user_id}, assignment_id: {assignment_id}")
-
+            logger.warning(f"Updated Student_to_assignment status to for user_id: {user_id}, assignment_id: {assignment_id}")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5050, debug=True)
