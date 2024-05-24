@@ -1,13 +1,3 @@
-<script>
-    import cookie from 'cookie';
-    // export let data;
-
-    // function handleSubmit(event) {
-    //         event.preventDefault();
-    //         // Add your submit logic here
-    //     }
-</script>
-
 <h1>Create Teacher</h1>
 
 <form method="POST">   

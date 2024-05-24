@@ -45,13 +45,13 @@ export const actions = {
                     console.log("insert into teacher db")
                     await db.insert(schema.teacher).values({
                         name: teacher.firstName + " " + teacher.lastName,
-                        username: teacher.username,
+                        username: teacher.username.toLowerCase(),
                     })
                 }
                 if(teacher.groups[0] === 'admin-group'){
                     await db.insert(schema.admin).values({
                         name: teacher.firstName + " " + teacher.lastName,
-                        username: teacher.username,
+                        username: teacher.username.toLowerCase(),
                     })
                 }
             }

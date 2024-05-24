@@ -13,9 +13,10 @@ keycloak:
   KC_METRICS_ENABLED: "true"
   KC_HOSTNAME_URL: https://localhost/keycloak/
   KC_HOSTNAME_ADMIN_URL: https://localhost/keycloak/
-  HOSTNAME_BASE: localhost
 
 postgresApplication:
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
   POSTGRES_DB: postgres
 
 ingress:

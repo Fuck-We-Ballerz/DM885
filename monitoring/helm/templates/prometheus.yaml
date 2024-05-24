@@ -2,15 +2,14 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prometheus
-  annotations:
-    reloader.stakater.com/auto: "true"
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: prometheus
   template:
     metadata:
+      annotations:
+        checksum/config: {{ include "monitoring/templates/configMaps/prometheus.yaml" . | sha256sum }}
       labels:
         app: prometheus
     spec:
@@ -27,11 +26,11 @@ spec:
             - /bin/prometheus
             - --config.file=/etc/prometheus/prometheus.yaml
             - --storage.tsdb.path=/prometheus
-{{- if eq .Values.environment "prod" }}
           securityContext:
             runAsUser: 1000
             runAsNonRoot: true
             runAsGroup: 65534
+# {{- if eq .Values.environment "prod" }}
       initContainers:
         - name: prometheus-data-permission-fix
           image: busybox
@@ -39,7 +38,7 @@ spec:
           volumeMounts:
             - name: prometheus-data
               mountPath: /prometheus
-{{- end }}
+# {{- end }}
       volumes:
         - name: prometheus-config
           configMap:
