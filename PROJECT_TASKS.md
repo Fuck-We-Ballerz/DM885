@@ -31,7 +31,7 @@ Project tasks
   - [x] Given an assignment, extract in bulk all the students’ submission metadata (e.g., student name, submission ID, submission time, result string contained in result.txt) in a CSV file
   - [x] Given an assignment and a student, extract in bulk all the student’s submissions logs in a zip file
   - [x] Given an assignment and a student, extract in bulk all the student’s submission metadata in a CSV file
-  - [ ] API access 
+  - [x] API access 
   - [x] GUI support
 
 * Administrator
