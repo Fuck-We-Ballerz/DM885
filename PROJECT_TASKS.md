@@ -10,6 +10,7 @@ Project tasks
   - [ ] Check if the evaluation of an assignment has been done
   - [ ] If not processed yet, cancel the submission of an assignment
   - [ ] See the results of the assignment
+  - [ ] API access 
   - [x] GUI support
 
 * Teacher
@@ -30,6 +31,7 @@ Project tasks
   - [ ] Given an assignment, extract in bulk all the students’ submission metadata (e.g., student name, submission ID, submission time, result string contained in result.txt) in a CSV file
   - [ ] Given an assignment and a student, extract in bulk all the student’s submissions logs in a zip file
   - [ ] Given an assignment and a student, extract in bulk all the student’s submission metadata in a CSV file
+  - [ ] API access 
   - [x] GUI support
 
 * Administrator
@@ -38,6 +40,8 @@ Project tasks
   - [x] add teachers
   - [ ] pause a teacher
   - [ ] delete a student or a teacher
+  - [ ] API access 
+  - [ ] GUI support
 
 * System Developer
 

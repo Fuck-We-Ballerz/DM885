@@ -23,12 +23,16 @@ spec:
           envFrom:
             - configMapRef:
                 name: grafana
-            - secretRef:
-                name: grafana
             - configMapRef:
                 name: postgres-application
             - secretRef:
                 name: postgres-application
+          env:
+            - name: GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak
+                  key: CUSTOM_KC_GRAFANA_REALM_SECRET
           volumeMounts:
             - name: grafana-datasources-config
               mountPath: /etc/grafana/provisioning/datasources/
