@@ -7,6 +7,9 @@ studentService:
   KEYCLOAK_REDIRECT_URI: https://zeruscloud.com/student/callback
   BASE_URL: https://zeruscloud.com
   KEYCLOAK_LOGOUT_URL: https://zeruscloud.com/keycloak/realms/DM885/protocol/openid-connect/logout
+  KEYCLOAK_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
+  KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+  
 
 teacherService:
   IMAGE: gcr.io/devsecops-422807/node-custom

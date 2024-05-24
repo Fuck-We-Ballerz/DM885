@@ -92,5 +92,6 @@ jobs:
       
       - name: Package and deploy Helm chart (Frontend)
         run: |
+          envsubst < frontend/helm/values-prod.yaml > out.yaml && mv out.yaml frontend/helm/values-prod.yaml
           helm package -d frontend/helm frontend/helm/.
           helm install frontend frontend/helm/frontend-0.1.0.tgz --values frontend/helm/values-prod.yaml
