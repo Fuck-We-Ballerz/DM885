@@ -2,6 +2,7 @@ import { db } from '$lib'
 import{ and, eq, inArray } from 'drizzle-orm'
 import * as schema from '$lib/db/schema'
 import JSZip from 'jszip';
+import { login } from '$lib/api/login';
 
 /**
  * Returns a zip file containing the logs for the given student for a given assignment

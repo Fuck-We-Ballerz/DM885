@@ -2,6 +2,7 @@ import { json } from '@sveltejs/kit'
 import { db } from '$lib'
 import{ eq } from 'drizzle-orm'
 import * as schema from '$lib/db/schema'
+import { login } from '$lib/api/login'
 
 /**
  * Pauses or unpauses an assignment.
