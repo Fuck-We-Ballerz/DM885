@@ -186,7 +186,6 @@ def login():
         auth_url = keycloak_openid.auth_url(redirect_uri=redirect_uri, scope="openid")
     except Exception as e:
         logger.error(f"Failed to get auth URL: {e}")
-        return 'Error: Failed to get auth URL.', 500
     return redirect(auth_url)
 
 # The callback route processes the response from Keycloak, and saves the user information in the session, which is later used to log out
