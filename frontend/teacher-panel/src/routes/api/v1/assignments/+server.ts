@@ -9,7 +9,6 @@ export async function GET({request}) {
         return authorized;
     }
 	const res = await db.query.assignment.findMany()
-    console.log("kk")
 
 	return json(res);
 }

@@ -22,7 +22,7 @@ export const login = async ({request}) => {
 
 
 
-    const response = await fetch(`${PUBLIC_KEYCLOAK_BASE_URL}/realms/DM885/protocol/openid-connect/token`, {
+    const response = await fetch(`http://keycloak:8080/realms/DM885/protocol/openid-connect/token`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
