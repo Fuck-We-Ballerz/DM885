@@ -71,7 +71,7 @@ Get the status, logs and the result for a given submission
         "status": string,
         "stdout": string,
         "stderr": string,
-        "result": string,
+        "result": string
     }
 ]
 ```
@@ -124,7 +124,7 @@ Returns a list of all the courses
     "courses": [
         {
             "id": number,
-            "name": string,
+            "name": string
         }
     ]
 }
@@ -154,7 +154,7 @@ Enrolls a student into the given assignment
 
 ```JSON
 {
-    "message": string,
+    "message": string
 }
 ```
 
@@ -175,7 +175,7 @@ Returns all the submissions made by a student for a given assignment
 ```json
 {
     "student_id": number,
-    "assignment_id": number,
+    "assignment_id": number
 }
 ```
 
@@ -194,7 +194,7 @@ Returns all the submissions made by a student for a given assignment
             "submission_err": string,
             "submission_time": date,
             "assignment_id": number,
-            "student_id": number,
+            "student_id": number
         }
     ]
 }
@@ -217,7 +217,7 @@ Unenrolls a student from the given assignment
 ```json
 {
     "student_id": number,
-    "assignment_id": number,
+    "assignment_id": number
 }
 ```
 
@@ -246,7 +246,7 @@ Returns all the submissions made by the given student for the given assignment
 ```json
 {
     "student_id": number,
-    "assignment_id": number,
+    "assignment_id": number
 }
 ```
 
@@ -265,7 +265,7 @@ Returns all the submissions made by the given student for the given assignment
             "submission_err": string,
             "submission_time": date,
             "assignment_id": number,
-            "student_id": number,
+            "student_id": number
         }
     ]
 }
@@ -287,7 +287,7 @@ Enrolls the specific student into the assignment
 
 ```json
 {
-    "assignment_id": number,
+    "assignment_id": number
 }
 ```
 
@@ -335,8 +335,8 @@ Pauses or unpauses an assignment.
 
 ```json
 {
-    is_visible: bool,
-    "assignment_id": number,
+    "is_visible": bool,
+    "assignment_id": number
 }
 ```
 
@@ -366,7 +366,7 @@ Returns a csv file containing the metadata for a given student for a given assig
 ```json
 {
     "student_id": number,
-    "assignment_id": number,
+    "assignment_id": number
 }
 ```
 
@@ -427,7 +427,7 @@ Retuns a zip file containing for a given student a folder and within that folder
 ```json
 {
     "assignment_id": number,
-    "student_id": number,
+    "student_id": number
 }
 ```
 
@@ -472,6 +472,6 @@ Deletes an assignment and unassigns the teachers and students that were assigned
 ```JSON
 {
     "message": string,
-    deleted_assignment: number
+    "deleted_assignment": number
 }
 ```
