@@ -87,7 +87,7 @@ Our user interface is built using Django and Svelte. We chose different framewor
 The picture depicted below provides a comprehensive overview of the architecture. An arrow pointing from a source to a target signifies that the source is dependent on the target.
 
 <center>
-<img src="assets/Architecture.drawio.svg" alt="drawing" width="750"/>
+<img src="assets/img/Architecture.drawio.svg" alt="drawing" width="750"/>
 </center>
 
 Finally, our project is live on Google Cloud and can be accessed on [https://zeruscloud.com](https://zeruscloud.com) with additional services exposed on `/api/...`, [/grafana](https://zeruscloud.com/grafana), [/adminer](https://zeruscloud.com/adminer), or [/keycloak](https://zeruscloud.com/keycloak). 
@@ -114,7 +114,11 @@ A minimal `values.yaml` are provided for the three helm charts: `infrastructure`
 
 We value ensuring that the development environment mirrors the production environment. The only differences are the values in `values-prod.yaml` and minimal if-statements in the templates. The services are configured to persist solely on the server they are run on.
 
-This separation of environments is achieved by creating two secret configurations: one with hard-coded development secrets, and the other pulling secrets from the pipeline variables. This ensures a secure and efficient deployment process.
+This separation of environments is achieved by creating two secret configurations: one with hard-coded development secrets, and the other pulling secrets from the pipeline variables. This ensures a secure and efficient deployment process. To illustrate, let's look at how the Keycloak password is accessed during deployment.
+
+<center>
+<img src="assets/img/secret_drawing.svg" alt="drawing" width="750"/>
+</center>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
