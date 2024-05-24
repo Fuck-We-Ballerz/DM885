@@ -5,6 +5,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
   resources:
     requests:
       storage: 1Gi
@@ -14,7 +15,6 @@ kind: Deployment
 metadata:
   name: dind
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: dind

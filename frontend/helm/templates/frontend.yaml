@@ -13,7 +13,6 @@ kind: Deployment
 metadata:
   name: student-service
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: student-service
@@ -57,7 +56,6 @@ kind: Deployment
 metadata:
   name: teacher-service
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: teacher-service
