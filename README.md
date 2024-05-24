@@ -156,6 +156,8 @@ on:
 ## 🚀 Using the exposed API
 We have prepared a detailed guide on how to interact with our application's API. This guide includes information about the available endpoints and the structure of the returned JSON objects. You can find this guide at the following location: [API](./api.md). Enjoy your development journey!
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ## 🤝 Contribute
 We have automated our local development process using VSCode tasks to create a simulated pipeline. This allows us to streamline our development workflow and ensure consistency across our team. Detailed instructions on how to set up and use these tasks is provided in the section <a href="#👷‍♂️-getting-started">Getting Started</a>.
 
