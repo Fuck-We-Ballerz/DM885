@@ -1,4 +1,3 @@
-import { drizzle } from 'drizzle-orm/postgres-js';
 import * as schema from '$lib/db/schema'
 import type { PageServerLoad } from './$types';
 import type { Actions } from './$types';

@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Fresh Deploy
 
 permissions:
   id-token: write
@@ -14,6 +14,15 @@ jobs:
     env:
       CLOUDSDK_COMPUTE_ZONE: europe-west3-a
       CLOUDSDK_CONTAINER_CLUSTER: dm885-grading-system
+      KEYCLOAK_ADMIN: ${{ secrets.KEYCLOAK_ADMIN }}
+      KEYCLOAK_ADMIN_PASSWORD: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
+      CUSTOM_KC_GRAFANA_REALM_SECRET: ${{ secrets.GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET }}
+      GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET: ${{ secrets.GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET }}
+      CUSTOM_KC_APPLICATION_REALM_SECRET: ${{ secrets.CUSTOM_KC_APPLICATION_REALM_SECRET }}
+      KC_DB_PASSWORD: ${{ secrets.KC_DB_PASSWORD }}
+      KC_DB_USERNAME: ${{ secrets.KC_DB_USERNAME }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
 
     steps:
       - name: Checkout code
@@ -47,6 +56,10 @@ jobs:
       - name: Get GKE credentials
         run: gcloud container clusters get-credentials ${{ env.CLOUDSDK_CONTAINER_CLUSTER }}
 
+      - name: Install Helm
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
       - name: Build and push Docker image (python-custom)
         run: |
           docker build -t gcr.io/devsecops-422807/python-custom -f frontend/user/Dockerfile frontend/user
@@ -54,29 +67,30 @@ jobs:
 
       - name: Build and push Docker image (node-custom)
         run: |
+          envsubst < frontend/teacher-panel/secrets-prod.env > out.yaml && mv out.yaml frontend/teacher-panel/secrets-prod.env
           docker build --build-arg ENVIRONMENT=prod -t gcr.io/devsecops-422807/node-custom -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
           docker push gcr.io/devsecops-422807/node-custom
-     
+
       - name: Build and push Docker image (grafana)
         run: |
           docker build -t gcr.io/devsecops-422807/grafana -f monitoring/Dockerfile.grafana ./monitoring
           docker push gcr.io/devsecops-422807/grafana
 
-      - name: Install Helm
-        run: |
-          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-
       - name: Package and deploy Helm chart (Infrastructure)
         run: |
+          envsubst < infrastructure/helm/values-prod.yaml > out.yaml && mv out.yaml infrastructure/helm/values-prod.yaml
           helm package -d infrastructure/helm infrastructure/helm/.
-          helm upgrade infrastructure infrastructure/helm/infrastructure-0.1.0.tgz --values infrastructure/helm/values-prod.yaml
+          helm install infrastructure infrastructure/helm/infrastructure-0.1.0.tgz \
+            --values infrastructure/helm/values-prod.yaml
 
       - name: Package and deploy Helm chart (Monitoring)
         run: |
+          envsubst < monitoring/helm/values-prod.yaml > out.yaml && mv out.yaml monitoring/helm/values-prod.yaml
           helm package -d monitoring/helm monitoring/helm/.
-          helm upgrade monitoring monitoring/helm/monitoring-0.1.0.tgz --values monitoring/helm/values-prod.yaml
-        
+          helm install monitoring monitoring/helm/monitoring-0.1.0.tgz \
+            --values monitoring/helm/values-prod.yaml
+      
       - name: Package and deploy Helm chart (Frontend)
         run: |
           helm package -d frontend/helm frontend/helm/.
-          helm upgrade frontend frontend/helm/frontend-0.1.0.tgz --values frontend/helm/values-prod.yaml
+          helm install frontend frontend/helm/frontend-0.1.0.tgz --values frontend/helm/values-prod.yaml

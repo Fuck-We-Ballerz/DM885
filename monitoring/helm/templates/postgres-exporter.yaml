@@ -2,10 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres-exporter
-  annotations:
-    reloader.stakater.com/auto: "true"
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: postgres-exporter
@@ -17,9 +14,12 @@ spec:
       containers:
         - name: postgres-exporter
           image: bitnami/postgres-exporter:latest
-          envFrom:
-            - secretRef:
-                name: postgres-exporter
+          env:
+            - name: DATA_SOURCE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-application
+                  key: DATA_SOURCE_NAME
       restartPolicy: Always
 ---
 apiVersion: v1

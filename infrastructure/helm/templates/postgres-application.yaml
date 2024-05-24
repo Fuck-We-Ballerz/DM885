@@ -3,12 +3,14 @@ kind: Deployment
 metadata:
   name: postgres-application
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: postgres-application
   template:
     metadata:
+      annotations:
+        checksum/config: {{ include "infrastructure/templates/configMaps/postgres-application-config.yaml" . | sha256sum }}
+        checksum/secret: {{ include "infrastructure/templates/secrets/postgres-application-secret.yaml" . | sha256sum }}
       labels:
         app: postgres-application
     spec:
@@ -56,7 +58,7 @@ spec:
     storage: 1Gi
   accessModes:
     - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
+  persistentVolumeReclaimPolicy: Delete
   storageClassName: manual
 {{- if eq .Values.environment "dev"}}
   hostPath:
