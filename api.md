@@ -1,7 +1,7 @@
 🚀 Using the API
 ===
 
-To interface with the application there exists these following interfaces.
+To interface with the application, there are several interfaces available. To ensure only authorized access to the data, we use Basic Authentication. This security measure requires users to provide a valid username and password to access the interfaces. This way, we can protect sensitive data and maintain the integrity of our application. Please remember to keep your credentials secure to prevent unauthorized access.
 
 # Teacher
 
