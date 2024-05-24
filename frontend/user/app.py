@@ -32,19 +32,6 @@ POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
 KEYCLOAK_TOKEN_URL = f"{KEYCLOAK_SERVER_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/token"
 KEYCLOAK_USER_CREATION_URL = f"{KEYCLOAK_SERVER_URL}/admin/realms/{KEYCLOAK_REALM}/users"
 
-#Debugging
-logger.info(f"Keycloak Server URL: {KEYCLOAK_SERVER_URL}")
-logger.info(f"Keycloak Realm: {KEYCLOAK_REALM}")
-logger.info(f"Keycloak Client ID: {KEYCLOAK_CLIENT_ID}")
-logger.info(f"Keycloak Client Secret: {KEYCLOAK_CLIENT_SECRET}")
-logger.info(f"Keycloak Redirect URI: {KEYCLOAK_REDIRECT_URI}")
-logger.info(f"Keycloak Admin Username: {KEYCLOAK_ADMIN}")
-logger.info(f"Keycloak Admin Password: {KEYCLOAK_ADMIN_PASSWORD}")
-logger.info(f"Base URL: {BASE_URL}")
-logger.info(f"Keycloak Logout URL: {KEYCLOAK_LOGOUT_URL}")
-logger.info(f"Postgres User: {POSTGRES_USER}")
-logger.info(f"Postgres Password: {POSTGRES_PASSWORD}")
-
 
 # If one of the Keycloak environment variables is missing, raise an error
 if not all([KEYCLOAK_SERVER_URL, KEYCLOAK_REALM, KEYCLOAK_CLIENT_ID, KEYCLOAK_CLIENT_SECRET, KEYCLOAK_REDIRECT_URI]):
