@@ -68,7 +68,7 @@ jobs:
       - name: Build and push Docker image (node-custom)
         run: |
           envsubst < frontend/teacher-panel/secrets-prod.env > out.yaml && mv out.yaml frontend/teacher-panel/secrets-prod.env
-          docker build --no-cache --build-arg ENVIRONMENT=prod -t gcr.io/devsecops-422807/node-custom -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
+          docker build --build-arg ENVIRONMENT=prod -t gcr.io/devsecops-422807/node-custom -f frontend/teacher-panel/Dockerfile frontend/teacher-panel
           docker push gcr.io/devsecops-422807/node-custom
 
       - name: Build and push Docker image (grafana)
