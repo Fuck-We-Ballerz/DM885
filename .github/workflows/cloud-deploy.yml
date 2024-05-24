@@ -64,7 +64,7 @@ jobs:
       - name: Build and push Docker image (python-custom)
         run: |
           envsubst < frontend/user/config-prod.env > out.yaml && mv out.yaml frontend/user/config-prod.env
-          docker build -t gcr.io/devsecops-422807/python-custom -f frontend/user/Dockerfile frontend/user
+          docker build --build-arg ENVIRONMENT=prod -t gcr.io/devsecops-422807/python-custom -f frontend/user/Dockerfile frontend/user
           docker push gcr.io/devsecops-422807/python-custom
 
       - name: Build and push Docker image (node-custom)
