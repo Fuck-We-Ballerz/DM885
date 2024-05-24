@@ -8,17 +8,18 @@ spec:
       app: postgres-exporter
   template:
     metadata:
-      annotations:
-        checksum/secret: {{ include "monitoring/templates/secrets/postgres-exporter-secret.yaml" . | sha256sum }}
       labels:
         app: postgres-exporter
     spec:
       containers:
         - name: postgres-exporter
           image: bitnami/postgres-exporter:latest
-          envFrom:
-            - secretRef:
-                name: postgres-exporter
+          env:
+            - name: DATA_SOURCE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-application
+                  key: DATA_SOURCE_NAME
       restartPolicy: Always
 ---
 apiVersion: v1
