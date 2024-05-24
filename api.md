@@ -5,13 +5,13 @@ To interface with the application there exists these following interfaces.
 
 # Teacher
 
-## `GET /api/v1/teachers`
+`GET /api/v1/teachers`
 
-### Description
+**Description**
 
 Returns all the teachers
 
-### returns
+**Returns**
 
 ```JSON
 {
@@ -27,15 +27,15 @@ Returns all the teachers
 }
 ```
 
+---
 
-## `GET /api/v1/teachers/[id]`
+`GET /api/v1/teachers/[id]`
 
-
-### Description
+**Description**
 
 Gets the information about a teacher
 
-### returns
+**Returns**
 
 ```JSON
 {
@@ -51,17 +51,19 @@ Gets the information about a teacher
 }
 ```
 
-## `GET /api/v1/teachers/[id]/submission/[submission_id]/`
+---
 
-### Description
+`GET /api/v1/teachers/[id]/submission/[submission_id]/`
+
+**Description**
 
 Get the status, logs and the result for a given submission
 
-#### Unused
+**Unused**
 
 * `[id]`
 
-#### returns
+**Returns**
 
 ```JSON
 [
@@ -74,18 +76,19 @@ Get the status, logs and the result for a given submission
 ]
 ```
 
-## `POST /api/v1/teachers/[id]/submission/[submission_id]/status`
+---
 
+`POST /api/v1/teachers/[id]/submission/[submission_id]/status`
 
-### Description
+**Description**
 
 Sets the status of the given submission
 
-### Unused
+**Unused**
 
 * `[id]`
 
-### Body
+**Body**
 
 ```JSON
 {
@@ -93,7 +96,7 @@ Sets the status of the given submission
 }
 ```
 
-### returns
+**Returns**
 
 ```JSON
 {
@@ -101,17 +104,19 @@ Sets the status of the given submission
 }
 ``` 
 
-## `GET /api/v1/teachers/[id]/courses`
+---
 
-### Description
+`GET /api/v1/teachers/[id]/courses`
+
+**Description**
 
 Returns a list of all the courses
 
-### Unused
+**Unused**
 
 * `[id]`
 
-### returns
+**Returns**
 
 ```JSON
 {
@@ -125,17 +130,19 @@ Returns a list of all the courses
 }
 ```
 
-## `POST /api/v1/teachers/[id]/assignment`
+---
 
-### Description
+`POST /api/v1/teachers/[id]/assignment`
+
+**Description**
 
 Enrolls a student into the given assignment
 
-### Unused
+**Unused**
 
 * `[id]`
 
-### Body
+**Body**
 
 ```json
 {
@@ -143,7 +150,7 @@ Enrolls a student into the given assignment
 }
 ```
 
-### returns
+**Returns**
 
 ```JSON
 {
@@ -151,17 +158,19 @@ Enrolls a student into the given assignment
 }
 ```
 
-## `GET /api/v1/teachers/[id]/assignment`
+---
 
-### Description
+`GET /api/v1/teachers/[id]/assignment`
+
+**Description**
 
 Returns all the submissions made by a student for a given assignment
 
-### Unused
+**Unused**
 
 * `[id]`
 
-### Body
+**Body**
 
 ```json
 {
@@ -170,7 +179,7 @@ Returns all the submissions made by a student for a given assignment
 }
 ```
 
-### returns
+**Returns**
 
 ```JSON
 {
@@ -191,17 +200,19 @@ Returns all the submissions made by a student for a given assignment
 }
 ```
 
-## `DELETE /api/v1/teachers/[id]/assignment`
+---
 
-### Description
+`DELETE /api/v1/teachers/[id]/assignment`
+
+**Description**
 
 Unenrolls a student from the given assignment
 
-### Unused
+**Unused**
 
 * `[id]`
 
-### Body
+**Body**
 
 ```json
 {
@@ -210,7 +221,7 @@ Unenrolls a student from the given assignment
 }
 ```
 
-### returns
+**Returns**
 
 ```JSON
 {
@@ -218,17 +229,19 @@ Unenrolls a student from the given assignment
 }
 ```
 
-## `GET /api/v1/teachers/[id]/assignment/student`
+---
 
-### Description
+`GET /api/v1/teachers/[id]/assignment/student`
+
+**Description**
 
 Returns all the submissions made by the given student for the given assignment
 
-### Unused
+**Unused**
 
 * `[id]`
 
-### Body
+**Body**
 
 ```json
 {
@@ -237,7 +250,7 @@ Returns all the submissions made by the given student for the given assignment
 }
 ```
 
-### returns
+**Returns**
 
 ```JSON
 {
@@ -258,17 +271,19 @@ Returns all the submissions made by the given student for the given assignment
 }
 ```
 
-## `POST /api/v1/teachers/[id]/assignment/student/[student_id]`
+---
 
-### Description
+`POST /api/v1/teachers/[id]/assignment/student/[student_id]`
+
+**Description**
 
 Enrolls the specific student into the assignment
 
-### Unused
+**Unused**
 
 * `[id]`
 
-### Body
+**Body**
 
 ```json
 {
@@ -276,7 +291,7 @@ Enrolls the specific student into the assignment
 }
 ```
 
-### returns
+**Returns**
 
 ```JSON
 {
@@ -284,17 +299,19 @@ Enrolls the specific student into the assignment
 }
 ```
 
-## `POST /api/v1/teachers/[id]/assignment/stop/[assignment_id]`
+---
 
-### Description
+`POST /api/v1/teachers/[id]/assignment/stop/[assignment_id]`
+
+**Description**
 
 Cancels the evaluation of all submissions for an assignment
 
-### Unused
+**Unused**
 
 * `[id]`
 
-### returns
+**Returns**
 
 ```JSON
 {
@@ -302,17 +319,19 @@ Cancels the evaluation of all submissions for an assignment
 }
 ```
 
-## `POST /api/v1/teachers/[id]/assignment/pause/[assignment_id]`
+---
 
-### Description
+`POST /api/v1/teachers/[id]/assignment/pause/[assignment_id]`
+
+**Description**
 
 Pauses or unpauses an assignment.
 
-### Unused
+**Unused**
 
 * `[id]`
 
-### Body
+**Body**
 
 ```json
 {
@@ -321,7 +340,7 @@ Pauses or unpauses an assignment.
 }
 ```
 
-### returns
+**Returns**
 
 ```JSON
 {
@@ -330,17 +349,19 @@ Pauses or unpauses an assignment.
 }
 ```
 
-## `GET /api/v1/teachers/[id]/assignment/metadata`
+---
 
-### Description
+`GET /api/v1/teachers/[id]/assignment/metadata`
+
+**Description**
 
 Returns a csv file containing the metadata for a given student for a given assignment
 
-### Unused
+**Unused**
 
 * `[id]`
 
-### Body
+**Body**
 
 ```json
 {
@@ -349,7 +370,7 @@ Returns a csv file containing the metadata for a given student for a given assig
 }
 ```
 
-### returns
+**Returns**
 
 ```JSON
 {
@@ -358,18 +379,19 @@ Returns a csv file containing the metadata for a given student for a given assig
 }
 ```
 
+---
 
-## `GET /api/v1/teachers/[id]/assignment/metadata/[assignment_id]`
+`GET /api/v1/teachers/[id]/assignment/metadata/[assignment_id]`
 
-### Description
+**Description**
 
 Returns a csv file containing the metadata for each student for a given assignment
 
-### Unused
+**Unused**
 
 * `[id]`
 
-### Body
+**Body**
 
 ```json
 {
@@ -377,7 +399,9 @@ Returns a csv file containing the metadata for each student for a given assignme
 }
 ```
 
-### returns
+---
+
+**Returns**
 
 ```JSON
 {
@@ -386,18 +410,19 @@ Returns a csv file containing the metadata for each student for a given assignme
 }
 ```
 
+---
 
-## `GET /api/v1/teachers/[id]/assignment/logs`
+`GET /api/v1/teachers/[id]/assignment/logs`
 
-### Description
+**Description**
 
 Retuns a zip file containing for a given student a folder and within that folder a file for stdout and another for stderr for a given assignment
 
-### Unused
+**Unused**
 
 * `[id]`
 
-### Body
+**Body**
 
 ```json
 {
@@ -406,41 +431,43 @@ Retuns a zip file containing for a given student a folder and within that folder
 }
 ```
 
-### returns
+**Returns**
 
 ```JSON
 zil file blob
 ```
 
+---
 
-## `GET /api/v1/teachers/[id]/assignment/logs/[assignment_id]`
+`GET /api/v1/teachers/[id]/assignment/logs/[assignment_id]`
 
-### Description
+**Description**
 
 Retuns a zip file containing for each student a folder and within that folder a file for stdout and another for stderr for a given assignment
 
-### Unused
+**Unused**
 
 * `[id]`
 
-### returns
+**Returns**
 
 ```JSON
 zil file blob
 ```
 
+---
 
-## `GET /api/v1/teachers/[id]/assignment/delete/[assignment_id]`
+`GET /api/v1/teachers/[id]/assignment/delete/[assignment_id]`
 
-### Description
+**Description**
 
 Deletes an assignment and unassigns the teachers and students that were assigned to that assignment.
 
-### Unused
+**Unused**
 
 * `[id]`
 
-### returns
+**Returns**
 
 ```JSON
 {
