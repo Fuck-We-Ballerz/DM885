@@ -3,7 +3,7 @@ environment: "prod"
 studentService:
   IMAGE: gcr.io/devsecops-422807/python-custom
   IMAGE_PULL_POLICY: Always
-  KEYCLOAK_SERVER_URL: http://keycloak:8080
+  KEYCLOAK_SERVER_URL: http://keycloak:8080/realms/DM885/protocol/openid-connect/auth
   KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
   KEYCLOAK_REDIRECT_URI: https://zeruscloud.com/student/callback
   BASE_URL: https://zeruscloud.com
