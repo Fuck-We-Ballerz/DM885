@@ -30,6 +30,8 @@ KEYCLOAK_LOGOUT_URL = os.getenv('KEYCLOAK_LOGOUT_URL')
 KEYCLOAK_TOKEN_URL = f"{KEYCLOAK_SERVER_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/token"
 KEYCLOAK_USER_CREATION_URL = f"{KEYCLOAK_SERVER_URL}/admin/realms/{KEYCLOAK_REALM}/users"
 
+#Debugging
+'''
 logger.info(f"Keycloak Server URL: {KEYCLOAK_SERVER_URL}")
 logger.info(f"Keycloak Realm: {KEYCLOAK_REALM}")
 logger.info(f"Keycloak Client ID: {KEYCLOAK_CLIENT_ID}")
@@ -37,7 +39,8 @@ logger.info(f"Keycloak Client Secret: {KEYCLOAK_CLIENT_SECRET}")
 logger.info(f"Keycloak Redirect URI: {KEYCLOAK_REDIRECT_URI}")
 logger.info(f"Keycloak Admin Username: {KEYCLOAK_ADMIN_USERNAME}")
 logger.info(f"Keycloak Admin Password: {KEYCLOAK_ADMIN_PASSWORD}")
-
+'''
+# If one of the Keycloak environment variables is missing, raise an error
 if not all([KEYCLOAK_SERVER_URL, KEYCLOAK_REALM, KEYCLOAK_CLIENT_ID, KEYCLOAK_CLIENT_SECRET, KEYCLOAK_REDIRECT_URI]):
     raise ValueError("One or more Keycloak configuration environment variables are missing")
 
@@ -57,9 +60,11 @@ keycloak_openid = KeycloakOpenID(
     client_secret_key=KEYCLOAK_CLIENT_SECRET
 )
 
+# Initialize the Flask app
 app = Flask(__name__, static_folder='static', template_folder='templates')
 bootstrap = Bootstrap(app)
 
+# Set the maximum file size for uploads and the database URI, along with the secret key
 app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024  # for 64 MB limit
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@postgres-application:5432/postgres'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -68,7 +73,7 @@ app.secret_key = os.getenv('SECRET_KEY')  # Set a secret key for session managem
 # Initialize the database
 init_db(app)
 
-
+# Get the admin token for Keycloak, in order to create students
 def get_admin_token():
     payload = {
         'client_id': KEYCLOAK_CLIENT_ID,
@@ -82,6 +87,7 @@ def get_admin_token():
     response.raise_for_status()
     return response.json()['access_token']
 
+# This is the dashboard for the student
 @app.route("/")
 def student_dashboard():
     if 'username' not in session:
@@ -116,6 +122,8 @@ def student_dashboard():
 
     return render_template("student.html", nav=f"Dashboard for: {username}", assignments=student_assignments)
 
+
+# The register route allows students to create an account through Keycloak, this entry is also put in the database
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -161,16 +169,19 @@ def register():
 
     return render_template('register.html', nav='Register')
 
+# The landing page, login or register
 @app.route('/landing')
 def home():
     return render_template('landing_page.html', nav='Home')
 
+# The login route redirects to Keycloak for authentication
 @app.route('/login')
 def login():
     redirect_uri = os.getenv('KEYCLOAK_REDIRECT_URI')
     auth_url = keycloak_openid.auth_url(redirect_uri=redirect_uri, scope="openid")
     return redirect(auth_url)
 
+# The callback route processes the response from Keycloak, and saves the user information in the session, which is later used to log out
 @app.route('/callback')
 def callback():
     code = request.args.get('code')
@@ -195,6 +206,7 @@ def callback():
         return 'Error: Failed to process callback.', 500
 
 
+# Logout of the application, and also from Keycloak
 @app.route('/logout')
 def logout():
     token = session.get('token', {})
@@ -218,7 +230,7 @@ def logout():
     logger.info("User session cleared.")
     return redirect(BASE_URL)
 
-
+# The route to view a specific assignment
 @app.route('/submit/<int:assignment_id>', methods=['GET', 'POST'])
 def submit_assignment(assignment_id):
     username = session.get('username', 'No user')
@@ -232,6 +244,7 @@ def submit_assignment(assignment_id):
         logger.info(f" Error: {e}")
     return render_template('submit.html', nav=f"{assignment.course}: {assignment.title}", assignment=assignment)
 
+# Cancel the assignment
 @app.route('/cancel_assignment/<int:assignment_id>', methods=['POST'])
 def cancel_assignment(assignment_id):
     if 'username' not in session:
@@ -253,6 +266,7 @@ def cancel_assignment(assignment_id):
         logger.error(f"Failed to cancel assignment {assignment_id}: {e}")
         return jsonify({'success': False, 'error': 'Failed to cancel assignment'}), 500
 
+# The route to upload a file
 @app.route('/upload', methods=['POST'])
 def upload_file():
     assignment_id = session.get('assignment_id', 'No Assignment')
@@ -309,9 +323,11 @@ def upload_file():
         logger.debug(f"{username} tried to upload a file of invalid file type: {filename}")
         return jsonify({'error': 'Invalid file type'}), 400
 
+# Check if the file is a zip file
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() == 'zip'
 
+# Run the submission in a Docker container
 def run_docker(user_id, assignment_id, submission_id):
     logger.info(f"Running Docker for user_id: {user_id}, assignment_id: {assignment_id}, submission_id: {submission_id}")
     try:
