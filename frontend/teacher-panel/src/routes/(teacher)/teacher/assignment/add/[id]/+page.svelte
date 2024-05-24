@@ -1,7 +1,5 @@
 <script lang="ts">
     import type { PageData } from './$types';
-    import { base } from '$app/paths';
-    import { student } from '$lib/db/schema';
 
     export let data: PageData;
     data.students.sort((a, b) => a.name.localeCompare(b.name)); //List of students sorted by name
