@@ -92,22 +92,45 @@ export const actions = {
             } else if(resStudent){
                 const studentIdDb = resStudent.id
 
-                console.log(`Deleting ${username} from student db table`)
-                await db.delete(schema.student)
-                        .where(eq(schema.student.id, studentIdDb))
-                
-                console.log("Deleting student from student_to_assignment db table")
-                await db.delete(schema.student_to_assignment)
-                        .where(eq(schema.student_to_assignment.student_id, studentIdDb))
+                const response = await fetch(`${ PUBLIC_KEYCLOAK_POST_URL }?username=${username}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
 
-                console.log("Deleting student from student_to_course db table")
-                await db.delete(schema.student_to_course)
-                        .where(eq(schema.student_to_course.student_id, studentIdDb))
-                
-                console.log("Deleting student from submission db table")
-                await db.delete(schema.submission)
-                        .where(eq(schema.submission.student_id, studentIdDb))
+                if(response.status === 200){
+                    const responJ = await response.json();
+                    const userId = responJ[0].id;
+                    
+                    console.log(`Deleting user from keycloak`)
+                    const responseDelete = await fetch(`${ PUBLIC_KEYCLOAK_POST_URL }/${userId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
 
+                    if(responseDelete.status === 204){
+                        console.log("Deleting student from student_to_assignment db table")
+                        await db.delete(schema.student_to_assignment)
+                                .where(eq(schema.student_to_assignment.student_id, studentIdDb))
+
+                        console.log("Deleting student from student_to_course db table")
+                        await db.delete(schema.student_to_course)
+                                .where(eq(schema.student_to_course.student_id, studentIdDb))
+                        
+                        console.log("Deleting student from submission db table")
+                        await db.delete(schema.submission)
+                                .where(eq(schema.submission.student_id, studentIdDb))
+
+                        console.log(`Deleting ${username} from student db table`)
+                        await db.delete(schema.student)
+                                .where(eq(schema.student.id, studentIdDb))
+                    }
+                }
             }
         }
     }
