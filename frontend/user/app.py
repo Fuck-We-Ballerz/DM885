@@ -182,7 +182,7 @@ def home():
 @app.route('/login')
 def login():
     redirect_uri = os.getenv('KEYCLOAK_REDIRECT_URI')
-    try :
+    try:
         auth_url = keycloak_openid.auth_url(redirect_uri=redirect_uri, scope="openid")
     except Exception as e:
         logger.error(f"Failed to get auth URL: {e}")
