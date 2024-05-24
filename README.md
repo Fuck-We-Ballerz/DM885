@@ -190,7 +190,7 @@ This section is dedicated to highlighting areas in the project that require furt
 
 Remember, this is a living document. As the project evolves, new tasks may emerge and existing ones may become irrelevant.
 
-For a succinct overview of the hard requirements, please refer to [PROJECT_TASKS.md](./PROJECT_TASKS.md), and our user stories are available as a [PDF document](./USER_STORIES.pdf) - this is an export from Atlassian Jira. 
+For a succinct overview of the hard requirements, please refer to [PROJECT_TASKS](./PROJECT_TASKS.md), and our user stories are available as a [PDF document](./USER_STORIES.pdf) - this is an export from Atlassian Jira. 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
