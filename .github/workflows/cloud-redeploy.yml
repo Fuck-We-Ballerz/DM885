@@ -5,7 +5,10 @@ permissions:
   contents: read
 
 on:
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Testing Workflow"]
+    types:
+      - completed
 
 jobs:
   build-and-deploy:
