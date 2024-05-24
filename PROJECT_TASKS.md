@@ -15,22 +15,22 @@ Project tasks
 
 * Teacher
 
-  - [ ] Add an assignment
-  - [ ] Update the configuration information of the assignment (e.g., change the docker image, the visibility, etc.)
-  - [ ] Pause an assignment
-  - [ ] Delete an assignment
-  - [ ] Add or remove individual students from the assignment
-  - [ ] Add or remove in bulk students from the assignment
-  - [ ] Given an assignment and a student, get the list of student submissions
-  - [ ] Given a submission, get the status, output, and result of the submission
-  - [ ] Delete a programming assignment
+  - [x] Add an assignment
+  - [x] Update the configuration information of the assignment (e.g., change the docker image, the visibility, etc.)
+  - [x] Pause an assignment
+  - [x] Delete an assignment
+  - [x] Add or remove individual students from the assignment
+  - [x] Add or remove in bulk students from the assignment
+  - [x] Given an assignment and a student, get the list of student submissions
+  - [x] Given a submission, get the status, output, and result of the submission
+  - [x] Delete a programming assignment
   - [ ] Trigger the re-evaluation of a submission
   - [ ] Stop the evaluation of a submission
   - [ ] Given an assignment, stop the evaluation of all submissions
-  - [ ] Given an assignment, extract in bulk all the students’ submissions logs in a zip file (i.e., the text in logs.txt)
-  - [ ] Given an assignment, extract in bulk all the students’ submission metadata (e.g., student name, submission ID, submission time, result string contained in result.txt) in a CSV file
-  - [ ] Given an assignment and a student, extract in bulk all the student’s submissions logs in a zip file
-  - [ ] Given an assignment and a student, extract in bulk all the student’s submission metadata in a CSV file
+  - [x] Given an assignment, extract in bulk all the students’ submissions logs in a zip file (i.e., the text in logs.txt)
+  - [x] Given an assignment, extract in bulk all the students’ submission metadata (e.g., student name, submission ID, submission time, result string contained in result.txt) in a CSV file
+  - [x] Given an assignment and a student, extract in bulk all the student’s submissions logs in a zip file
+  - [x] Given an assignment and a student, extract in bulk all the student’s submission metadata in a CSV file
   - [ ] API access 
   - [x] GUI support
 
@@ -38,10 +38,10 @@ Project tasks
 
   - [x] monitoring and logging the platform using a dashboard
   - [x] add teachers
-  - [ ] pause a teacher
-  - [ ] delete a student or a teacher
+  - [x] pause a teacher
+  - [x] delete a student or a teacher
   - [ ] API access 
-  - [ ] GUI support
+  - [x] GUI support
 
 * System Developer
 
