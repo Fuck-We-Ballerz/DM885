@@ -58,6 +58,7 @@ try:
         client_secret_key=KEYCLOAK_CLIENT_SECRET
     )
     logger.info(keycloak_openid)
+    logger.info(keycloak_openid.connection)
     logger.info("Keycloak initialized successfully")
 except Exception as e:
     logger.error(f"Failed to initialize Keycloak: {e}")
