@@ -22,43 +22,45 @@ KEYCLOAK_REALM = os.getenv('KEYCLOAK_REALM')
 KEYCLOAK_CLIENT_ID = os.getenv('KEYCLOAK_CLIENT_ID')
 KEYCLOAK_CLIENT_SECRET = os.getenv('KEYCLOAK_CLIENT_SECRET')
 KEYCLOAK_REDIRECT_URI = os.getenv('KEYCLOAK_REDIRECT_URI')
-KEYCLOAK_ADMIN_USERNAME = os.getenv('KEYCLOAK_ADMIN_USERNAME')
+KEYCLOAK_ADMIN = os.getenv('KEYCLOAK_ADMIN')
 KEYCLOAK_ADMIN_PASSWORD = os.getenv('KEYCLOAK_ADMIN_PASSWORD')
 BASE_URL = os.getenv('BASE_URL')
 KEYCLOAK_LOGOUT_URL = os.getenv('KEYCLOAK_LOGOUT_URL')
+POSTGRES_USER = os.getenv('POSTGRES_USER')
+POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
 
 KEYCLOAK_TOKEN_URL = f"{KEYCLOAK_SERVER_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/token"
 KEYCLOAK_USER_CREATION_URL = f"{KEYCLOAK_SERVER_URL}/admin/realms/{KEYCLOAK_REALM}/users"
 
 #Debugging
-'''
 logger.info(f"Keycloak Server URL: {KEYCLOAK_SERVER_URL}")
 logger.info(f"Keycloak Realm: {KEYCLOAK_REALM}")
 logger.info(f"Keycloak Client ID: {KEYCLOAK_CLIENT_ID}")
 logger.info(f"Keycloak Client Secret: {KEYCLOAK_CLIENT_SECRET}")
 logger.info(f"Keycloak Redirect URI: {KEYCLOAK_REDIRECT_URI}")
-logger.info(f"Keycloak Admin Username: {KEYCLOAK_ADMIN_USERNAME}")
+logger.info(f"Keycloak Admin Username: {KEYCLOAK_ADMIN}")
 logger.info(f"Keycloak Admin Password: {KEYCLOAK_ADMIN_PASSWORD}")
-'''
+logger.info(f"Base URL: {BASE_URL}")
+logger.info(f"Keycloak Logout URL: {KEYCLOAK_LOGOUT_URL}")
+logger.info(f"Postgres User: {POSTGRES_USER}")
+logger.info(f"Postgres Password: {POSTGRES_PASSWORD}")
+
+
 # If one of the Keycloak environment variables is missing, raise an error
 if not all([KEYCLOAK_SERVER_URL, KEYCLOAK_REALM, KEYCLOAK_CLIENT_ID, KEYCLOAK_CLIENT_SECRET, KEYCLOAK_REDIRECT_URI]):
     raise ValueError("One or more Keycloak configuration environment variables are missing")
 
-# Check Keycloak server accessibility
 try:
-    response = requests.get(KEYCLOAK_SERVER_URL)
-    logger.info(f"RESPONSE: {response.status_code}")
-    response.raise_for_status()
-    logger.info("Keycloak server is accessible")
-except requests.exceptions.RequestException as e:
-    logger.error(f"Failed to reach Keycloak server: {e}")
-
-keycloak_openid = KeycloakOpenID(
-    server_url=KEYCLOAK_SERVER_URL,
-    client_id=KEYCLOAK_CLIENT_ID,
-    realm_name=KEYCLOAK_REALM,
-    client_secret_key=KEYCLOAK_CLIENT_SECRET
-)
+    keycloak_openid = KeycloakOpenID(
+        server_url=KEYCLOAK_SERVER_URL,
+        client_id=KEYCLOAK_CLIENT_ID,
+        realm_name=KEYCLOAK_REALM,
+        client_secret_key=KEYCLOAK_CLIENT_SECRET
+    )
+    logger.info("Keycloak initialized successfully")
+except Exception as e:
+    logger.error(f"Failed to initialize Keycloak: {e}")
+    raise ValueError("Failed to initialize Keycloak")
 
 # Initialize the Flask app
 app = Flask(__name__, static_folder='static', template_folder='templates')
@@ -66,9 +68,9 @@ bootstrap = Bootstrap(app)
 
 # Set the maximum file size for uploads and the database URI, along with the secret key
 app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024  # for 64 MB limit
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@postgres-application:5432/postgres'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@postgres-application:5432/postgres'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = os.getenv('SECRET_KEY')  # Set a secret key for session management
+app.secret_key = os.urandom(24)
 
 # Initialize the database
 init_db(app)
@@ -79,7 +81,7 @@ def get_admin_token():
         'client_id': KEYCLOAK_CLIENT_ID,
         'client_secret': KEYCLOAK_CLIENT_SECRET,
         'grant_type': 'password',
-        'username': KEYCLOAK_ADMIN_USERNAME,
+        'username': KEYCLOAK_ADMIN,
         'password': KEYCLOAK_ADMIN_PASSWORD
     }
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -103,8 +105,10 @@ def student_dashboard():
         if not student:
             raise ValueError(f"Student with username {username} not found")
         
-        assignments = db.session.query(Assignment).all()
-        
+        # Query assignments assigned to the student
+        assignments = db.session.query(Assignment).join(Student_to_assignment).filter(
+            Student_to_assignment.student_id == student.id
+        ).all()
         for assignment in assignments:
             submission = Submission.query.filter_by(assignment_id=assignment.id, student_id=student.id).first()
             grade = submission.grade if submission else "Not submitted"
