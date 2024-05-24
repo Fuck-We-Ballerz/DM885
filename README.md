@@ -114,11 +114,13 @@ A minimal `values.yaml` are provided for the three helm charts: `infrastructure`
 
 We value ensuring that the development environment mirrors the production environment. The only differences are the values in `values-prod.yaml` and minimal if-statements in the templates. The services are configured to persist solely on the server they are run on.
 
-This separation of environments is achieved by creating two secret configurations: one with hard-coded development secrets, and the other pulling secrets from the pipeline variables. This ensures a secure and efficient deployment process. To illustrate, let's look at how the Keycloak password is accessed during deployment.
+This separation of environments is achieved by creating two secret configurations: one with hard-coded development secrets, and the other pulling secrets from the pipeline variables. To illustrate, let's look at how the Keycloak password is accessed during deployment.
 
 <center>
 <img src="assets/img/secret_drawing.svg" alt="drawing" width="750"/>
 </center>
+
+This ensures a secure and efficient deployment process.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
