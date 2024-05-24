@@ -14,21 +14,10 @@
         <a href="{{ url_for('submit_assignment', assignment_id=assignment.id) }}" class="list-group-item list-group-item-action text-center">
             <div>
                 <strong>Assignment:</strong> {{ assignment.course_name }}: {{ assignment.title }}<br>
-                <strong>Time Period:</strong> {{ assignment.start_date.strftime('%Y-%m-%d %H:%M:%S') }} - {{ assignment.end_date.strftime('%Y-%m-%d %H:%M:%S') }}
-                <strong>Status:</strong>
-                <span style="color: 
-                    {% if assignment.status == 0 %}grey
-                    {% elif assignment.status == 1 %}blue
-                    {% elif assignment.status == 2 %}orange
-                    {% elif assignment.status == 3 %}green
-                    {% elif assignment.status == 4 %}red
-                    {% endif %};">
-                    {% if assignment.status == 0 %}Not Started
-                    {% elif assignment.status == 1 %}In Progress
-                    {% elif assignment.status == 2 %}Under Review
-                    {% elif assignment.status == 3 %}Completed
-                    {% elif assignment.status == 4 %}Needs Revision
-                    {% endif %}
+                <strong>Time Period:</strong> {{ assignment.start_date.strftime('%Y-%m-%d %H:%M:%S') }} - {{ assignment.end_date.strftime('%Y-%m-%d %H:%M:%S') }}<br>
+                <strong>Grade:</strong> 
+                <span class="{% if assignment.grade == 'passed' %}text-success{% elif assignment.grade == 'failed' %}text-danger{% else %}text-secondary{% endif %}">
+                    {{ assignment.grade }}
                 </span>
             </div>
         </a>
@@ -36,10 +25,11 @@
     </div>
         {% endfor %}
     {% else %}
-        <div class="list-group-item text-center">No assignments available</div>
+        <div class="list-group-item text-center">
+            No assignments available. Have a nice weekend!
+        </div>
     {% endif %}
 </div>
-
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -52,7 +42,6 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ status: 0 })
                 })
                 .then(response => response.json())
                 .then(data => {

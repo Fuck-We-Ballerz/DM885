@@ -14,11 +14,20 @@ RUN apt-get update && apt-get install -y docker-ce-cli
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
+COPY . .
+
+ARG ENVIRONMENT=dev
+
+# Run the command to move config.env to .env
+RUN if [ "$ENVIRONMENT" = "dev" ]; then \
+        cat config.env > .env; \
+    else \
+        cat config-prod.env > .env; \
+    fi
+    
+
 # Define environment variable
 ENV SCRIPT_NAME=/student
-
-# Copy the current directory contents into the container at /usr/src/app
-COPY . .
 
 # Install any needed packages specified in requirements.txt, or list them explicitly
 RUN pip install -r requirements.txt 
