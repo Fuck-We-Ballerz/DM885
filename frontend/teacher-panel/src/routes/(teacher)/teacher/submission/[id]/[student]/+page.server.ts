@@ -1,6 +1,6 @@
 import { and, eq } from 'drizzle-orm';
 import * as schema from '$lib/db/schema'
-import type { Actions, PageServerLoad } from './$types';
+import type { PageServerLoad } from './$types';
 import { db } from '$lib';
 
 
