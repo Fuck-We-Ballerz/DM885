@@ -1,3 +1,6 @@
+
+---
+# Service for student-service
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,7 +10,9 @@ spec:
     app: student-service
   ports:
     - port: 5050
+
 ---
+# Deployment for student-service
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -27,6 +32,56 @@ spec:
           image: {{ .Values.studentService.IMAGE }}
           imagePullPolicy: {{ .Values.studentService.IMAGE_PULL_POLICY }}
           env:
+          - name: SECRET_KEY
+            valueFrom:
+              configMapKeyRef:
+                name: flask-config
+                key: SECRET_KEY
+          - name: KEYCLOAK_SERVER_URL
+            valueFrom:
+              configMapKeyRef:
+                name: flask-config
+                key: KEYCLOAK_SERVER_URL
+          - name: KEYCLOAK_REALM
+            valueFrom:
+              configMapKeyRef:
+                name: flask-config
+                key: KEYCLOAK_REALM
+          - name: KEYCLOAK_CLIENT_ID
+            valueFrom:
+              configMapKeyRef:
+                name: flask-config
+                key: KEYCLOAK_CLIENT_ID
+          - name: KEYCLOAK_CLIENT_SECRET
+            valueFrom:
+              configMapKeyRef:
+                name: flask-config
+                key: KEYCLOAK_CLIENT_SECRET
+          - name: KEYCLOAK_REDIRECT_URI
+            valueFrom:
+              configMapKeyRef:
+                name: flask-config
+                key: KEYCLOAK_REDIRECT_URI
+          - name: KEYCLOAK_ADMIN_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: flask-config
+                key: KEYCLOAK_ADMIN_USERNAME
+          - name: KEYCLOAK_ADMIN_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: flask-config
+                key: KEYCLOAK_ADMIN_PASSWORD
+          - name: BASE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: flask-config
+                key: BASE_URL
+          - name: KEYCLOAK_LOGOUT_URL
+            valueFrom:
+              configMapKeyRef:
+                name: flask-config
+                key: KEYCLOAK_LOGOUT_URL
           - name: DOCKER_HOST
             value: "tcp://dind:2376"
           - name: DOCKER_CERT_PATH
@@ -41,7 +96,9 @@ spec:
       - name: dind-certs
         persistentVolumeClaim:
           claimName: dind-certs
+
 ---
+# Service for teacher-service
 apiVersion: v1
 kind: Service
 metadata:
@@ -51,7 +108,9 @@ spec:
     app: teacher-service
   ports:
     - port: 5173
+
 ---
+# Deployment for teacher-service
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -68,5 +127,5 @@ spec:
     spec:
       containers:
         - name: teacher-service
-          image: {{ .Values.teacherService.IMAGE}}
+          image: {{ .Values.teacherService.IMAGE }}
           imagePullPolicy: {{ .Values.teacherService.IMAGE_PULL_POLICY }}

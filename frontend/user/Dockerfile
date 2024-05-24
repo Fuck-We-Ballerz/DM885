@@ -6,10 +6,6 @@ FROM python:3.12-slim
 WORKDIR /usr/src/app
 
 # Copy the config.env file before any RUN commands that need it
-COPY config.env .
-
-# Run the command to move config.env to .env
-RUN cat config.env > .env
 
 RUN apt-get update && apt-get install -y lsb-release
 RUN apt-get -y update; apt-get -y install curl

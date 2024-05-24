@@ -1,8 +1,13 @@
 environment: "prod"
 
 studentService:
-  IMAGE: "gcr.io/devsecops-422807/python-custom"
-  IMAGE_PULL_POLICY: "Always"
+  IMAGE: gcr.io/devsecops-422807/python-custom
+  IMAGE_PULL_POLICY: Always
+  KEYCLOAK_SERVER_URL: https://zeruscloud.com/keycloak
+  KEYCLOAK_REDIRECT_URI: https://zeruscloud.com/student/callback
+  BASE_URL: https://zeruscloud.com
+  KEYCLOAK_LOGOUT_URL: https://zeruscloud.com/keycloak/realms/DM885/protocol/openid-connect/logout
+
 teacherService:
-  IMAGE: "gcr.io/devsecops-422807/node-custom"
-  IMAGE_PULL_POLICY: "Always"
+  IMAGE: gcr.io/devsecops-422807/node-custom
+  IMAGE_PULL_POLICY: Always

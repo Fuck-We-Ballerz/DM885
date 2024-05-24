@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flask-config
+data:
+  SECRET_KEY: {{ .Values.studentService.SECRET_KEY |  quote}} 
+  KEYCLOAK_SERVER_URL: {{ .Values.studentService.KEYCLOAK_SERVER_URL | quote}}
+  KEYCLOAK_REALM: {{ .Values.studentService.KEYCLOAK_REALM | quote}}
+  KEYCLOAK_CLIENT_ID: {{ .Values.studentService.KEYCLOAK_CLIENT_ID | quote}}
+  KEYCLOAK_CLIENT_SECRET: {{ .Values.studentService.KEYCLOAK_CLIENT_SECRET | quote}}
+  KEYCLOAK_REDIRECT_URI: {{ .Values.studentService.KEYCLOAK_REDIRECT_URI | quote}}
+  KEYCLOAK_ADMIN_USERNAME: {{ .Values.studentService.KEYCLOAK_ADMIN_USERNAME | quote}}
+  KEYCLOAK_ADMIN_PASSWORD: {{ .Values.studentService.KEYCLOAK_ADMIN_PASSWORD | quote}}
+  BASE_URL: {{ .Values.studentService.BASE_URL | quote}}
+  KEYCLOAK_LOGOUT_URL: {{ .Values.studentService.KEYCLOAK_LOGOUT_URL | quote}}
