@@ -46,14 +46,18 @@ logger.info(f"Keycloak Admin Password: {KEYCLOAK_ADMIN_PASSWORD}")
 if not all([KEYCLOAK_SERVER_URL, KEYCLOAK_REALM, KEYCLOAK_CLIENT_ID, KEYCLOAK_CLIENT_SECRET, KEYCLOAK_REDIRECT_URI]):
     raise ValueError("One or more Keycloak configuration environment variables are missing")
 
-# Check Keycloak server accessibility
-try:
-    response = requests.get(KEYCLOAK_SERVER_URL)
-    logger.info(f"RESPONSE: {response.status_code}")
-    response.raise_for_status()
-    logger.info("Keycloak server is accessible")
-except requests.exceptions.RequestException as e:
-    logger.error(f"Failed to reach Keycloak server: {e}")
+# Retry connecting to Keycloak server
+for _ in range(1000):
+    try:
+        response = requests.get(KEYCLOAK_SERVER_URL)
+        response.raise_for_status()
+        logger.info("Keycloak server is accessible")
+        break
+    except requests.RequestException as e:
+        logger.error(f"Failed to reach Keycloak server: {e}")
+        time.sleep(10)
+else:
+    raise RuntimeError("Failed to connect to Keycloak server after multiple attempts")
 
 keycloak_openid = KeycloakOpenID(
     server_url=KEYCLOAK_SERVER_URL,
