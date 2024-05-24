@@ -12,3 +12,7 @@ grafana:
   GF_SERVER_ROOT_URL: "https://localhost/grafana/"
   GF_AUTH_GENERIC_OAUTH_TOKEN_URL: "http://keycloak:8080/realms/DM885/protocol/openid-connect/token"
   IMAGE: "grafana-custom"
+
+postgresApplication:
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
