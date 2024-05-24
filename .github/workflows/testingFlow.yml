@@ -1,0 +1,24 @@
+name: Testing Workflow
+
+permissions:
+  id-token: write
+  contents: read
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install npm in teacher
+        working-directory: ./frontend/teacher-panel
+        run: npm install
+
+      - name: Teacher/Admin tests
+        working-directory: ./frontend/teacher-panel
+        run: npm test
