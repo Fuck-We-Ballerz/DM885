@@ -2,8 +2,18 @@ import { db } from '$lib'
 import * as schema from '$lib/db/schema'
 import type { Actions } from './$types'
 import { and,eq } from 'drizzle-orm'
+import { error } from '@sveltejs/kit';
+
 
 export async function load({cookies, params}) {
+        //Get logged in teacher
+        const teacherUsername = cookies.get('kc-username')!
+        const teacher = await db.query.teacher.findFirst({ where: eq(schema.teacher.username, teacherUsername)})
+
+        if(!teacher){
+            error(403, "Access denied: user is not a teacher")
+        }
+
         const courseId = parseInt(params.id)
         const course = await db.query.course.findFirst({ where: eq(schema.course.id, courseId)})
 
@@ -19,10 +29,6 @@ export async function load({cookies, params}) {
             username: student.student.username
             }
         })
-
-        //Get logged in teacher
-        const teacherUsername = cookies.get('kc-username')!
-        const teacher = await db.query.teacher.findFirst({ where: eq(schema.teacher.username, teacherUsername)})
         
         //Get all assignments for the course that the teacher is teaching
         const assignments = await db.select().from(schema.assignment)

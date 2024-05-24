@@ -18,6 +18,7 @@
                 body: formData
             });
         }
+        window.location.reload();
     }
 </script>
 
