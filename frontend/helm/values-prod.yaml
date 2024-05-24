@@ -3,6 +3,7 @@ environment: "prod"
 studentService:
   IMAGE: gcr.io/devsecops-422807/python-custom
   IMAGE_PULL_POLICY: Always
+  KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
   KEYCLOAK_REDIRECT_URI: https://zeruscloud.com/student/callback
   BASE_URL: https://zeruscloud.com
   KEYCLOAK_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
