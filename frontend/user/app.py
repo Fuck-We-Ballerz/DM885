@@ -304,10 +304,8 @@ def upload_file():
                 
             student = Student.query.filter_by(username=username).first()
             new_submission = Submission(assignment_id=assignment_id, student_id=student.id, submission=data)
-            new_student_to_assignment = Student_to_assignment(assignment_id=assignment_id, student_id=student.id)
             
             db.session.add(new_submission)
-            db.session.add(new_student_to_assignment)
             db.session.commit()
             logger.info(f"Submission created for assignment: {assignment_id} by student: {username}")
             logger.info(f"Student_to_assignment created for assignment: {assignment_id} by student: {username} with status 1")
