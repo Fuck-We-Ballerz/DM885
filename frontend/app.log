@@ -1,0 +1,44 @@
+2024-05-19 21:29:45,609 - logs_config - WARNING - Access attempt without login
+2024-05-19 21:29:45,609 - logs_config - WARNING - Access attempt without login
+2024-05-19 21:29:45,650 - logs_config - INFO - /login
+2024-05-19 21:29:45,650 - logs_config - INFO - /login
+2024-05-19 21:31:47,763 - logs_config - INFO - /login
+2024-05-19 21:31:47,763 - logs_config - INFO - /login
+2024-05-19 21:31:49,255 - logs_config - INFO - /login
+2024-05-19 21:31:49,255 - logs_config - INFO - /login
+2024-05-19 21:31:50,145 - logs_config - INFO - /login
+2024-05-19 21:31:50,145 - logs_config - INFO - /login
+2024-05-19 21:31:50,146 - logs_config - WARNING - Empty login submission
+2024-05-19 21:31:50,146 - logs_config - WARNING - Empty login submission
+2024-05-19 21:31:50,150 - logs_config - INFO - /login
+2024-05-19 21:31:50,150 - logs_config - INFO - /login
+2024-05-19 21:31:56,311 - logs_config - INFO - /login
+2024-05-19 21:31:56,311 - logs_config - INFO - /login
+2024-05-19 21:31:56,892 - logs_config - INFO - /login
+2024-05-19 21:31:56,892 - logs_config - INFO - /login
+2024-05-19 21:31:56,892 - logs_config - WARNING - Empty login submission
+2024-05-19 21:31:56,892 - logs_config - WARNING - Empty login submission
+2024-05-19 21:31:56,898 - logs_config - INFO - /login
+2024-05-19 21:31:56,898 - logs_config - INFO - /login
+2024-05-19 21:32:46,384 - logs_config - INFO - /login
+2024-05-19 21:32:46,384 - logs_config - INFO - /login
+2024-05-19 21:32:52,639 - logs_config - INFO - /login
+2024-05-19 21:32:52,639 - logs_config - INFO - /login
+2024-05-19 21:39:37,236 - logs_config - ERROR - Database connection error: (psycopg2.OperationalError) could not translate host name "postgres-application" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2024-05-19 21:39:37,236 - logs_config - ERROR - Database connection error: (psycopg2.OperationalError) could not translate host name "postgres-application" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2024-05-19 21:40:46,062 - logs_config - ERROR - Database not connected: (psycopg2.OperationalError) could not translate host name "postgres-application" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2024-05-19 21:40:46,062 - logs_config - ERROR - Database not connected: (psycopg2.OperationalError) could not translate host name "postgres-application" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2024-05-19 21:40:47,610 - logs_config - ERROR - Database not connected: (psycopg2.OperationalError) could not translate host name "postgres-application" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2024-05-19 21:40:47,610 - logs_config - ERROR - Database not connected: (psycopg2.OperationalError) could not translate host name "postgres-application" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)

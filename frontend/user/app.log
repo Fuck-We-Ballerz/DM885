@@ -1,0 +1,223 @@
+2024-05-23 16:10:35,488 - logs_config - INFO - Keycloak Server URL: None
+2024-05-23 16:10:35,488 - logs_config - INFO - Keycloak Realm: None
+2024-05-23 16:10:35,488 - logs_config - INFO - Keycloak Client ID: None
+2024-05-23 16:10:35,488 - logs_config - INFO - Keycloak Client Secret: None
+2024-05-23 16:10:35,488 - logs_config - INFO - Keycloak Redirect URI: None
+2024-05-23 16:10:35,488 - logs_config - INFO - Keycloak Admin Username: None
+2024-05-23 16:10:35,488 - logs_config - INFO - Keycloak Admin Password: None
+2024-05-23 16:20:34,736 - logs_config - INFO - Keycloak Server URL: None
+2024-05-23 16:20:34,736 - logs_config - INFO - Keycloak Realm: None
+2024-05-23 16:20:34,736 - logs_config - INFO - Keycloak Client ID: None
+2024-05-23 16:20:34,736 - logs_config - INFO - Keycloak Client Secret: None
+2024-05-23 16:20:34,736 - logs_config - INFO - Keycloak Redirect URI: None
+2024-05-23 16:20:34,736 - logs_config - INFO - Keycloak Admin Username: None
+2024-05-23 16:20:34,736 - logs_config - INFO - Keycloak Admin Password: None
+2024-05-23 16:22:45,660 - logs_config - INFO - Keycloak Server URL: None
+2024-05-23 16:22:45,660 - logs_config - INFO - Keycloak Realm: None
+2024-05-23 16:22:45,660 - logs_config - INFO - Keycloak Client ID: None
+2024-05-23 16:22:45,660 - logs_config - INFO - Keycloak Client Secret: None
+2024-05-23 16:22:45,660 - logs_config - INFO - Keycloak Redirect URI: None
+2024-05-23 16:22:45,660 - logs_config - INFO - Keycloak Admin Username: None
+2024-05-23 16:22:45,660 - logs_config - INFO - Keycloak Admin Password: None
+2024-05-23 16:23:04,338 - logs_config - INFO - Keycloak Server URL: None
+2024-05-23 16:23:04,338 - logs_config - INFO - Keycloak Realm: None
+2024-05-23 16:23:04,338 - logs_config - INFO - Keycloak Client ID: None
+2024-05-23 16:23:04,338 - logs_config - INFO - Keycloak Client Secret: None
+2024-05-23 16:23:04,338 - logs_config - INFO - Keycloak Redirect URI: None
+2024-05-23 16:23:04,338 - logs_config - INFO - Keycloak Admin Username: None
+2024-05-23 16:23:04,338 - logs_config - INFO - Keycloak Admin Password: None
+2024-05-23 16:24:04,226 - logs_config - INFO - Keycloak Server URL: None
+2024-05-23 16:24:04,227 - logs_config - INFO - Keycloak Realm: None
+2024-05-23 16:24:04,227 - logs_config - INFO - Keycloak Client ID: None
+2024-05-23 16:24:04,227 - logs_config - INFO - Keycloak Client Secret: None
+2024-05-23 16:24:04,227 - logs_config - INFO - Keycloak Redirect URI: None
+2024-05-23 16:24:04,227 - logs_config - INFO - Keycloak Admin Username: None
+2024-05-23 16:24:04,227 - logs_config - INFO - Keycloak Admin Password: None
+2024-05-23 16:28:26,187 - logs_config - INFO - Keycloak Server URL: None
+2024-05-23 16:28:26,188 - logs_config - INFO - Keycloak Realm: None
+2024-05-23 16:28:26,188 - logs_config - INFO - Keycloak Client ID: None
+2024-05-23 16:28:26,188 - logs_config - INFO - Keycloak Client Secret: None
+2024-05-23 16:28:26,188 - logs_config - INFO - Keycloak Redirect URI: None
+2024-05-23 16:28:26,188 - logs_config - INFO - Keycloak Admin Username: None
+2024-05-23 16:28:26,188 - logs_config - INFO - Keycloak Admin Password: None
+2024-05-23 16:33:01,612 - logs_config - INFO - Keycloak Server URL: http://keycloak:8080
+2024-05-23 16:33:01,612 - logs_config - INFO - Keycloak Realm: DM885
+2024-05-23 16:33:01,612 - logs_config - INFO - Keycloak Client ID: application
+2024-05-23 16:33:01,612 - logs_config - INFO - Keycloak Client Secret: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+2024-05-23 16:33:01,612 - logs_config - INFO - Keycloak Redirect URI: https://localhost/student/callback
+2024-05-23 16:33:01,612 - logs_config - INFO - Keycloak Admin Username: admin
+2024-05-23 16:33:01,612 - logs_config - INFO - Keycloak Admin Password: admin
+2024-05-23 16:33:01,615 - logs_config - ERROR - Failed to reach Keycloak server: HTTPConnectionPool(host='keycloak', port=8080): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f3aadab0800>: Failed to resolve 'keycloak' ([Errno -3] Temporary failure in name resolution)"))
+2024-05-23 16:34:15,373 - logs_config - INFO - Keycloak Server URL: None
+2024-05-23 16:34:15,373 - logs_config - INFO - Keycloak Realm: None
+2024-05-23 16:34:15,373 - logs_config - INFO - Keycloak Client ID: None
+2024-05-23 16:34:15,373 - logs_config - INFO - Keycloak Client Secret: None
+2024-05-23 16:34:15,373 - logs_config - INFO - Keycloak Redirect URI: None
+2024-05-23 16:34:15,373 - logs_config - INFO - Keycloak Admin Username: None
+2024-05-23 16:34:15,373 - logs_config - INFO - Keycloak Admin Password: None
+2024-05-23 16:34:16,722 - logs_config - INFO - Keycloak Server URL: None
+2024-05-23 16:34:16,722 - logs_config - INFO - Keycloak Realm: None
+2024-05-23 16:34:16,722 - logs_config - INFO - Keycloak Client ID: None
+2024-05-23 16:34:16,722 - logs_config - INFO - Keycloak Client Secret: None
+2024-05-23 16:34:16,722 - logs_config - INFO - Keycloak Redirect URI: None
+2024-05-23 16:34:16,723 - logs_config - INFO - Keycloak Admin Username: None
+2024-05-23 16:34:16,723 - logs_config - INFO - Keycloak Admin Password: None
+2024-05-23 16:35:01,301 - logs_config - INFO - Keycloak Server URL: None
+2024-05-23 16:35:01,301 - logs_config - INFO - Keycloak Realm: None
+2024-05-23 16:35:01,301 - logs_config - INFO - Keycloak Client ID: None
+2024-05-23 16:35:01,301 - logs_config - INFO - Keycloak Client Secret: None
+2024-05-23 16:35:01,301 - logs_config - INFO - Keycloak Redirect URI: None
+2024-05-23 16:35:01,301 - logs_config - INFO - Keycloak Admin Username: None
+2024-05-23 16:35:01,301 - logs_config - INFO - Keycloak Admin Password: None
+2024-05-23 16:36:43,371 - logs_config - INFO - Keycloak Server URL: http://keycloak:8080
+2024-05-23 16:36:43,371 - logs_config - INFO - Keycloak Realm: DM885
+2024-05-23 16:36:43,371 - logs_config - INFO - Keycloak Client ID: application
+2024-05-23 16:36:43,372 - logs_config - INFO - Keycloak Client Secret: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+2024-05-23 16:36:43,372 - logs_config - INFO - Keycloak Redirect URI: https://localhost/student/callback
+2024-05-23 16:36:43,372 - logs_config - INFO - Keycloak Admin Username: admin
+2024-05-23 16:36:43,372 - logs_config - INFO - Keycloak Admin Password: admin
+2024-05-23 16:36:43,374 - logs_config - ERROR - Failed to reach Keycloak server: HTTPConnectionPool(host='keycloak', port=8080): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f1239d4b3b0>: Failed to resolve 'keycloak' ([Errno -3] Temporary failure in name resolution)"))
+2024-05-23 16:38:00,909 - logs_config - INFO - Keycloak Server URL: http://keycloak:8080
+2024-05-23 16:38:00,909 - logs_config - INFO - Keycloak Realm: DM885
+2024-05-23 16:38:00,909 - logs_config - INFO - Keycloak Client ID: application
+2024-05-23 16:38:00,909 - logs_config - INFO - Keycloak Client Secret: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+2024-05-23 16:38:00,909 - logs_config - INFO - Keycloak Redirect URI: https://localhost/student/callback
+2024-05-23 16:38:00,909 - logs_config - INFO - Keycloak Admin Username: admin
+2024-05-23 16:38:00,909 - logs_config - INFO - Keycloak Admin Password: admin
+2024-05-23 16:38:00,911 - logs_config - ERROR - Failed to reach Keycloak server: HTTPConnectionPool(host='keycloak', port=8080): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7fd1d0ef75f0>: Failed to resolve 'keycloak' ([Errno -3] Temporary failure in name resolution)"))
+2024-05-23 16:39:24,226 - logs_config - INFO - Keycloak Server URL: http://keycloak:8080
+2024-05-23 16:39:24,226 - logs_config - INFO - Keycloak Realm: DM885
+2024-05-23 16:39:24,226 - logs_config - INFO - Keycloak Client ID: application
+2024-05-23 16:39:24,226 - logs_config - INFO - Keycloak Client Secret: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+2024-05-23 16:39:24,226 - logs_config - INFO - Keycloak Redirect URI: https://localhost/student/callback
+2024-05-23 16:39:24,226 - logs_config - INFO - Keycloak Admin Username: admin
+2024-05-23 16:39:24,226 - logs_config - INFO - Keycloak Admin Password: admin
+2024-05-23 16:39:24,228 - logs_config - ERROR - Failed to reach Keycloak server: HTTPConnectionPool(host='keycloak', port=8080): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7fa356483650>: Failed to resolve 'keycloak' ([Errno -3] Temporary failure in name resolution)"))
+2024-05-23 16:40:57,381 - logs_config - INFO - Keycloak Server URL: http://keycloak:8080
+2024-05-23 16:40:57,381 - logs_config - INFO - Keycloak Realm: DM885
+2024-05-23 16:40:57,381 - logs_config - INFO - Keycloak Client ID: application
+2024-05-23 16:40:57,381 - logs_config - INFO - Keycloak Client Secret: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+2024-05-23 16:40:57,381 - logs_config - INFO - Keycloak Redirect URI: https://localhost/student/callback
+2024-05-23 16:40:57,381 - logs_config - INFO - Keycloak Admin Username: admin
+2024-05-23 16:40:57,381 - logs_config - INFO - Keycloak Admin Password: admin
+2024-05-23 16:40:57,383 - logs_config - ERROR - Failed to reach Keycloak server: HTTPConnectionPool(host='keycloak', port=8080): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f6d78770920>: Failed to resolve 'keycloak' ([Errno -3] Temporary failure in name resolution)"))
+2024-05-23 16:42:49,147 - logs_config - INFO - Keycloak Server URL: http://keycloak:8080
+2024-05-23 16:42:49,147 - logs_config - INFO - Keycloak Realm: DM885
+2024-05-23 16:42:49,147 - logs_config - INFO - Keycloak Client ID: application
+2024-05-23 16:42:49,147 - logs_config - INFO - Keycloak Client Secret: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+2024-05-23 16:42:49,147 - logs_config - INFO - Keycloak Redirect URI: https://localhost/student/callback
+2024-05-23 16:42:49,147 - logs_config - INFO - Keycloak Admin Username: admin
+2024-05-23 16:42:49,147 - logs_config - INFO - Keycloak Admin Password: admin
+2024-05-23 16:42:49,150 - logs_config - ERROR - Failed to reach Keycloak server: HTTPConnectionPool(host='keycloak', port=8080): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f1528bc1d00>: Failed to resolve 'keycloak' ([Errno -3] Temporary failure in name resolution)"))
+2024-05-23 16:43:33,631 - logs_config - INFO - Keycloak Server URL: http://keycloak:8080
+2024-05-23 16:43:33,632 - logs_config - INFO - Keycloak Realm: DM885
+2024-05-23 16:43:33,632 - logs_config - INFO - Keycloak Client ID: application
+2024-05-23 16:43:33,632 - logs_config - INFO - Keycloak Client Secret: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+2024-05-23 16:43:33,632 - logs_config - INFO - Keycloak Redirect URI: https://localhost/student/callback
+2024-05-23 16:43:33,632 - logs_config - INFO - Keycloak Admin Username: admin
+2024-05-23 16:43:33,632 - logs_config - INFO - Keycloak Admin Password: admin
+2024-05-23 16:43:33,634 - logs_config - ERROR - Failed to reach Keycloak server: HTTPConnectionPool(host='keycloak', port=8080): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7fca8eec7530>: Failed to resolve 'keycloak' ([Errno -3] Temporary failure in name resolution)"))
+2024-05-23 16:44:33,046 - logs_config - INFO - Keycloak Server URL: http://keycloak:8080
+2024-05-23 16:44:33,047 - logs_config - INFO - Keycloak Realm: DM885
+2024-05-23 16:44:33,047 - logs_config - INFO - Keycloak Client ID: application
+2024-05-23 16:44:33,047 - logs_config - INFO - Keycloak Client Secret: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+2024-05-23 16:44:33,047 - logs_config - INFO - Keycloak Redirect URI: https://localhost/student/callback
+2024-05-23 16:44:33,047 - logs_config - INFO - Keycloak Admin Username: admin
+2024-05-23 16:44:33,047 - logs_config - INFO - Keycloak Admin Password: admin
+2024-05-23 16:44:33,049 - logs_config - ERROR - Failed to reach Keycloak server: HTTPConnectionPool(host='keycloak', port=8080): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f4c2cc06b10>: Failed to resolve 'keycloak' ([Errno -3] Temporary failure in name resolution)"))
+2024-05-23 16:45:22,446 - logs_config - INFO - Keycloak Server URL: http://keycloak:8080
+2024-05-23 16:45:22,446 - logs_config - INFO - Keycloak Realm: DM885
+2024-05-23 16:45:22,446 - logs_config - INFO - Keycloak Client ID: application
+2024-05-23 16:45:22,446 - logs_config - INFO - Keycloak Client Secret: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+2024-05-23 16:45:22,446 - logs_config - INFO - Keycloak Redirect URI: https://localhost/student/callback
+2024-05-23 16:45:22,446 - logs_config - INFO - Keycloak Admin Username: admin
+2024-05-23 16:45:22,446 - logs_config - INFO - Keycloak Admin Password: admin
+2024-05-23 16:45:22,448 - logs_config - ERROR - Failed to reach Keycloak server: HTTPConnectionPool(host='keycloak', port=8080): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f6fb5d5ba10>: Failed to resolve 'keycloak' ([Errno -3] Temporary failure in name resolution)"))
+2024-05-23 16:46:20,320 - logs_config - INFO - Keycloak Server URL: http://keycloak:8080
+2024-05-23 16:46:20,320 - logs_config - INFO - Keycloak Realm: DM885
+2024-05-23 16:46:20,320 - logs_config - INFO - Keycloak Client ID: application
+2024-05-23 16:46:20,320 - logs_config - INFO - Keycloak Client Secret: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+2024-05-23 16:46:20,321 - logs_config - INFO - Keycloak Redirect URI: https://localhost/student/callback
+2024-05-23 16:46:20,321 - logs_config - INFO - Keycloak Admin Username: admin
+2024-05-23 16:46:20,321 - logs_config - INFO - Keycloak Admin Password: admin
+2024-05-23 16:46:20,323 - logs_config - ERROR - Failed to reach Keycloak server: HTTPConnectionPool(host='keycloak', port=8080): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f505feb7140>: Failed to resolve 'keycloak' ([Errno -3] Temporary failure in name resolution)"))
+2024-05-23 16:47:23,546 - logs_config - INFO - Keycloak Server URL: http://keycloak:8080
+2024-05-23 16:47:23,546 - logs_config - INFO - Keycloak Realm: DM885
+2024-05-23 16:47:23,546 - logs_config - INFO - Keycloak Client ID: application
+2024-05-23 16:47:23,546 - logs_config - INFO - Keycloak Client Secret: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+2024-05-23 16:47:23,546 - logs_config - INFO - Keycloak Redirect URI: https://localhost/student/callback
+2024-05-23 16:47:23,546 - logs_config - INFO - Keycloak Admin Username: admin
+2024-05-23 16:47:23,546 - logs_config - INFO - Keycloak Admin Password: admin
+2024-05-23 16:47:23,548 - logs_config - ERROR - Failed to reach Keycloak server: HTTPConnectionPool(host='keycloak', port=8080): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7fe247d93a10>: Failed to resolve 'keycloak' ([Errno -3] Temporary failure in name resolution)"))
+2024-05-23 16:48:18,519 - logs_config - INFO - Keycloak Server URL: http://keycloak:8080
+2024-05-23 16:48:18,520 - logs_config - INFO - Keycloak Realm: DM885
+2024-05-23 16:48:18,520 - logs_config - INFO - Keycloak Client ID: application
+2024-05-23 16:48:18,520 - logs_config - INFO - Keycloak Client Secret: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+2024-05-23 16:48:18,520 - logs_config - INFO - Keycloak Redirect URI: https://localhost/student/callback
+2024-05-23 16:48:18,520 - logs_config - INFO - Keycloak Admin Username: admin
+2024-05-23 16:48:18,520 - logs_config - INFO - Keycloak Admin Password: admin
+2024-05-23 16:48:18,522 - logs_config - ERROR - Failed to reach Keycloak server: HTTPConnectionPool(host='keycloak', port=8080): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f5d09dafe00>: Failed to resolve 'keycloak' ([Errno -3] Temporary failure in name resolution)"))
+2024-05-23 16:50:02,025 - logs_config - INFO - Keycloak Server URL: http://keycloak:8080
+2024-05-23 16:50:02,026 - logs_config - INFO - Keycloak Realm: DM885
+2024-05-23 16:50:02,026 - logs_config - INFO - Keycloak Client ID: application
+2024-05-23 16:50:02,026 - logs_config - INFO - Keycloak Client Secret: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+2024-05-23 16:50:02,026 - logs_config - INFO - Keycloak Redirect URI: https://localhost/student/callback
+2024-05-23 16:50:02,026 - logs_config - INFO - Keycloak Admin Username: admin
+2024-05-23 16:50:02,026 - logs_config - INFO - Keycloak Admin Password: admin
+2024-05-23 16:50:02,028 - logs_config - ERROR - Failed to reach Keycloak server: HTTPConnectionPool(host='keycloak', port=8080): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7fa6f8eeff50>: Failed to resolve 'keycloak' ([Errno -3] Temporary failure in name resolution)"))
+2024-05-23 16:51:10,789 - logs_config - INFO - Keycloak Server URL: http://keycloak:8080
+2024-05-23 16:51:10,789 - logs_config - INFO - Keycloak Realm: DM885
+2024-05-23 16:51:10,789 - logs_config - INFO - Keycloak Client ID: application
+2024-05-23 16:51:10,790 - logs_config - INFO - Keycloak Client Secret: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+2024-05-23 16:51:10,790 - logs_config - INFO - Keycloak Redirect URI: https://localhost/student/callback
+2024-05-23 16:51:10,790 - logs_config - INFO - Keycloak Admin Username: admin
+2024-05-23 16:51:10,790 - logs_config - INFO - Keycloak Admin Password: admin
+2024-05-23 16:51:10,792 - logs_config - ERROR - Failed to reach Keycloak server: HTTPConnectionPool(host='keycloak', port=8080): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f30953cb980>: Failed to resolve 'keycloak' ([Errno -3] Temporary failure in name resolution)"))
+2024-05-23 16:52:12,723 - logs_config - INFO - Keycloak Server URL: http://keycloak:8080
+2024-05-23 16:52:12,723 - logs_config - INFO - Keycloak Realm: DM885
+2024-05-23 16:52:12,723 - logs_config - INFO - Keycloak Client ID: application
+2024-05-23 16:52:12,723 - logs_config - INFO - Keycloak Client Secret: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+2024-05-23 16:52:12,723 - logs_config - INFO - Keycloak Redirect URI: https://localhost/student/callback
+2024-05-23 16:52:12,723 - logs_config - INFO - Keycloak Admin Username: admin
+2024-05-23 16:52:12,723 - logs_config - INFO - Keycloak Admin Password: admin
+2024-05-23 16:52:12,725 - logs_config - ERROR - Failed to reach Keycloak server: HTTPConnectionPool(host='keycloak', port=8080): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f090524c770>: Failed to resolve 'keycloak' ([Errno -3] Temporary failure in name resolution)"))
+2024-05-23 16:53:45,787 - logs_config - INFO - Keycloak Server URL: http://keycloak:8080
+2024-05-23 16:53:45,787 - logs_config - INFO - Keycloak Realm: DM885
+2024-05-23 16:53:45,787 - logs_config - INFO - Keycloak Client ID: application
+2024-05-23 16:53:45,787 - logs_config - INFO - Keycloak Client Secret: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+2024-05-23 16:53:45,787 - logs_config - INFO - Keycloak Redirect URI: https://localhost/student/callback
+2024-05-23 16:53:45,787 - logs_config - INFO - Keycloak Admin Username: admin
+2024-05-23 16:53:45,787 - logs_config - INFO - Keycloak Admin Password: admin
+2024-05-23 16:53:45,789 - logs_config - ERROR - Failed to reach Keycloak server: HTTPConnectionPool(host='keycloak', port=8080): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f6a0252c0b0>: Failed to resolve 'keycloak' ([Errno -3] Temporary failure in name resolution)"))
+2024-05-23 16:54:20,233 - logs_config - INFO - Keycloak Server URL: http://keycloak:8080
+2024-05-23 16:54:20,233 - logs_config - INFO - Keycloak Realm: DM885
+2024-05-23 16:54:20,233 - logs_config - INFO - Keycloak Client ID: application
+2024-05-23 16:54:20,233 - logs_config - INFO - Keycloak Client Secret: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+2024-05-23 16:54:20,233 - logs_config - INFO - Keycloak Redirect URI: https://localhost/student/callback
+2024-05-23 16:54:20,233 - logs_config - INFO - Keycloak Admin Username: admin
+2024-05-23 16:54:20,234 - logs_config - INFO - Keycloak Admin Password: admin
+2024-05-23 16:54:20,236 - logs_config - ERROR - Failed to reach Keycloak server: HTTPConnectionPool(host='keycloak', port=8080): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7fcc399fe810>: Failed to resolve 'keycloak' ([Errno -3] Temporary failure in name resolution)"))
+2024-05-23 16:56:34,604 - logs_config - INFO - Keycloak Server URL: http://keycloak:8080
+2024-05-23 16:56:34,604 - logs_config - INFO - Keycloak Realm: DM885
+2024-05-23 16:56:34,604 - logs_config - INFO - Keycloak Client ID: application
+2024-05-23 16:56:34,604 - logs_config - INFO - Keycloak Client Secret: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+2024-05-23 16:56:34,604 - logs_config - INFO - Keycloak Redirect URI: https://localhost/student/callback
+2024-05-23 16:56:34,604 - logs_config - INFO - Keycloak Admin Username: admin
+2024-05-23 16:56:34,604 - logs_config - INFO - Keycloak Admin Password: admin
+2024-05-23 16:56:34,606 - logs_config - ERROR - Failed to reach Keycloak server: HTTPConnectionPool(host='keycloak', port=8080): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f1f66a2dfa0>: Failed to resolve 'keycloak' ([Errno -3] Temporary failure in name resolution)"))
+2024-05-23 16:57:39,928 - logs_config - INFO - Keycloak Server URL: http://keycloak:8080
+2024-05-23 16:57:39,928 - logs_config - INFO - Keycloak Realm: DM885
+2024-05-23 16:57:39,928 - logs_config - INFO - Keycloak Client ID: application
+2024-05-23 16:57:39,928 - logs_config - INFO - Keycloak Client Secret: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+2024-05-23 16:57:39,928 - logs_config - INFO - Keycloak Redirect URI: https://localhost/student/callback
+2024-05-23 16:57:39,928 - logs_config - INFO - Keycloak Admin Username: admin
+2024-05-23 16:57:39,928 - logs_config - INFO - Keycloak Admin Password: admin
+2024-05-23 16:57:39,930 - logs_config - ERROR - Failed to reach Keycloak server: HTTPConnectionPool(host='keycloak', port=8080): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7fd4491d85c0>: Failed to resolve 'keycloak' ([Errno -3] Temporary failure in name resolution)"))
+2024-05-23 17:06:13,228 - logs_config - INFO - Keycloak Server URL: http://keycloak:8080
+2024-05-23 17:06:13,236 - logs_config - INFO - Keycloak Realm: DM885
+2024-05-23 17:06:13,236 - logs_config - INFO - Keycloak Client ID: application
+2024-05-23 17:06:13,236 - logs_config - INFO - Keycloak Client Secret: YMnr9LdjNcqjRF94Q0i6PD2Ga2wTccrB
+2024-05-23 17:06:13,236 - logs_config - INFO - Keycloak Redirect URI: https://localhost/student/callback
+2024-05-23 17:06:13,236 - logs_config - INFO - Keycloak Admin Username: admin
+2024-05-23 17:06:13,236 - logs_config - INFO - Keycloak Admin Password: admin
+2024-05-23 17:06:13,239 - logs_config - ERROR - Failed to reach Keycloak server: HTTPConnectionPool(host='keycloak', port=8080): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x7f29f2faa9f0>: Failed to resolve 'keycloak' ([Errno -3] Temporary failure in name resolution)"))
