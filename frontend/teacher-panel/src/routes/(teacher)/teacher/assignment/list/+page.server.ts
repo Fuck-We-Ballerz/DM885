@@ -2,10 +2,16 @@ import { eq } from 'drizzle-orm';
 import * as schema from '$lib/db/schema'
 import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib';
+import { error } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({cookies, params}) => {   
     const teacherUsername = cookies.get('kc-username')!
     const teacher = await db.query.teacher.findFirst({ where: eq(schema.teacher.username, teacherUsername)})
+
+    if(!teacher){
+        error(403, "Access denied: user is not a teacher")
+    }
+
     const configs = await db.query.assignmentConfig.findMany()
 
     let output = []
@@ -33,7 +39,7 @@ export const load: PageServerLoad = async ({cookies, params}) => {
     return {
         assignmentConfigs: configs,
         assignments: output
-	};
+    };
 };
 
 

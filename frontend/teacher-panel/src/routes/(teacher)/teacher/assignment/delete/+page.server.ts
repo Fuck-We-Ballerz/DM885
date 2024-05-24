@@ -1,12 +1,15 @@
 import { db } from '$lib'
 import * as schema from '$lib/db/schema'
-import type { Actions } from './$types'
 import { eq } from 'drizzle-orm'
+import { error } from '@sveltejs/kit'
 
 export async function load({cookies}) {
     //Get logged in teacher
     const teacherUsername = cookies.get('kc-username')!
     const teacher = await db.query.teacher.findFirst({ where: eq(schema.teacher.username, teacherUsername)})
+    if(!teacher){
+        error(403, "Access denied: user is not a teacher")
+    }
     
     const assignments = await db.select().from(schema.assignment)
                     .innerJoin(schema.teacher_to_assignment, eq(schema.assignment.id, schema.teacher_to_assignment.assignment_id))
@@ -31,5 +34,5 @@ export async function load({cookies}) {
 
     return {
         assignments: output
-	};
+    };
 }

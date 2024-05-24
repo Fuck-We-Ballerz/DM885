@@ -7,10 +7,8 @@ export const actions = {
     default: async ({cookies, request}) => {
         try {
             const teacherUsername = cookies.get('kc-username')!
-            console.log(teacherUsername)
             const teacher = await db.query.teacher.findFirst({ where: eq(schema.teacher.username, teacherUsername)})
-            console.log(teacher)
-
+            
             const data = await request.formData();
 
             const insertedCouse = await db.insert(schema.course).values({

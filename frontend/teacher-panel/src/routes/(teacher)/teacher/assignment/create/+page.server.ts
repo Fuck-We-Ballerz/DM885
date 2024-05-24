@@ -2,6 +2,7 @@ import { db } from '$lib';
 import * as schema from '$lib/db/schema'
 import { eq } from 'drizzle-orm';
 import type { Actions } from './$types';
+import { error } from '@sveltejs/kit'
 
 // type Course = typeof schema.course.$inferInsert;
 
@@ -67,6 +68,10 @@ import type { PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({cookies}) => {
     const teacherUsername = cookies.get('kc-username')!
     const teacher = await db.query.teacher.findFirst({ where: eq(schema.teacher.username, teacherUsername)})
+
+    if(!teacher){
+        error(403, "Access denied: user is not a teacher")
+    }
     
     const configs = await db.query.assignmentConfig.findMany()
 
@@ -74,8 +79,8 @@ export const load: PageServerLoad = async ({cookies}) => {
                             .innerJoin(schema.teacher_to_course, eq(schema.course.id, schema.teacher_to_course.course_id))
                             .where(eq(schema.teacher_to_course.teacher_id, teacher!.id));
 
-	return {
+    return {
         courses: courses.map(courseObj => courseObj.course),
-	    assignmentConfigs2: configs
-	}
+        assignmentConfigs2: configs
+    }
 }
