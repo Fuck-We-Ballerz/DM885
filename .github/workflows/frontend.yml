@@ -1,4 +1,4 @@
-name: Frontend
+name: Frontend Deploy
 
 permissions:
   id-token: write
@@ -19,6 +19,7 @@ jobs:
       CUSTOM_KC_GRAFANA_REALM_SECRET: ${{ secrets.GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET }}
       GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET: ${{ secrets.GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET }}
       CUSTOM_KC_APPLICATION_REALM_SECRET: ${{ secrets.CUSTOM_KC_APPLICATION_REALM_SECRET }}
+      KEYCLOAK_CLIENT_SECRET: ${{ secrets.CUSTOM_KC_APPLICATION_REALM_SECRET }}
       KC_DB_PASSWORD: ${{ secrets.KC_DB_PASSWORD }}
       KC_DB_USERNAME: ${{ secrets.KC_DB_USERNAME }}
       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
@@ -62,10 +63,12 @@ jobs:
 
       - name: Build and push Docker image (python-custom)
         run: |
-          docker build -t gcr.io/devsecops-422807/python-custom -f frontend/user/Dockerfile frontend/user
+          envsubst < frontend/user/config-prod.env > out.yaml && mv out.yaml frontend/user/config-prod.env
+          docker build --build-arg ENVIRONMENT=prod -t gcr.io/devsecops-422807/python-custom -f frontend/user/Dockerfile frontend/user
           docker push gcr.io/devsecops-422807/python-custom
       
       - name: Package and deploy Helm chart (Frontend)
         run: |
+          envsubst < frontend/helm/values-prod.yaml > out.yaml && mv out.yaml frontend/helm/values-prod.yaml
           helm package -d frontend/helm frontend/helm/.
           helm install frontend frontend/helm/frontend-0.1.0.tgz --values frontend/helm/values-prod.yaml

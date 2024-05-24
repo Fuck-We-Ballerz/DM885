@@ -1,170 +1,233 @@
-from ast import Sub
-from re import sub
-from flask import Flask, request, render_template, redirect, url_for, jsonify, session
-from flask_bootstrap import Bootstrap  # Import Flask-Bootstrap
+from flask import flash, Flask, request, render_template, redirect, url_for, jsonify, session
+from flask_bootstrap import Bootstrap
+import requests
 from werkzeug.utils import secure_filename
 import os
 from logs_config import setup_logging
-import requests
-from datetime import datetime
-from sqlalchemy.dialects.postgresql import BYTEA
 from database import db, Student, Assignment, Course, AssignmentConfig, Submission, init_db, Student_to_assignment
 import docker
+from datetime import datetime
+from keycloak import KeycloakOpenID
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Set up logger
-# set log_terminal to True, if you want logs in the terminal, otherwise set to False
 log_terminal = True
 logger = setup_logging(log_terminal)
 
-app = Flask(__name__)
-bootstrap = Bootstrap(app)  # Initialize Flask-Bootstrap
+# Load environment variables
+KEYCLOAK_SERVER_URL = os.getenv('KEYCLOAK_SERVER_URL')
+KEYCLOAK_REALM = os.getenv('KEYCLOAK_REALM')
+KEYCLOAK_CLIENT_ID = os.getenv('KEYCLOAK_CLIENT_ID')
+KEYCLOAK_CLIENT_SECRET = os.getenv('KEYCLOAK_CLIENT_SECRET')
+KEYCLOAK_REDIRECT_URI = os.getenv('KEYCLOAK_REDIRECT_URI')
+KEYCLOAK_ADMIN = os.getenv('KEYCLOAK_ADMIN')
+KEYCLOAK_ADMIN_PASSWORD = os.getenv('KEYCLOAK_ADMIN_PASSWORD')
+BASE_URL = os.getenv('BASE_URL')
+KEYCLOAK_LOGOUT_URL = os.getenv('KEYCLOAK_LOGOUT_URL')
+POSTGRES_USER = os.getenv('POSTGRES_USER')
+POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+
+KEYCLOAK_TOKEN_URL = f"{KEYCLOAK_SERVER_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/token"
+KEYCLOAK_USER_CREATION_URL = f"{KEYCLOAK_SERVER_URL}/admin/realms/{KEYCLOAK_REALM}/users"
+
+
+# If one of the Keycloak environment variables is missing, raise an error
+if not all([KEYCLOAK_SERVER_URL, KEYCLOAK_REALM, KEYCLOAK_CLIENT_ID, KEYCLOAK_CLIENT_SECRET, KEYCLOAK_REDIRECT_URI]):
+    raise ValueError("One or more Keycloak configuration environment variables are missing")
+
+try:
+    keycloak_openid = KeycloakOpenID(
+        server_url=KEYCLOAK_SERVER_URL,
+        client_id=KEYCLOAK_CLIENT_ID,
+        realm_name=KEYCLOAK_REALM,
+        client_secret_key=KEYCLOAK_CLIENT_SECRET
+    )
+    logger.info(keycloak_openid)
+    logger.info(keycloak_openid.connection)
+    logger.info("Keycloak initialized successfully")
+except Exception as e:
+    logger.error(f"Failed to initialize Keycloak: {e}")
+    raise ValueError("Failed to initialize Keycloak")
+
+# Initialize the Flask app
+app = Flask(__name__, static_folder='static', template_folder='templates')
+bootstrap = Bootstrap(app)
+
+# Set the maximum file size for uploads and the database URI, along with the secret key
 app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024  # for 64 MB limit
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@postgres-application:5432/postgres'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = os.urandom(24)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@postgres-application/postgres'
-
-
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.secret_key = 'Jacobo'  # Set a secret key for session management
 # Initialize the database
 init_db(app)
 
-# In case we are not connected to the database, we can use this as fallback
-fallback_assignments = [
-    {"id": 1, "title": "Lav et sort-rød træ (Det kan du ikke)", "status": 0, "requirements": "No specific requirements", "start_date":datetime.now(), "end_date":datetime.now(), "course_name": "Rizzology"},
-    {"id": 2, "title": "Bevis Chernoff", "status": 1, "requirements": "Nu skal du staffes", "start_date":datetime.now(), "end_date":datetime.now(), "course_name": "Rizzology"},
-    {"id": 3, "title": "Brug Bayes Theorem", "status": 3, "requirements": "No specific requirements", "start_date":datetime.now(), "end_date":datetime.now(), "course_name": "Rizzology"},
-    {"id": 4, "title": "Skriv .parralel()", "status": 4, "requirements": "No specific requirements", "start_date":datetime.now(), "end_date":datetime.now(), "course_name": "Rizzology"},
-    {"id": 5, "title": "Opfind Linux", "status": 2, "requirements": "No specific requirements", "start_date":datetime.now(), "end_date":datetime.now(), "course_name": "Rizzology"}
-]
+# Get the admin token for Keycloak, in order to create students
+def get_admin_token():
+    payload = {
+        'client_id': KEYCLOAK_CLIENT_ID,
+        'client_secret': KEYCLOAK_CLIENT_SECRET,
+        'grant_type': 'password',
+        'username': KEYCLOAK_ADMIN,
+        'password': KEYCLOAK_ADMIN_PASSWORD
+    }
+    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    response = requests.post(KEYCLOAK_TOKEN_URL, data=payload, headers=headers)
+    response.raise_for_status()
+    return response.json()['access_token']
 
-fallback_course = [
-    {"id": 1, "name": "DM507_AlgoDat"},
-    {"id": 2, "name": "DM551_AlgoSand"},
-    {"id": 3, "name": "DM566_DmMl"},
-    {"id": 4, "name": "DM563_CP"},
-    {"id": 5, "name": "DM510_Operativsystemer"},
-]
-
-
+# This is the dashboard for the student
 @app.route("/")
-def homepage():
-    logger.debug("Redirecting from homepage to login")
-    return redirect(url_for('login', error="You must login first"))
-
-@app.route("/student")
-def student():
+def student_dashboard():
     if 'username' not in session:
         logger.warning("Access attempt without login")
         return redirect(url_for('login', error="You need to login first"))
-
+    
     username = session['username']
+    student_assignments = []
+    
     try:
-        # Get the student's assignments with status
         student = Student.query.filter_by(username=username).first()
-        assignments = db.session.query(
-            Assignment.id,
-            Assignment.title,
-            Assignment.start_date,
-            Assignment.end_date,
-            Course.name.label('course_name'),
-            db.case(
-                (Student_to_assignment.status.isnot(None), Student_to_assignment.status),
-                else_=0
-            ).label('status')
-            ).outerjoin(Student_to_assignment, 
-                        (Assignment.id == Student_to_assignment.assignment_id) & 
-                        (Student_to_assignment.student_id == student.id))\
-            .join(Course, Assignment.course_id == Course.id)\
-            .order_by('status').all()
+        
+        if not student:
+            raise ValueError(f"Student with username {username} not found")
+        
+        # Query assignments assigned to the student
+        assignments = db.session.query(Assignment).join(Student_to_assignment).filter(
+            Student_to_assignment.student_id == student.id
+        ).all()
+        for assignment in assignments:
+            submission = Submission.query.filter_by(assignment_id=assignment.id, student_id=student.id).first()
+            grade = submission.grade if submission else "Not submitted"
+            student_assignments.append({
+                'id': assignment.id,  # Ensure 'id' is included
+                'course_name': assignment.course.name if assignment.course else 'No Course',
+                'title': assignment.title,
+                'start_date': assignment.start_date,
+                'end_date': assignment.end_date,
+                'grade': grade
+            })
     except Exception as e:
         logger.error(f"Failed to retrieve assignments: {e}")
-        assignments = fallback_assignments  # Use the fallback assignments if the query fails
+        student_assignments = []
 
-    return render_template("student.html", nav=f"Dashboard for: {username}", assignments=assignments)
+    return render_template("student.html", nav=f"Dashboard for: {username}", assignments=student_assignments)
 
-'''
-@app.route('/login', methods=['GET', 'POST'])
-def login():
+
+# The register route allows students to create an account through Keycloak, this entry is also put in the database
+@app.route('/register', methods=['GET', 'POST'])
+def register():
     if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        if username and password: # Check if the inputs are not empty
-          
-            #headers = {'content-type': 'application/x-www-form-urlencoded',}
-            
-            # Define data for HTTP request
-            
-            data = {
-                'username': username,
-                'password': password,
-                'grant_type': 'password',
-                'client_id': 'student_service',
-                'client_secret': 'K0hdiACFA0sJOmgDc3xyMbwuhUh7fWpp'
+        username = request.form['username']
+        password = request.form['password']
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        email = request.form['email']
+
+        try:
+            token = get_admin_token()
+            headers = {
+                'Content-Type': 'application/json',
+                'Authorization': f"Bearer {token}"
             }
-            try:
-                response = requests.post('http://localhost:3200/auth/realms/DM855/protocol/openid-connect/token', headers=headers, data=data)
-                if response.status_code == 200:
-                    session['username'] = username
-                    return redirect(url_for('student'))
-                else:
-                    return redirect(url_for('login', nav="Login", error="Invalid username or password"))
-            except Exception as e:
-                    logger.error(f"HTTP request failed: {e}")
-                    return redirect(url_for('login', nav="Login", error="Invalid username or password"))    
+            user_data = {
+                "username": username,
+                "email": email,
+                "firstName": first_name,
+                "lastName": last_name,
+                "enabled": True,
+                "credentials": [{
+                    "type": "password",
+                    "value": password,
+                    "temporary": False
+                }]
+            }
+            response = requests.post(KEYCLOAK_USER_CREATION_URL, json=user_data, headers=headers)
+            response.raise_for_status()
+            logger.info(f"User {username} created successfully")
             
-        else:
-            logger.warning("Empty login submission")
-            return redirect(url_for('login', nav="Login", error="Input cannot be empty"))
-    else:
-        return render_template('login.html', nav="Login")
-'''
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        if username and password: # Check if the inputs are not empty
-            try:
-                student = Student.query.filter_by(username=username).first()
-                # Check if the student exists and the username and the password is correct
-                if student and username == student.username and password == student.password: # Check if the username and password are correct
-                    session['username'] = student.username 
-                    logger.info(f"User: {username} has succesfully logged in.")
-                    return redirect(url_for('student'))
-                else:
-                    if username == "admin" and password == "admin":
-                        session['username'] = username
-                        logger.info(f"Bypass database using admin") 
-                        return redirect(url_for('student')) 
-                    logger.debug(f"User: {username} failed to log in.")
-                    return redirect(url_for('login', nav="Login", error="Invalid username or password"))
+            # Create a new student in the database
+            new_student = Student(username=username, name=first_name, password="")
+            db.session.add(new_student)
+            db.session.commit()
             
-            # In case the database is not connected. Used for testing without db
-            except Exception as e:
-                if username == "admin" and password == "admin":
-                    session['username'] = username
-                    logger.info(f"Bypass database using admin") 
-                    return redirect(url_for('student'))
-                else:
-                    logger.error(f"Database not connected: {e}")
-                    return redirect(url_for('login', nav="Login", error="Invalid username or password"))
-                    
-        else:
-            logger.warning("Empty login submission")
-            return redirect(url_for('login', nav="Login", error="Input cannot be empty"))
-    else:
-        return render_template('login.html', nav="Login")
+            flash('Account created successfully!', 'success')
+            return redirect(url_for('login'))
+        except Exception as e:
+            flash(f'Error creating account: {str(e)}', 'danger')
+            logger.error(f"Failed to create account: {e}")
+            return redirect(url_for('register'))
 
+    return render_template('register.html', nav='Register')
+
+# The landing page, login or register
+@app.route('/landing')
+def home():
+    return render_template('landing_page.html', nav='Home')
+
+# The login route redirects to Keycloak for authentication
+@app.route('/login')
+def login():
+    redirect_uri = os.getenv('KEYCLOAK_REDIRECT_URI')
+    try:
+        auth_url = keycloak_openid.auth_url(redirect_uri=redirect_uri, scope="openid")
+    except Exception as e:
+        logger.error(f"Failed to get auth URL: {e}")
+    return redirect(auth_url)
+
+# The callback route processes the response from Keycloak, and saves the user information in the session, which is later used to log out
+@app.route('/callback')
+def callback():
+    code = request.args.get('code')
+    if not code:
+        logger.info("No code provided")
+        return 'Error: No code provided.', 400
+    
+    try:
+        token = keycloak_openid.token(
+            grant_type='authorization_code',
+            code=code,
+            redirect_uri=KEYCLOAK_REDIRECT_URI
+        )
+        userinfo = keycloak_openid.userinfo(token['access_token'])
+        session['username'] = userinfo['preferred_username']
+        session['user'] = userinfo
+        session['token'] = token  # Save the token in the session
+        logger.info(f"User: {userinfo['preferred_username']} logged in successfully.")
+        return redirect(url_for('student_dashboard'))
+    except Exception as e:
+        logger.error(f"Failed to process callback: {e}")
+        return 'Error: Failed to process callback.', 500
+
+
+# Logout of the application, and also from Keycloak
 @app.route('/logout')
 def logout():
-    # Clear the session
-    username = session.get('username', 'No User')
-    session.clear()
-    # Redirect to the login page
-    logger.info(f"{username} logged out.")
-    return redirect(url_for('login'))
+    token = session.get('token', {})
+    refresh_token = token.get('refresh_token')
+    if refresh_token:
+        try:
+            requests.post(
+                KEYCLOAK_LOGOUT_URL,
+                data={
+                    'client_id': KEYCLOAK_CLIENT_ID,
+                    'client_secret': KEYCLOAK_CLIENT_SECRET,
+                    'refresh_token': refresh_token
+                },
+                headers={'Content-Type': 'application/x-www-form-urlencoded'}
+            )
+            logger.info("Logged out of Keycloak successfully.")
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Failed to log out from Keycloak: {e}")
 
-@app.route('/student/submit/<int:assignment_id>', methods=['GET', 'POST'])
+    session.clear()
+    logger.info("User session cleared.")
+    return redirect(BASE_URL)
+
+# The route to view a specific assignment
+@app.route('/submit/<int:assignment_id>', methods=['GET', 'POST'])
 def submit_assignment(assignment_id):
     username = session.get('username', 'No user')
     session['assignment_id'] = assignment_id
@@ -174,14 +237,11 @@ def submit_assignment(assignment_id):
         assignment = Assignment.query.get(session.get('assignment_id'))
         logger.info(f"User clicked assignment: {assignment}")
     except Exception as e:
-        # Use a fallback if the database query fails
-        assignment = next((a for a in fallback_assignments if a['id'] == assignment_id), None)
-        assignment = Assignment(id=assignment['id'], title=assignment['title'], status=assignment['status'], requirements=assignment['requirements'])
-        logger.info(f"Using the fallback list the user: {username} clicked assignment: {assignment}, Error: {e}")
+        logger.info(f" Error: {e}")
     return render_template('submit.html', nav=f"{assignment.course}: {assignment.title}", assignment=assignment)
 
-
-@app.route('/student/cancel_assignment/<int:assignment_id>', methods=['POST'])
+# Cancel the assignment
+@app.route('/cancel_assignment/<int:assignment_id>', methods=['POST'])
 def cancel_assignment(assignment_id):
     if 'username' not in session:
         return jsonify({'success': False, 'error': 'You need to login first'}), 403
@@ -190,7 +250,6 @@ def cancel_assignment(assignment_id):
         assignment = Student_to_assignment.query.filter_by(assignment_id=assignment_id, student_id=student_id).first()
         submission = Submission.query.filter_by(assignment_id=assignment_id, student_id=student_id).first()
         if assignment:
-            assignment.status = 0
             db.session.delete(submission)
             db.session.delete(assignment)
             db.session.commit()
@@ -203,18 +262,16 @@ def cancel_assignment(assignment_id):
         logger.error(f"Failed to cancel assignment {assignment_id}: {e}")
         return jsonify({'success': False, 'error': 'Failed to cancel assignment'}), 500
 
-
-
-@app.route('/student/upload', methods=['POST'])
+# The route to upload a file
+@app.route('/upload', methods=['POST'])
 def upload_file():
     assignment_id = session.get('assignment_id', 'No Assignment')
     logger.info(f"Uploading for assignment: {assignment_id}")
     
-    upload_folder= '/user/upload'
+    upload_folder = '/user/upload'
     username = session.get('username', 'No User')
     assignment_id = session.get('assignment_id', 'No Assignment')
     
-    # Check if directory exists, and if not, create it
     if not os.path.exists(upload_folder):
         try:
             os.makedirs(upload_folder, exist_ok=True)
@@ -235,102 +292,120 @@ def upload_file():
         filename = secure_filename(file.filename)
         file_path = os.path.join(upload_folder, filename)
         file.save(file_path)
-        logger.info(f"{username} succesfully uploaded file: {filename}")
+        logger.info(f"{username} successfully uploaded file: {filename}")
         
-        # SQL create submission
         try:
             with open(file_path, 'rb') as f:
                 data = f.read()
                 
             student = Student.query.filter_by(username=username).first()
             new_submission = Submission(assignment_id=assignment_id, student_id=student.id, submission=data)
-            new_student_to_assignment = Student_to_assignment(assignment_id=assignment_id, student_id=student.id, status=1)
             
             db.session.add(new_submission)
-            db.session.add(new_student_to_assignment)
             db.session.commit()
             logger.info(f"Submission created for assignment: {assignment_id} by student: {username}")
             logger.info(f"Student_to_assignment created for assignment: {assignment_id} by student: {username} with status 1")
             
-            # Run Docker container with the uploaded file
-            run_docker(student.id, assignment_id, new_submission.id, file_path)
+            run_docker(student.id, assignment_id, new_submission.id)
         except Exception as e:
             print("Error in submission", e)
             db.session.rollback()
             logger.error(f"Failed to create submission for assignment: {assignment_id}, Error {e}")
         
-        return redirect(url_for('student', nav="Student", error=f"You Succesfully uploaded: {filename}")) 
+        return redirect(url_for('student_dashboard', nav="Student", error=f"You successfully uploaded: {filename}")) 
     else:
         logger.debug(f"{username} tried to upload a file of invalid file type: {filename}")
         return jsonify({'error': 'Invalid file type'}), 400
 
+# Check if the file is a zip file
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() == 'zip'
 
-def run_docker(user_id, assignment_id, submission_id, file_path):
+# Run the submission in a Docker container
+def run_docker(user_id, assignment_id, submission_id):
+    logger.info(f"Running Docker for user_id: {user_id}, assignment_id: {assignment_id}, submission_id: {submission_id}")
     try:
-        # Get information from the database
+        logger.debug(f"Fetching assignment {assignment_id} from database")
         assignment = Assignment.query.get(assignment_id)
-        config = AssignmentConfig.query.filter_by(id=assignment_id).first()
+        config = AssignmentConfig.query.filter_by(id=assignment.config_id).first()
         if not assignment or not config:
+            logger.error(f'Invalid assignment or configuration for assignment_id: {assignment_id} and config_id: {config.id}')
             raise ValueError("Invalid assignment or configuration")
+        logger.info(f"Assignment and configuration found for assignment_id: {assignment_id}")
 
-        image = assignment.docker_image if assignment.docker_image else "python:3.12-slim"
-        submission_id = Submission.query.get(submission_id).id
+        image = "alpine"
+        logger.debug(f"Fetching submission {submission_id} from database")
+        submission = Submission.query.get(submission_id)
 
-        # Docker client setup
-        client = docker.DockerClient(base_url='unix://var/run/docker.sock')
+        client = docker.from_env()
+        logger.debug("Docker client initialized")
 
-        # Bind the directory containing the zip file
-        host_directory = os.path.dirname(file_path)
-        container_directory = "/app"
-        file_name = os.path.basename(file_path)
-
-        # Ensure memory limit is at least 6MB
         mem_limit = max(int(config.max_ram), 6 * 1024 * 1024)
         cpu_count = int(config.max_cpu)
+        logger.info(f"Running container with mem_limit: {mem_limit}, cpu_count: {cpu_count}")
 
         container = client.containers.run(
             image,
-            command=f"sh -c 'unzip /app/{file_name} -d /app && python3 /app/test.py'",
+            command="echo 'Hello World'",
             detach=True,
             mem_limit=mem_limit,
             cpu_count=cpu_count,
-            volumes={host_directory: {'bind': container_directory, 'mode': 'rw'}}
         )
+        logger.info(f"Container started for assignment_id: {assignment_id}")
 
-        # Wait for the container to finish
         container.wait()
+        logger.info(f"Container execution completed for assignment_id: {assignment_id}")
 
-        # Fetch logs
         stdout = container.logs(stdout=True, stderr=False)
         stderr = container.logs(stdout=False, stderr=True)
 
-        # Update the submission with the output
-        submission = Submission.query.get(submission_id)
+        logger.debug("Fetching submission to update")
         submission.submission_std = stdout.decode('utf-8') if stdout else ''
         submission_err = stderr.decode('utf-8') if stderr else ''
-        submission.submission_err = submission_err[:64]  # Truncate to 64 characters
+        submission.submission_err = submission_err[:64]
         submission.grade = "passed" if not stderr else "failed"
-        submission.status = 3 if not stderr else 4
+
+        student_to_assignment = Student_to_assignment.query.filter_by(
+            student_id=user_id,
+            assignment_id=assignment_id
+        ).first()
+        if student_to_assignment:
+            logger.info(f"Updated Student_to_assignment status to for user_id: {user_id}, assignment_id: {assignment_id}")
 
         db.session.commit()
+        logger.info(f"Submission updated successfully for assignment_id: {assignment_id}, grade: {submission.grade}")
 
     except docker.errors.DockerException as de:
         logger.error(f"Docker error for assignment {assignment_id}: {de}")
         submission = Submission.query.get(submission_id)
-        submission.submission_err = str(de)[:64]  # Truncate to 64 characters
+        submission.submission_err = str(de)[:64]
         submission.grade = "failed"
-        submission.status = 4
         db.session.commit()
+        logger.warning(f"Docker error handled for assignment_id: {assignment_id}, status set to failed")
+
+        student_to_assignment = Student_to_assignment.query.filter_by(
+            student_id=user_id,
+            assignment_id=assignment_id
+        ).first()
+        if student_to_assignment:
+            db.session.commit()
+            logger.warning(f"Updated Student_to_assignment status to for user_id: {user_id}, assignment_id: {assignment_id}")
+
     except Exception as e:
         logger.error(f"Error running docker for assignment {assignment_id}, Error: {e}")
         submission = Submission.query.get(submission_id)
-        submission.submission_err = str(e)[:64]  # Truncate to 64 characters
+        submission.submission_err = str(e)[:64]
         submission.grade = "failed"
-        submission.status = 4
         db.session.commit()
+        logger.warning(f"General error handled for assignment_id: {assignment_id}, status set to failed")
 
+        student_to_assignment = Student_to_assignment.query.filter_by(
+            student_id=user_id,
+            assignment_id=assignment_id
+        ).first()
+        if student_to_assignment:
+            db.session.commit()
+            logger.warning(f"Updated Student_to_assignment status to for user_id: {user_id}, assignment_id: {assignment_id}")
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True, port=5050)
+    app.run(host="0.0.0.0", port=5050, debug=True)

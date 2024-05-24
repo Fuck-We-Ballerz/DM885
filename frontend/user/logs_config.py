@@ -2,7 +2,6 @@ import logging
 
 # Setup custom logging, terminal and file logging
 def setup_logging(log_terminal = False):
-    
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)  # Set the logging level
     # Create a logging format
