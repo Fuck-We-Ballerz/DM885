@@ -16,9 +16,9 @@ data:
       - name: Postgres
         type: postgres
         url: postgres-application:5432
-        user: postgres
+        user: {{ .Values.postgresApplication.POSTGRES_USER }}
         secureJsonData:
-          password: postgres
+          password: {{ .Values.postgresApplication.POSTGRES_PASSWORD }}
         jsonData:
           database: postgres
           sslmode: 'disable' # disable/require/verify-ca/verify-full
