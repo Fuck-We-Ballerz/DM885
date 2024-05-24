@@ -4,7 +4,11 @@ metadata:
   name: dind-certs
 spec:
   accessModes:
+{{- if eq .Values.environment "prod" }}
     - ReadWriteOnce
+{{- else }}
+    - ReadWriteMany
+{{- end }}
   persistentVolumeReclaimPolicy: Delete
   resources:
     requests:

@@ -25,6 +25,7 @@ KEYCLOAK_CLIENT_SECRET = os.getenv('KEYCLOAK_CLIENT_SECRET')
 KEYCLOAK_REDIRECT_URI = os.getenv('KEYCLOAK_REDIRECT_URI')
 KEYCLOAK_ADMIN_USERNAME = os.getenv('KEYCLOAK_ADMIN_USERNAME')
 KEYCLOAK_ADMIN_PASSWORD = os.getenv('KEYCLOAK_ADMIN_PASSWORD')
+KEYCLOAK_SERVER_URI = os.getenv('KEYCLOAK_SERVER_URI')
 BASE_URL = os.getenv('BASE_URL')
 KEYCLOAK_LOGOUT_URL = os.getenv('KEYCLOAK_LOGOUT_URL')
 POSTGRES_USER = os.getenv('POSTGRES_USER')
@@ -190,7 +191,7 @@ def home():
 # The login route redirects to Keycloak for authentication
 @app.route('/login')
 def login():
-    redirect_uri = os.getenv('KEYCLOAK_REDIRECT_URI')
+    redirect_uri = KEYCLOAK_SERVER_URI
     auth_url = keycloak_openid.auth_url(redirect_uri=redirect_uri, scope="openid")
     return redirect(auth_url)
 
