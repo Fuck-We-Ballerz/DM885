@@ -14,9 +14,8 @@ export const POST = async ({params, request}) => {
     if (authorized.status !== 200) {
         return authorized;
     }
-    const teacherId = parseInt(params.id);
     const data = await request.json();
-    if (!data.is_visible) {
+    if (data.is_visible == undefined) {
         return new Response(JSON.stringify({
             message: "Missing boolean is_visible"
         }), { status: 400 });

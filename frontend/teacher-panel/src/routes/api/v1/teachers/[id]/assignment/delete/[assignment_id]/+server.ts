@@ -14,25 +14,24 @@ export const DELETE = async ({params, request}) => {
     if (authorized.status !== 200) {
         return authorized;
     }
-    const assignment_id = parseInt(params.id);
-    const data = await request.json();
-   
+    const assignment_id = parseInt(params.assignment_id);
+
     await db.delete(schema.teacher_to_assignment)
-        .where(eq(schema.teacher_to_assignment.assignment_id, data.assignment_id));
+        .where(eq(schema.teacher_to_assignment.assignment_id, assignment_id));
 
     await db.delete(schema.student_to_assignment)
-        .where(eq(schema.student_to_assignment.assignment_id, data.assignment_id));
+        .where(eq(schema.student_to_assignment.assignment_id, assignment_id));
 
     await db.delete(schema.submission)
-        .where(eq(schema.submission.assignment_id, data.assignment_id));
+        .where(eq(schema.submission.assignment_id, assignment_id));
 
     const [result] = await db.delete(schema.assignment)
-                            .where(eq(schema.assignment.id, data.assignment_id))
+                            .where(eq(schema.assignment.id, assignment_id))
                             .returning();
 
 
     return new Response(JSON.stringify({
         message: "Success", 
-        deleted_assignment: result
+        deleted_assignament: result
     }), { status: 200 } );
 }

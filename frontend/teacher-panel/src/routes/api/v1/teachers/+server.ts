@@ -11,5 +11,8 @@ export const GET = async ({request}) => {
     }
 	const res = await db.query.teacher.findMany()
 
-	return json(res);
+	return new Response(JSON.stringify({
+        message: "Success",
+        teacher: res
+    }), { status: 200 });
 }
