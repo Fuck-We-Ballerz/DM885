@@ -43,10 +43,11 @@ logger.info(f"Keycloak Redirect URI: {KEYCLOAK_REDIRECT_URI}")
 logger.info(f"Keycloak Admin Username: {KEYCLOAK_ADMIN_USERNAME}")
 logger.info(f"Keycloak Admin Password: {KEYCLOAK_ADMIN_PASSWORD}")
 
+
 # If one of the Keycloak environment variables is missing, raise an error
 if not all([KEYCLOAK_SERVER_URL, KEYCLOAK_REALM, KEYCLOAK_CLIENT_ID, KEYCLOAK_CLIENT_SECRET, KEYCLOAK_REDIRECT_URI]):
     raise ValueError("One or more Keycloak configuration environment variables are missing")
-
+'''
 # Retry connecting to Keycloak server
 for _ in range(1000):
     try:
@@ -59,6 +60,7 @@ for _ in range(1000):
         time.sleep(10)
 else:
     raise RuntimeError("Failed to connect to Keycloak server after multiple attempts")
+'''
 
 keycloak_openid = KeycloakOpenID(
     server_url=KEYCLOAK_SERVER_URL,
@@ -79,6 +81,10 @@ app.secret_key = os.getenv('SECRET_KEY')  # Set a secret key for session managem
 
 # Initialize the database
 init_db(app)
+
+# Register the api blueprint
+from api import api
+app.register_blueprint(api, url_prefix='/api')
 
 # Get the admin token for Keycloak, in order to create students
 def get_admin_token():

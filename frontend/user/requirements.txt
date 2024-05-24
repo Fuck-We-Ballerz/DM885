@@ -10,3 +10,4 @@ selenium
 python-keycloak
 python-dotenv
 Flask-Testing
+pytest
