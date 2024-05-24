@@ -6,7 +6,7 @@ import os
 from logs_config import setup_logging
 from database import db, Student, Assignment, Course, AssignmentConfig, Submission, init_db, Student_to_assignment
 import docker
-from datetime import datetime
+from datetime import datetime, time
 from keycloak import KeycloakOpenID
 #from dotenv import load_dotenv
 

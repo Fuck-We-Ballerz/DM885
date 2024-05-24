@@ -81,7 +81,7 @@ def get_admin_token():
     response.raise_for_status()
     return response.json()['access_token']
 
-@app.route('/api/create_user', methods=['POST'])
+@app.route('/api/register', methods=['POST'])
 def api_create_user():
     data = request.json
     username = data.get('username')
@@ -124,8 +124,6 @@ def api_create_user():
     except Exception as e:
         logger.error(f"Failed to create account: {e}")
         return jsonify({'error': f'Failed to create account: {str(e)}'}), 500
-
-# Other routes...
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5050, debug=True)
