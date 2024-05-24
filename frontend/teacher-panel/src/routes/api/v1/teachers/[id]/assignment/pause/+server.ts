@@ -8,7 +8,9 @@ import { login } from '$lib/api/login'
  * Pauses or unpauses an assignment.
  */
 export const POST = async ({params, request}) => {
-    const authorized = await login({request});
+    const authHeader = request.headers.get('Authorization');
+
+    const authorized = await login({ authHeader: authHeader });
     if (authorized.status !== 200) {
         return authorized;
     }

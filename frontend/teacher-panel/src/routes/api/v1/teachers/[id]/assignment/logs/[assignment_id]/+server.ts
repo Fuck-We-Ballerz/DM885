@@ -10,7 +10,9 @@ import { zipSubmissions } from '$lib/api/utilities';
  * Returns a zip file containing the logs for each student for a given assignment
  */
 export const GET = async ({params, request}) => {
-    const authorized = await login({request});
+    const authHeader = request.headers.get('Authorization');
+
+    const authorized = await login({ authHeader: authHeader });
     if (authorized.status !== 200) {
         return authorized;
     }
@@ -24,7 +26,7 @@ export const GET = async ({params, request}) => {
       .where(eq(schema.submission.assignment_id, assignment_id));
 
     const zipFile = await zipSubmissions(submissions);
-    
+
     return new Response(JSON.stringify({
         message: "Success",
         zipFile: zipFile

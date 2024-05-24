@@ -9,7 +9,9 @@ import { zipSubmissions } from '$lib/api/utilities';
  * Returns a zip file containing the logs for the given student for a given assignment
  */
 export const GET = async ({request}) => {
-    const authorized = await login({request});
+    const authHeader = request.headers.get('Authorization');
+
+    const authorized = await login({ authHeader: authHeader });
     if (authorized.status !== 200) {
         return authorized;
     }

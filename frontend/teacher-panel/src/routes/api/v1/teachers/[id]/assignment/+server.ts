@@ -7,7 +7,9 @@ import { login } from '$lib/api/login';
  * Enroll a list of student into the given assignment
  */
 export const POST = async ({params, request}) => {
-    const authorized = await login({request});
+    const authHeader = request.headers.get('Authorization');
+
+    const authorized = await login({ authHeader: authHeader });
     if (authorized.status !== 200) {
         return authorized;
     }
@@ -38,7 +40,9 @@ export const POST = async ({params, request}) => {
  * Unenroll a student into the given assignment
  */
 export const DELETE = async ({params, request}) => {
-    const authorized = await login({request});
+    const authHeader = request.headers.get('Authorization');
+
+    const authorized = await login({ authHeader: authHeader });
     if (authorized.status !== 200) {
         return authorized;
     }
@@ -64,7 +68,9 @@ export const DELETE = async ({params, request}) => {
  * Returns all the submissions made by a student for a given assignment
  */
 export const GET = async ({request}) => {
-    const authorized = await login({request});
+    const authHeader = request.headers.get('Authorization');
+
+    const authorized = await login({ authHeader: authHeader });
     if (authorized.status !== 200) {
         return authorized;
     }

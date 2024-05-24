@@ -1,6 +1,14 @@
-export const login = async ({request}) => {
-    const { username, password } = await request.json();
+export const login = async ({authHeader}) => {
+    if (!authHeader || !authHeader.startsWith('Basic ')) {
+        return new Response(JSON.stringify({ 
+            message: 'Authorization header missing or not Basic' 
+        }), { status: 401 });
+    }
 
+    const base64Credentials = authHeader.split(' ')[1];
+    const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+    const [username, password] = credentials.split(':');
+    
     if (!username || !password) {
         return new Response(JSON.stringify({
             body: { error: 'Username and password are required' }
