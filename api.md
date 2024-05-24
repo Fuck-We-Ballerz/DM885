@@ -144,7 +144,7 @@ Enrolls a student into the given assignment
 
 **Body**
 
-```json
+```JSON
 {
     "student_id": [ number ]
 }
@@ -172,7 +172,7 @@ Returns all the submissions made by a student for a given assignment
 
 **Body**
 
-```json
+```JSON
 {
     "student_id": number,
     "assignment_id": number
@@ -214,7 +214,7 @@ Unenrolls a student from the given assignment
 
 **Body**
 
-```json
+```JSON
 {
     "student_id": number,
     "assignment_id": number
@@ -243,7 +243,7 @@ Returns all the submissions made by the given student for the given assignment
 
 **Body**
 
-```json
+```JSON
 {
     "student_id": number,
     "assignment_id": number
@@ -285,7 +285,7 @@ Enrolls the specific student into the assignment
 
 **Body**
 
-```json
+```JSON
 {
     "assignment_id": number
 }
@@ -333,7 +333,7 @@ Pauses or unpauses an assignment.
 
 **Body**
 
-```json
+```JSON
 {
     "is_visible": bool,
     "assignment_id": number
@@ -363,7 +363,7 @@ Returns a csv file containing the metadata for a given student for a given assig
 
 **Body**
 
-```json
+```JSON
 {
     "student_id": number,
     "assignment_id": number
@@ -393,7 +393,7 @@ Returns a csv file containing the metadata for each student for a given assignme
 
 **Body**
 
-```json
+```JSON
 {
     "assignment_id": number,
 }
@@ -424,7 +424,7 @@ Retuns a zip file containing for a given student a folder and within that folder
 
 **Body**
 
-```json
+```JSON
 {
     "assignment_id": number,
     "student_id": number
