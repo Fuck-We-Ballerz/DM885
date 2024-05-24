@@ -44,6 +44,9 @@ Exploring microservices using Kubernetes!
       <a href="#🏭-the-pipeline">🏭 The Pipeline</a>
     </li>
     <li>
+      <a href="#🚀-using-the-exposed-api">🚀 Using the exposed API</a>
+    </li>
+    <li>
         <a href="#🤝-contribute">🤝 Contribute</a>
     </li>
     <li>
@@ -149,6 +152,9 @@ on:
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## 🚀 Using the exposed API
+
 
 ## 🤝 Contribute
 We have automated our local development process using VSCode tasks to create a simulated pipeline. This allows us to streamline our development workflow and ensure consistency across our team. Detailed instructions on how to set up and use these tasks is provided in the section <a href="#👷‍♂️-getting-started">Getting Started</a>.
