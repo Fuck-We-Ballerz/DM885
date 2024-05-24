@@ -1,6 +1,6 @@
 import JSZip from "jszip";
 
-export const zipSubmissions = async (/** @type {string | any[]} */ submissions) => {
+export const zipSubmissions = async (/** @type {{student_id: number, stdout: String, stderr: String}[]} */ submissions) => {
 
     const zip = new JSZip();
 

@@ -30,10 +30,13 @@ export const GET = async ({request}) => {
             eq(schema.submission.student_id, student_id)
         ));
 
-    const zipFile = await zipSubmissions(submissions);
+    const blob = await zipSubmissions(submissions);
 
-    return new Response(JSON.stringify({
-        message: "Success",
-        zipFile: zipFile
-    }), { status: 200 });
+    return new Response(await blob.arrayBuffer(), { 
+        status: 200, 
+        headers: {
+            'Content-Type': 'application/zip',
+            'Content-Disposition': 'attachment; filename="submissions.zip"',
+        }
+    });
 };
