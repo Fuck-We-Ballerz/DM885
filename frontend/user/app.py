@@ -26,6 +26,9 @@ KEYCLOAK_ADMIN_USERNAME = os.getenv('KEYCLOAK_ADMIN_USERNAME')
 KEYCLOAK_ADMIN_PASSWORD = os.getenv('KEYCLOAK_ADMIN_PASSWORD')
 BASE_URL = os.getenv('BASE_URL')
 KEYCLOAK_LOGOUT_URL = os.getenv('KEYCLOAK_LOGOUT_URL')
+POSTGRES_USER = os.getenv('POSTGRES_USER')
+POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+POSTGRES_DB = os.getenv('POSTGRES_DB')
 
 KEYCLOAK_TOKEN_URL = f"{KEYCLOAK_SERVER_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/token"
 KEYCLOAK_USER_CREATION_URL = f"{KEYCLOAK_SERVER_URL}/admin/realms/{KEYCLOAK_REALM}/users"
@@ -65,7 +68,7 @@ bootstrap = Bootstrap(app)
 
 # Set the maximum file size for uploads and the database URI, along with the secret key
 app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024  # for 64 MB limit
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@postgres-application:5432/postgres'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@postgres-application:5432/{POSTGRES_DB}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.getenv('SECRET_KEY')  # Set a secret key for session management
 

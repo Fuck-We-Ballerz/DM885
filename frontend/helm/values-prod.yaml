@@ -8,6 +8,9 @@ studentService:
   BASE_URL: https://zeruscloud.com
   KEYCLOAK_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
   KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+  # Postgres Application:
+  POSTGRES_USER: ${POSTGRES_USER}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   
 
 teacherService:

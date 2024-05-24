@@ -14,6 +14,10 @@ studentService:
   BASE_URL: https://localhost
   KEYCLOAK_LOGOUT_URL: http://keycloak:8080/realms/DM885/protocol/openid-connect/logout
 
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_DB: postgres
+
 teacherService:
   IMAGE: node-custom
   IMAGE_PULL_POLICY: Never
