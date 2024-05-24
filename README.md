@@ -46,7 +46,7 @@ Exploring microservices using Kubernetes!
       <a href="#🏭-the-pipeline">🏭 The Pipeline</a>
     </li>
     <li>
-      <a href="#🚀-using-the-exposed-api">🚀 Using the exposed API</a>
+      <a href="#🚀-using-the-exposed-api">🚀 Using The Exposed API</a>
     </li>
     <li>
         <a href="#🤝-contribute">🤝 Contribute</a>
@@ -163,7 +163,7 @@ on:
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## 🚀 Using the exposed API
+## 🚀 Using The Exposed API
 We have prepared a detailed guide on how to interact with our application's API. This guide includes information about the available endpoints and the structure of the returned JSON objects. You can find this guide at the following location: [API](./api.md). Enjoy your development journey!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
