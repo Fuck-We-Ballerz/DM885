@@ -1,12 +1,16 @@
 import { eq } from 'drizzle-orm';
-import { drizzle } from 'drizzle-orm/postgres-js';
 import * as schema from '$lib/db/schema'
-import type { Actions, PageServerLoad } from './$types';
+import type { PageServerLoad } from './$types';
 import { db } from '$lib';
+import { error } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({cookies, params}) => {   
     const teacherUsername = cookies.get('kc-username')!
     const teacher = await db.query.teacher.findFirst({ where: eq(schema.teacher.username, teacherUsername)})
+
+    if(!teacher){
+        error(403, "Access denied: user is not a teacher")
+    }
 
     let output = []
     //Get all assignments that a teacher has
@@ -32,5 +36,5 @@ export const load: PageServerLoad = async ({cookies, params}) => {
 
     return {
         assignments: output
-	};
+    };
 };

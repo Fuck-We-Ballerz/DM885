@@ -14,5 +14,8 @@ export async function GET({params, request}) {
     const teacherId = parseInt(params.id)
 	const res = await db.query.teacher.findFirst({ where: eq(schema.teacher.id, teacherId)})
 
-	return json(res);
+    return new Response(JSON.stringify({
+        message: "Success",
+        teacher: res
+    }), { status: 200 });
 }

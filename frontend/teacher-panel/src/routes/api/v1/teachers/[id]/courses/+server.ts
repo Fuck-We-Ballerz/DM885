@@ -20,7 +20,8 @@ export async function GET({params, request}) {
                                 .innerJoin(schema.teacher_to_course, eq(schema.course.id, schema.teacher_to_course.course_id))
                                 .where(eq(schema.teacher_to_course.teacher_id, teacherId));
     
-    console.log(courses)
-    
-	return json(courses);
+    return new Response(JSON.stringify({
+        message: "Success",
+        courses: courses
+    }), { status: 200 });
 }

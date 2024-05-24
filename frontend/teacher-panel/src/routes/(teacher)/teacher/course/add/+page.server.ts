@@ -2,30 +2,34 @@ import { db } from '$lib'
 import * as schema from '$lib/db/schema'
 import type { Actions } from './$types'
 import { eq } from 'drizzle-orm'
+import { error } from '@sveltejs/kit'
 
 export async function load({cookies}) {
-        const students = await db.query.student.findMany() ?? []
+    const teacherUsername = cookies.get('kc-username')!
+    const teacher = await db.query.teacher.findFirst({ where: eq(schema.teacher.username, teacherUsername)})
+    if(!teacher){
+        error(403, "Access denied: user is not a teacher")
+    }
 
-        let studentOutput = students.map((student) => {
-            return {
-                name: student.name,
-                id: student.id,
-                username: student.username
-            }
-        })
+    const students = await db.query.student.findMany() ?? []
 
-        const teacherUsername = cookies.get('kc-username')!
-        const teacher = await db.query.teacher.findFirst({ where: eq(schema.teacher.username, teacherUsername)})
-        
-        //Get all courses that the teacher is teaching
-        const courses = await db.select().from(schema.course)
-                                .innerJoin(schema.teacher_to_course, eq(schema.course.id, schema.teacher_to_course.course_id))
-                                .where(eq(schema.teacher_to_course.teacher_id, teacher!.id));
-
+    let studentOutput = students.map((student) => {
         return {
-            students: studentOutput,
-            courses: courses.map(courseObj => courseObj.course)
+            name: student.name,
+            id: student.id,
+            username: student.username
         }
+    })
+    
+    //Get all courses that the teacher is teaching
+    const courses = await db.select().from(schema.course)
+                            .innerJoin(schema.teacher_to_course, eq(schema.course.id, schema.teacher_to_course.course_id))
+                            .where(eq(schema.teacher_to_course.teacher_id, teacher!.id));
+
+    return {
+        students: studentOutput,
+        courses: courses.map(courseObj => courseObj.course)
+    }
 }
 
 
