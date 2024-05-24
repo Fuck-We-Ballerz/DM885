@@ -1,5 +1,3 @@
-import { PUBLIC_KEYCLOAK_BASE_URL } from '$env/static/public'
-
 export const login = async ({request}) => {
     const { username, password } = await request.json();
 
