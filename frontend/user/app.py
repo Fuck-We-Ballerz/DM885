@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Set up logger
+# Set up logger 
 log_terminal = True
 logger = setup_logging(log_terminal)
 
@@ -51,7 +51,7 @@ except Exception as e:
     logger.error(f"Failed to initialize Keycloak: {e}")
     raise ValueError("Failed to initialize Keycloak")
 
-# Initialize the Flask app
+# Initialize the Flask app  
 app = Flask(__name__, static_folder='static', template_folder='templates')
 bootstrap = Bootstrap(app)
 

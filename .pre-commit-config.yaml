@@ -1,0 +1,13 @@
+repos:
+- repo: local
+  hooks:
+    - id: end-to-end-tests
+      name: end-to-end-tests
+      entry: python frontend/user/end_to_end.py
+      language: system
+      types: [python]
+      pass_filenames: false
+      stages: [commit]
+      
+
+
