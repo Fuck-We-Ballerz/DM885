@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Set up logger 
+# Set up logger
 log_terminal = True
 logger = setup_logging(log_terminal)
 
