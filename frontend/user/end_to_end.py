@@ -32,7 +32,7 @@ class AssignmentSubmissionTest(unittest.TestCase):
             driver.get("https://zeruscloud/")
 
 
-        # Login as admin
+        # Login as admin 
         WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.XPATH, "/html/body/div/button[3]"))
         ).click()
