@@ -54,7 +54,7 @@ except Exception as e:
 # Initialize the Flask app 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 bootstrap = Bootstrap(app)
-
+ 
 # Set the maximum file size for uploads and the database URI, along with the secret key
 app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024  # for 64 MB limit
 app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@postgres-application:5432/postgres'
