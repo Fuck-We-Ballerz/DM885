@@ -16,7 +16,7 @@ load_dotenv()
 log_terminal = True
 logger = setup_logging(log_terminal)
 
-# Load environment variables
+# Load environment variables 
 KEYCLOAK_SERVER_URL = os.getenv('KEYCLOAK_SERVER_URL')
 KEYCLOAK_REALM = os.getenv('KEYCLOAK_REALM')
 KEYCLOAK_CLIENT_ID = os.getenv('KEYCLOAK_CLIENT_ID')
